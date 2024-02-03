@@ -2,6 +2,7 @@ MainScreen:
 
 <MainScreen>:
     MDTopAppBar:
+        id: top_bar
         pos_hint: {'top': 1}
         elevation: 4
         title: 'Drawer'
@@ -72,13 +73,13 @@ MainScreen:
             text: 'Products'
             on_press:
                 root.nav_drawer.set_state('close')
-                root.screen_manager.current = 'prod_scr'
+                app.change_screen('prod_scr')
                 app.get_products()
         OneLineListItem:
             text: 'Shopping Lists'
             on_press:
                 root.nav_drawer.set_state('close')
-                root.screen_manager.current = 'list_scr'
+                app.change_screen('list_scr')
                 app.get_lists()
 
 
