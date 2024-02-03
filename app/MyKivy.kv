@@ -1,0 +1,99 @@
+MainScreen:
+
+<MainScreen>:
+    MDTopAppBar:
+        pos_hint: {'top': 1}
+        elevation: 4
+        title: 'Drawer'
+        left_action_items: [['menu', lambda _: nav_drawer.set_state('open')]]
+
+    MDNavigationLayout:
+        MDScreenManager:
+            id: scr_manager
+
+            MDScreen:
+                name: 'prod_scr'
+
+                MDFloatLayout:
+                    size_hint_y: .85
+                    MDScrollView:
+                        MDList:
+                            id: prod_items
+
+            MDScreen:
+                name: 'list_scr'
+
+                MDFloatLayout:
+                    size_hint_y: .85
+                    MDScrollView:
+                        MDList:
+                            id: shop_list_items
+
+            MDScreen:
+                name: 'list_content_scr'
+
+                MDFloatLayout:
+                    size_hint_y: .85
+                    MDScrollView:
+                        MDList:
+                            id: list_content_items
+
+            MDScreen:
+                name: 'add_list_scr'
+                MDLabel:
+                    text: 'Add List Scr'
+                    halign: 'center'
+
+            MDScreen:
+                name: 'add_prod_scr'
+                MDLabel:
+                    text: 'Add Prod Scr'
+                    halign: 'center'
+
+        MDNavigationDrawer:
+            id: nav_drawer
+            radius: (0, 16, 16, 0)
+
+            ContentNavigationDrawer:
+                screen_manager: scr_manager
+                nav_drawer: nav_drawer
+
+    MDFloatLayout:
+        MDFloatingActionButtonSpeedDial:
+            id: speed_dial
+            root_button_anim: True
+            hint_animation: False
+            closing_time: 0.2
+            opening_time: 0.2
+
+<ContentNavigationDrawer>:
+    MDList:
+        OneLineListItem:
+            text: 'Products'
+            on_press:
+                root.nav_drawer.set_state('close')
+                root.screen_manager.current = 'prod_scr'
+                app.get_products()
+        OneLineListItem:
+            text: 'Shopping Lists'
+            on_press:
+                root.nav_drawer.set_state('close')
+                root.screen_manager.current = 'list_scr'
+                app.get_lists()
+
+
+<SwipeToDeleteItem>
+    size_hint_y: None
+    height: content.height
+
+    MDCardSwipeLayerBox:
+        # Content under the card.
+
+    MDCardSwipeFrontBox:
+
+        # Content of card.
+        OneLineListItem:
+            id: content
+            text: root.text
+            _no_ripple_effect: True
+
