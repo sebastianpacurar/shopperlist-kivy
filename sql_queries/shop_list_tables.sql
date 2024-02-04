@@ -23,6 +23,7 @@ CREATE TABLE shop_list_product (
     product_id INT,
     quantity INT NOT NULL,
     category_id INT,
+    active BOOLEAN NOT NULL DEFAULT TRUE, -- Added 'active' column here
     PRIMARY KEY (shop_list_id, product_id),
     FOREIGN KEY (shop_list_id) REFERENCES shop_list(shop_list_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id),
