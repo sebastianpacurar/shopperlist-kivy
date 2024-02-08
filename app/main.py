@@ -1,7 +1,6 @@
 from kivy.properties import StringProperty
 from kivymd.app import MDApp
-from kivymd.uix.card import MDCardSwipe
-from kivymd.uix.list import TwoLineListItem
+from kivymd.uix.list import TwoLineListItem, OneLineAvatarListItem, ImageLeftWidget
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.scrollview import MDScrollView
 
@@ -28,8 +27,9 @@ class ContentNavigationDrawer(MDScrollView):
     pass
 
 
-class SwipeToDeleteItem(MDCardSwipe):
+class ShopListProduct(MDScrollView):
     text = StringProperty()
+    # img = ObjectProperty()
 
 
 class MyKivyApp(MDApp):
@@ -128,14 +128,22 @@ class MyKivyApp(MDApp):
     def get_list(self, *args):
         list_id = args[0].id.split('_')[1]
         data = self.db.get_shop_list(list_id)
-        self.change_screen('list_content_scr')
 
         list_content_items = self.root.ids.list_content_items
-        list_content_items.clear_widgets()  # Clear previous list items
+        list_content_items.clear_widgets()
+
         for entry in data:
-            item = SwipeToDeleteItem(text=entry[1])
+
+            item = OneLineAvatarListItem(
+                ImageLeftWidget(
+                    source=entry[4]
+                ),
+                text=entry[1],
+                _no_ripple_effect=True
+            )
             list_content_items.add_widget(item)
 
+        self.change_screen('list_content_scr')
         self.update_top_bar()
 
 

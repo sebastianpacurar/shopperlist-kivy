@@ -5,3 +5,4 @@ mysql-connector==2.2.9
 mysql-connector-python==8.3.0
 mysql-connector-python-rf==2.2.2
 python-decouple==3.8
+opencv-python==4.9.0.80

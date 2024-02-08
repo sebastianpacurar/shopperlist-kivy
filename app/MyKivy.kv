@@ -83,18 +83,4 @@ MainScreen:
                 app.get_lists()
 
 
-<SwipeToDeleteItem>
-    size_hint_y: None
-    height: content.height
-
-    MDCardSwipeLayerBox:
-        # Content under the card.
-
-    MDCardSwipeFrontBox:
-
-        # Content of card.
-        OneLineListItem:
-            id: content
-            text: root.text
-            _no_ripple_effect: True
 
