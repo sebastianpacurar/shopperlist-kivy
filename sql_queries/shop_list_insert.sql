@@ -8,19 +8,19 @@ VALUES ('Electronics'),
 
 
 -- Insert products with corresponding categories
-INSERT INTO product (name, price, category_id)
-VALUES ('Smartphone', 599.99, 1),
-       ('Laptop', 899.99, 1),
-       ('T-shirt', 19.99, 2),
-       ('Jeans', 39.99, 2),
-       ('Milk', 2.99, 3),
-       ('Sofa', 499.99, 4),
-       ('Shampoo', 8.99, 5),
-       ('Toothpaste', 3.49, 5),
-       ('Headphones', 59.99, 1),
-       ('Running Shoes', 69.99, 2),
-       ('Coffee', 4.99, 3),
-       ('Chocolate', 3.99, 3);
+INSERT INTO product (name, price, unit, category_id)
+VALUES ('Smartphone', 599.99, 'piece', 1),
+       ('Laptop', 899.99, 'piece', 1),
+       ('T-shirt', 19.99, 'piece', 2),
+       ('Jeans', 39.99, 'piece', 2),
+       ('Milk', 2.99, 'L', 3),
+       ('Sofa', 499.99, 'piece', 4),
+       ('Shampoo', 8.99, 'piece', 5),
+       ('Toothpaste', 3.49, 'piece', 5),
+       ('Headphones', 59.99, 'piece', 1),
+       ('Running Shoes', 69.99, 'pair', 2),
+       ('Coffee', 4.99, 'piece', 3),
+       ('Chocolate', 3.99, 'piece', 3);
 
 -- Insert shop lists
 INSERT INTO shop_list (name)

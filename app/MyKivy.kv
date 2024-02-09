@@ -5,7 +5,6 @@ MainScreen:
         id: top_bar
         pos_hint: {'top': 1}
         elevation: 4
-        title: 'Drawer'
         left_action_items: [['menu', lambda _: nav_drawer.set_state('open')]]
 
     MDNavigationLayout:
@@ -13,7 +12,7 @@ MainScreen:
             id: scr_manager
 
             MDScreen:
-                name: 'prod_scr'
+                name: 'products_list_scr'
 
                 MDFloatLayout:
                     size_hint_y: .85
@@ -38,6 +37,76 @@ MainScreen:
                     MDScrollView:
                         MDList:
                             id: list_content_items
+
+            MDScreen:
+                name: 'add_product_scr'
+
+                MDFloatLayout:
+                    MDTextField:
+                        id: product_name_text
+                        size_hint_x: .8
+                        pos_hint: {'center_x': .5, 'y': .75}
+                        size_hint: .5, None
+                        height: dp(20)
+                        icon_left: 'insert'
+                        hint_text: 'Name'
+                        helper_text: 'Cannot be empty'
+                        required: True
+                        multiline: False
+
+
+                    MDTextField:
+                        id: product_price_text
+                        size_hint_x: .8
+                        pos_hint: {'center_x': .5, 'y': .60}
+                        size_hint: .5, None
+                        height: dp(20)
+                        icon_left: 'insert'
+                        hint_text: 'Price Per Unit'
+                        helper_text: 'Cannot be empty'
+                        required: True
+                        multiline: False
+
+
+                    MDTextField:
+                        id: product_category_text
+                        size_hint_x: .8
+                        pos_hint: {'center_x': .5, 'y': .45}
+                        size_hint: .5, None
+                        height: dp(20)
+                        icon_left: 'insert'
+                        hint_text: 'Category'
+                        helper_text: 'Cannot be empty'
+                        required: True
+                        multiline: False
+
+                    MDTextField:
+                        id: product_unit_text
+                        size_hint_x: .8
+                        pos_hint: {'center_x': .5, 'y': .30}
+                        size_hint: .5, None
+                        height: dp(20)
+                        icon_left: 'insert'
+                        hint_text: 'Unit'
+                        helper_text: 'Cannot be empty'
+                        required: True
+                        multiline: False
+
+
+                    MDRaisedButton:
+                        text: 'Add'
+                        pos_hint: {'center_x': .4, 'y': .15}
+                        on_release: app.perform_product_add()
+
+                    MDRectangleFlatButton:
+                        text: "Cancel"
+                        pos_hint: {'center_x': .6, 'y': .15}
+                        theme_text_color: "Custom"
+                        text_color: app.theme_cls.error_color
+                        line_color: app.theme_cls.error_color
+                        on_release: app.navigate_back()
+
+
 
         MDNavigationDrawer:
             id: nav_drawer
@@ -77,28 +146,26 @@ MainScreen:
             text: 'Products'
             on_press:
                 root.nav_drawer.set_state('close')
-                app.change_screen('prod_scr')
+                app.change_screen('products_list_scr')
                 app.get_products()
         OneLineListItem:
             text: 'Shopping Lists'
             on_press:
                 root.nav_drawer.set_state('close')
                 app.change_screen('collection_scr')
-                app.get_lists()
+                app.get_collections()
 
 
 <MySnackbar>:
-    size_hint_x: .9
+    size_hint_x: .8
     pos_hint: {'center_x': .5, 'y': .05}
-    MDIconButton:
-        pos_hint: {'center_y': .5}
-        icon: root.icon
 
     MDLabel:
         size_hint_y: None
         height: self.texture_size[1]
         text: root.text
         font_size: root.font_size
+        bold: root.bold_text
         shorten: True
         shorten_from: 'right'
         pos_hint: {'center_y': .5}

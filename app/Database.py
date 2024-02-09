@@ -32,7 +32,8 @@ class Database:
         """ get all columns of a table """
         conn = self.set_conn()
         with conn.cursor() as cursor:
-            cursor.execute(f"SELECT * FROM product")
+            cursor.execute(
+                f"SELECT product.product_id, product.name, category.name AS category_name FROM product JOIN category ON product.category_id = category.category_id")
             return cursor.fetchall()
 
     def get_shop_lists(self):
@@ -73,9 +74,30 @@ class Database:
 
     def add_shopping_list(self, name):
         conn = self.set_conn()
-        with conn.cursor() as cursor:
-            cursor.execute("INSERT INTO shop_list (name) VALUES (%s)", (name,))
-            conn.commit()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute("INSERT INTO shop_list (name) VALUES (%s)", (name,))
+                conn.commit()
+                return 1
+        except Exception as e:
+            conn.rollback()
+            return 0
+        finally:
+            conn.close()
+
+    def add_product(self, name, price, category, unit):
+        conn = self.set_conn()
+        try:
+            with conn.cursor() as cursor:
+                cursor.execute("INSERT INTO product (name, price, unit, category_id) VALUES (%s, %s, %s, %s)",
+                               (name, price, category, unit))
+                conn.commit()
+                return 1
+        except Exception as e:
+            conn.rollback()
+            return 0
+        finally:
+            conn.close()
 
     def set_table(self, target):
         self.curr_table = target
