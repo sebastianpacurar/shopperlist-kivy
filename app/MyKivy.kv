@@ -22,13 +22,13 @@ MainScreen:
                             id: prod_items
 
             MDScreen:
-                name: 'list_scr'
+                name: 'collection_scr'
 
                 MDFloatLayout:
                     size_hint_y: .85
                     MDScrollView:
                         MDList:
-                            id: shop_list_items
+                            id: collection_id
 
             MDScreen:
                 name: 'list_content_scr'
@@ -39,18 +39,6 @@ MainScreen:
                         MDList:
                             id: list_content_items
 
-            MDScreen:
-                name: 'add_list_scr'
-                MDLabel:
-                    text: 'Add List Scr'
-                    halign: 'center'
-
-            MDScreen:
-                name: 'add_prod_scr'
-                MDLabel:
-                    text: 'Add Prod Scr'
-                    halign: 'center'
-
         MDNavigationDrawer:
             id: nav_drawer
             radius: (0, 16, 16, 0)
@@ -59,13 +47,29 @@ MainScreen:
                 screen_manager: scr_manager
                 nav_drawer: nav_drawer
 
-    MDFloatLayout:
-        MDFloatingActionButtonSpeedDial:
-            id: speed_dial
-            root_button_anim: True
-            hint_animation: False
-            closing_time: 0.2
-            opening_time: 0.2
+
+<AddShoppingListContent>:
+    orientation: 'vertical'
+    size_hint_y: None
+
+    MDLabel:
+        theme_text_color: 'Custom'
+        text_color: app.theme_cls.primary_dark
+        text: 'Add Shopping List'
+        pos_hint: {'top': 1, 'left': 1}
+
+    HeadSpacer:
+
+    MDTextField:
+        id: shop_list_name_text
+        pos_hint: {'left': 1, 'y': 0}
+        mode: 'rectangle'
+        icon_left: 'insert'
+        hint_text: 'Shop List Name'
+        helper_text: 'Cannot be empty'
+        required: True
+        multiline: False
+
 
 <ContentNavigationDrawer>:
     MDList:
@@ -79,8 +83,32 @@ MainScreen:
             text: 'Shopping Lists'
             on_press:
                 root.nav_drawer.set_state('close')
-                app.change_screen('list_scr')
+                app.change_screen('collection_scr')
                 app.get_lists()
 
 
+<MySnackbar>:
+    size_hint_x: .9
+    pos_hint: {'center_x': .5, 'y': .05}
+    MDIconButton:
+        pos_hint: {'center_y': .5}
+        icon: root.icon
 
+    MDLabel:
+        size_hint_y: None
+        height: self.texture_size[1]
+        text: root.text
+        font_size: root.font_size
+        shorten: True
+        shorten_from: 'right'
+        pos_hint: {'center_y': .5}
+
+
+<HeadSpacer@MDBoxLayout>:
+    size_hint_y: None
+    height: dp(35)
+
+
+<Spacer@MDBoxLayout>:
+    size_hint_y: None
+    height: dp(20)

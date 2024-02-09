@@ -45,7 +45,7 @@ class Database:
         conn = self.set_conn()
         with conn.cursor() as cursor:
             cursor.execute(
-                ' '.join(f'''
+                ' '.join('''
                     SELECT
                         p.product_id,
                         p.name AS product_name,
@@ -60,8 +60,8 @@ class Database:
                     LEFT JOIN
                         category AS c ON p.category_id = c.category_id
                     WHERE
-                        slp.shop_list_id = {list_id};
-                '''.split()))
+                        slp.shop_list_id = %s;
+                '''.split()), (list_id,))
             return cursor.fetchall()
 
     def get_table_cols_list(self):
@@ -70,6 +70,12 @@ class Database:
         with conn.cursor() as cursor:
             cursor.execute(f"SHOW COLUMNS FROM {self.curr_table}")
             return [x[0] for x in cursor.fetchall()]
+
+    def add_shopping_list(self, name):
+        conn = self.set_conn()
+        with conn.cursor() as cursor:
+            cursor.execute("INSERT INTO shop_list (name) VALUES (%s)", (name,))
+            conn.commit()
 
     def set_table(self, target):
         self.curr_table = target
