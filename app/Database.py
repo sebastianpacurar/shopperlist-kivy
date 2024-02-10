@@ -39,7 +39,19 @@ class Database:
     def get_shop_lists(self):
         conn = self.set_conn()
         with conn.cursor() as cursor:
-            cursor.execute(f"Select * From  shop_list")
+            cursor.execute("Select * From  shop_list")
+            return cursor.fetchall()
+
+    def get_product_categories(self):
+        conn = self.set_conn()
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT * FROM category")
+            return cursor.fetchall()
+
+    def get_product_units(self):
+        conn = self.set_conn()
+        with conn.cursor() as cursor:
+            cursor.execute("SELECT * FROM product_unit")
             return cursor.fetchall()
 
     def get_shop_list(self, list_id):
@@ -70,7 +82,7 @@ class Database:
         conn = self.set_conn()
         with conn.cursor() as cursor:
             cursor.execute(f"SHOW COLUMNS FROM {self.curr_table}")
-            return [x[0] for x in cursor.fetchall()]
+            return cursor.fetchall()
 
     def add_shopping_list(self, name):
         conn = self.set_conn()
@@ -89,8 +101,14 @@ class Database:
         conn = self.set_conn()
         try:
             with conn.cursor() as cursor:
-                cursor.execute("INSERT INTO product (name, price, unit, category_id) VALUES (%s, %s, %s, %s)",
-                               (name, price, category, unit))
+                cursor.execute("SELECT category_id FROM category WHERE name = %s", (category,))
+                category_id = cursor.fetchone()[0]
+
+                cursor.execute("SELECT unit_id FROM product_unit WHERE name = %s", (unit,))
+                unit_id = cursor.fetchone()[0]
+
+                cursor.execute("INSERT INTO product (name, price, category_id, unit) VALUES (%s, %s, %s, %s)",
+                               (name, price, category_id, unit_id))
                 conn.commit()
                 return 1
         except Exception as e:

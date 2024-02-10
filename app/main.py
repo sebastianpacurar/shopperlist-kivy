@@ -1,3 +1,6 @@
+import os
+from decimal import Decimal
+
 from kivy.properties import StringProperty, NumericProperty, BooleanProperty
 from kivy.clock import Clock
 
@@ -10,8 +13,13 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.snackbar import MDSnackbar, MDSnackbarCloseButton
+from kivymd.uix.menu import MDDropdownMenu
+from kivymd.uix.textfield import MDTextField
+from kivymd.uix.toolbar.toolbar import ActionTopAppBarButton
 
 from app.Database import Database
+
+placeholder_img = os.path.join(os.getcwd(), '..', 'images', 'placeholder_image.png')
 
 
 class MainScreen(MDScreen):
@@ -65,13 +73,18 @@ def show_snackbar(db_result):
     sb = MySnackbar(
         MDSnackbarCloseButton(
             icon='close-thick',
-            on_release=lambda x: sb.dismiss()
+            on_release=lambda _: sb.dismiss()
         ),
         text='Success' if db_result else 'Failure',
         bold_text=True,
         md_bg_color=(0, .65, 0, 1) if db_result else (.65, 0, 0, 1)
     )
     sb.open()
+
+
+def on_dropdown_item_select(text_input, content, menu):
+    text_input.text = str(content[1])
+    menu.dismiss()
 
 
 class MyKivyApp(MDApp):
@@ -95,6 +108,53 @@ class MyKivyApp(MDApp):
         self.prev_screen = self.root.ids.scr_manager.current_screen.name
         self.update_top_bar()
         self.get_products()
+
+    def toggle_dropdown(self, widget):
+        data = None
+        menu_items = []
+        menu = MDDropdownMenu(
+            caller=widget,
+            width_mult=4,
+            radius=[12, 12, 12, 12],
+            position='center',
+            elevation=4,
+        )
+
+        if isinstance(widget, MDTextField):
+            if widget.hint_text == 'Category':
+                data = self.db.get_product_categories()
+            elif widget.hint_text == 'Unit':
+                data = self.db.get_product_units()
+
+            for entry in data:
+                menu_items.append(
+                    {
+                        'viewclass': 'OneLineListItem',
+                        'text': entry[1],
+                        'on_release': lambda item=entry: on_dropdown_item_select(widget, item, menu)
+                    }
+                )
+        elif isinstance(widget, ActionTopAppBarButton):
+            menu_items = [
+                {
+                    'viewclass': 'OneLineListItem',
+                    'text': 'Add Product',
+                    'on_release': lambda target='add_product_scr': (self.change_screen(target), menu.dismiss())
+                },
+                {
+                    'viewclass': 'OneLineListItem',
+                    'text': 'Add Category',
+                    'on_release': lambda target='add_category_scr': (self.change_screen(target), menu.dismiss())
+                },
+                {
+                    'viewclass': 'OneLineListItem',
+                    'text': 'Add Unit',
+                    'on_release': lambda target='add_unit_scr': (self.change_screen(target), menu.dismiss())
+                }
+            ]
+
+        menu.items = menu_items
+        menu.open()
 
     def show_dialog(self):
         content = AddShoppingListContent()
@@ -126,10 +186,10 @@ class MyKivyApp(MDApp):
 
     def perform_product_add(self):
         name = self.root.ids.product_name_text.text
-        price = self.root.ids.product_price_text.text
+        price = Decimal(self.root.ids.product_price_text.text)
         category = self.root.ids.product_category_text.text
         unit = self.root.ids.product_unit_text.text
-        db_result = self.db.add_product(name, price, unit, category)
+        db_result = self.db.add_product(name, price, category, unit)
 
         show_snackbar(db_result)
 
@@ -147,7 +207,8 @@ class MyKivyApp(MDApp):
             case 'products_list_scr':
                 top_bar.title = 'Products'
                 top_bar.left_action_items = [['menu', lambda _: nav_drawer.set_state('open')]]
-                top_bar.right_action_items = [['plus-thick', lambda _: self.change_screen('add_product_scr')]]
+                top_bar.right_action_items = [
+                    ['dots-horizontal-circle-outline', lambda item: self.toggle_dropdown(item)]]
             case 'collection_scr':
                 top_bar.title = 'Collections'
                 top_bar.left_action_items = [['menu', lambda _: nav_drawer.set_state('open')]]
@@ -158,6 +219,14 @@ class MyKivyApp(MDApp):
                 top_bar.right_action_items = [['plus-thick', lambda _: print('show dialog for add item in list')]]
             case 'add_product_scr':
                 top_bar.title = 'Add Product'
+                top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
+                top_bar.right_action_items = []
+            case 'add_category_scr':
+                top_bar.title = 'Add Category'
+                top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
+                top_bar.right_action_items = []
+            case 'add_unit_scr':
+                top_bar.title = 'Add Category'
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = []
 
@@ -174,7 +243,6 @@ class MyKivyApp(MDApp):
         sm.current = screen_name
         self.update_top_bar()
 
-    # issue here
     def get_products(self):
         self.data['prod']['entries'] = self.db.get_all_products()
         curr_scr = self.root.ids.scr_manager.current

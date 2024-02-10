@@ -13,7 +13,6 @@ MainScreen:
 
             MDScreen:
                 name: 'products_list_scr'
-
                 MDFloatLayout:
                     size_hint_y: .85
                     MDScrollView:
@@ -22,7 +21,6 @@ MainScreen:
 
             MDScreen:
                 name: 'collection_scr'
-
                 MDFloatLayout:
                     size_hint_y: .85
                     MDScrollView:
@@ -31,7 +29,6 @@ MainScreen:
 
             MDScreen:
                 name: 'list_content_scr'
-
                 MDFloatLayout:
                     size_hint_y: .85
                     MDScrollView:
@@ -39,8 +36,31 @@ MainScreen:
                             id: list_content_items
 
             MDScreen:
-                name: 'add_product_scr'
+                name: 'add_category_scr'
+                MDFloatLayout:
+                    MDTextField:
+                        id: category_name_text
+                        size_hint_x: .8
+                        pos_hint: {'center_x': .5, 'y': .75}
+                        hint_text: 'Name'
+                        helper_text: 'Cannot be empty'
+                        required: True
+                        multiline: False
 
+            MDScreen:
+                name: 'add_unit_scr'
+                MDFloatLayout:
+                    MDTextField:
+                        id: category_name_text
+                        size_hint_x: .8
+                        pos_hint: {'center_x': .5, 'y': .75}
+                        hint_text: 'Name'
+                        helper_text: 'Cannot be empty'
+                        required: True
+                        multiline: False
+
+            MDScreen:
+                name: 'add_product_scr'
                 MDFloatLayout:
                     MDTextField:
                         id: product_name_text
@@ -48,7 +68,6 @@ MainScreen:
                         pos_hint: {'center_x': .5, 'y': .75}
                         size_hint: .5, None
                         height: dp(20)
-                        icon_left: 'insert'
                         hint_text: 'Name'
                         helper_text: 'Cannot be empty'
                         required: True
@@ -61,24 +80,11 @@ MainScreen:
                         pos_hint: {'center_x': .5, 'y': .60}
                         size_hint: .5, None
                         height: dp(20)
-                        icon_left: 'insert'
-                        hint_text: 'Price Per Unit'
+                        hint_text: 'Price'
                         helper_text: 'Cannot be empty'
                         required: True
                         multiline: False
-
-
-                    MDTextField:
-                        id: product_category_text
-                        size_hint_x: .8
-                        pos_hint: {'center_x': .5, 'y': .45}
-                        size_hint: .5, None
-                        height: dp(20)
-                        icon_left: 'insert'
-                        hint_text: 'Category'
-                        helper_text: 'Cannot be empty'
-                        required: True
-                        multiline: False
+                        input_filter: 'float'
 
                     MDTextField:
                         id: product_unit_text
@@ -86,12 +92,29 @@ MainScreen:
                         pos_hint: {'center_x': .5, 'y': .30}
                         size_hint: .5, None
                         height: dp(20)
-                        icon_left: 'insert'
                         hint_text: 'Unit'
                         helper_text: 'Cannot be empty'
                         required: True
                         multiline: False
+                        on_focus: if self.focus: app.toggle_dropdown(self)
 
+                    MDTextField:
+                        id: product_category_text
+                        size_hint_x: .8
+                        pos_hint: {'center_x': .5, 'y': .45}
+                        size_hint: .5, None
+                        height: dp(20)
+                        hint_text: 'Category'
+                        helper_text: 'Cannot be empty'
+                        required: True
+                        multiline: False
+                        on_focus: if self.focus: app.toggle_dropdown(self)
+
+#                    MDDropDownItem:
+#                        id: product_category_text
+#                        pos_hint: {'center_x': .5, 'y': .45}
+#                        text: 'Item 0'
+#                        on_release: app.menu.toggle_dropdown(self)
 
                     MDRaisedButton:
                         text: 'Add'
@@ -105,8 +128,6 @@ MainScreen:
                         text_color: app.theme_cls.error_color
                         line_color: app.theme_cls.error_color
                         on_release: app.navigate_back()
-
-
 
         MDNavigationDrawer:
             id: nav_drawer

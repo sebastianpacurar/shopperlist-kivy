@@ -1,4 +1,3 @@
--- Insert categories
 INSERT INTO category (name)
 VALUES ('Electronics'),
        ('Clothing'),
@@ -7,29 +6,34 @@ VALUES ('Electronics'),
        ('Beauty and Personal Care');
 
 
--- Insert products with corresponding categories
-INSERT INTO product (name, price, unit, category_id)
-VALUES ('Smartphone', 599.99, 'piece', 1),
-       ('Laptop', 899.99, 'piece', 1),
-       ('T-shirt', 19.99, 'piece', 2),
-       ('Jeans', 39.99, 'piece', 2),
-       ('Milk', 2.99, 'L', 3),
-       ('Sofa', 499.99, 'piece', 4),
-       ('Shampoo', 8.99, 'piece', 5),
-       ('Toothpaste', 3.49, 'piece', 5),
-       ('Headphones', 59.99, 'piece', 1),
-       ('Running Shoes', 69.99, 'pair', 2),
-       ('Coffee', 4.99, 'piece', 3),
-       ('Chocolate', 3.99, 'piece', 3);
+INSERT INTO product_unit (name)
+VALUES ('L'),
+       ('Kg'),
+       ('Piece'),
+       ('Pair'),
+       ('Gr');
 
--- Insert shop lists
+
+INSERT INTO product (name, price, unit, category_id)
+VALUES ('Smartphone', 599.99, '3', 1),
+       ('Laptop', 899.99, '3', 1),
+       ('T-shirt', 19.99, '3', 2),
+       ('Jeans', 39.99, '3', 2),
+       ('Milk', 2.99, '1', 3),
+       ('Sofa', 499.99, '3', 4),
+       ('Shampoo', 8.99, '3', 5),
+       ('Toothpaste', 3.49, '5', 5),
+       ('Headphones', 59.99, '3', 1),
+       ('Running Shoes', 69.99, 3, 2),
+       ('Coffee', 4.99, '3', 3),
+       ('Chocolate', 3.99, '5', 3);
+
 INSERT INTO shop_list (name)
 VALUES ('Grocery List'),
        ('Tech Shopping'),
        ('Clothing Shopping');
 
 
--- Insert products into shop lists with quantities and categories
 INSERT INTO shop_list_product (shop_list_id, product_id, quantity, category_id)
 VALUES (1, 5, 3, 3),  -- Milk
        (1, 6, 2, 4),  -- Sofa
