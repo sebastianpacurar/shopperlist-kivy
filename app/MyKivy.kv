@@ -15,25 +15,26 @@ MainScreen:
                 name: 'products_list_scr'
                 MDFloatLayout:
                     size_hint_y: .85
-                    MDScrollView:
-                        MDList:
-                            id: prod_items
+                    RV:
+                        viewclass: 'EditableItemList'
+                        id: rv_prod_list
 
             MDScreen:
                 name: 'collection_scr'
                 MDFloatLayout:
                     size_hint_y: .85
-                    MDScrollView:
-                        MDList:
-                            id: collection_id
+                    RV:
+                        viewclass: 'EditableItemList'
+                        id: rv_collection
 
             MDScreen:
                 name: 'list_content_scr'
                 MDFloatLayout:
                     size_hint_y: .85
-                    MDScrollView:
-                        MDList:
-                            id: list_content_items
+                    RV:
+                        viewclass: 'ProdItemWithImg'
+                        id: rv_list_content
+
 
             MDScreen:
                 name: 'add_category_scr'
@@ -138,6 +139,27 @@ MainScreen:
                 nav_drawer: nav_drawer
 
 
+<RV>:
+    RecycleBoxLayout:
+        orientation: 'vertical'
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        color: (0, 0.7, 0.4, 0.8)
+        size_hint_y: None
+        height: self.minimum_height
+
+
+<EditableItemList>:
+    IconRightWidget:
+        icon: root.itm_icon
+        on_release: app.display_bottom_sheet(self)
+
+
+<ProdItemWithImg>:
+    ImageLeftWidget:
+        source: root.img_path
+
+
 <AddShoppingListContent>:
     orientation: 'vertical'
     size_hint_y: None
@@ -168,13 +190,13 @@ MainScreen:
             on_press:
                 root.nav_drawer.set_state('close')
                 app.change_screen('products_list_scr')
-                app.get_products()
+                app.display_products()
         OneLineListItem:
             text: 'Shopping Lists'
             on_press:
                 root.nav_drawer.set_state('close')
                 app.change_screen('collection_scr')
-                app.get_collections()
+                app.display_collections()
 
 
 <MySnackbar>:

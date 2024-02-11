@@ -1,103 +1,24 @@
 import os
 from decimal import Decimal
 
-from kivy.properties import StringProperty, NumericProperty, BooleanProperty
-from kivy.clock import Clock
-
 from kivymd.app import MDApp
-from kivymd.uix.list import OneLineAvatarListItem, ImageLeftWidget, IconRightWidget, IRightBodyTouch, \
-    TwoLineRightIconListItem
-from kivymd.uix.screen import MDScreen
-from kivymd.uix.scrollview import MDScrollView
-from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.button import MDFlatButton
-from kivymd.uix.snackbar import MDSnackbar, MDSnackbarCloseButton
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.toolbar.toolbar import ActionTopAppBarButton
 
 from app.Database import Database
+from app.components import on_dropdown_item_select, AddShoppingListContent, show_snackbar
 
 placeholder_img = os.path.join(os.getcwd(), '..', 'images', 'placeholder_image.png')
-
-
-class MainScreen(MDScreen):
-    pass
-
-
-class ProductsScreen(MDScreen):
-    pass
-
-
-class CollectionScreen(MDScreen):
-    pass
-
-
-class ListScreen(MDScreen):
-    pass
-
-
-class ContentNavigationDrawer(MDScrollView):
-    pass
-
-
-class AddShoppingListContent(MDBoxLayout):
-    pass
-
-
-class AddProductScreen(MDScreen):
-    pass
-
-
-class EditableItemList(TwoLineRightIconListItem):
-    pass
-
-
-class IconContainer(IRightBodyTouch, MDBoxLayout):
-    adaptive_width = True
-    spacing = NumericProperty('24dp')
-
-
-class ShopListProduct(MDScrollView):
-    text = StringProperty()
-
-
-class MySnackbar(MDSnackbar):
-    text = StringProperty(None)
-    font_size = NumericProperty('15sp')
-    bold_text = BooleanProperty(False)
-
-
-def show_snackbar(db_result):
-    sb = MySnackbar(
-        MDSnackbarCloseButton(
-            icon='close-thick',
-            on_release=lambda _: sb.dismiss()
-        ),
-        text='Success' if db_result else 'Failure',
-        bold_text=True,
-        md_bg_color=(0, .65, 0, 1) if db_result else (.65, 0, 0, 1)
-    )
-    sb.open()
-
-
-def on_dropdown_item_select(text_input, content, menu):
-    text_input.text = str(content[1])
-    menu.dismiss()
 
 
 class MyKivyApp(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.data = {
-            'prod': {'entries': None, 'i': 0},
-            'collection': {'entries': None, 'i': 0},
-            'list': {'entries': None, 'i': 0}
-        }
         self.dialog = None
         self.prev_screen = None
-        self.db = Database()
 
     def build(self):
         self.theme_cls.primary_palette = 'Blue'
@@ -107,7 +28,7 @@ class MyKivyApp(MDApp):
     def on_start(self):
         self.prev_screen = self.root.ids.scr_manager.current_screen.name
         self.update_top_bar()
-        self.get_products()
+        self.display_products()
 
     def toggle_dropdown(self, widget):
         data = None
@@ -122,9 +43,9 @@ class MyKivyApp(MDApp):
 
         if isinstance(widget, MDTextField):
             if widget.hint_text == 'Category':
-                data = self.db.get_product_categories()
+                data = db.get_product_categories()
             elif widget.hint_text == 'Unit':
-                data = self.db.get_product_units()
+                data = db.get_product_units()
 
             for entry in data:
                 menu_items.append(
@@ -189,13 +110,12 @@ class MyKivyApp(MDApp):
         price = Decimal(self.root.ids.product_price_text.text)
         category = self.root.ids.product_category_text.text
         unit = self.root.ids.product_unit_text.text
-        db_result = self.db.add_product(name, price, category, unit)
-
+        db_result = db.add_product(name, price, category, unit)
         show_snackbar(db_result)
 
     def perform_shop_list_add(self):
         shop_list_name = self.dialog.content_cls.ids.shop_list_name_text.text
-        db_result = self.db.add_shopping_list(shop_list_name)
+        db_result = db.add_shopping_list(shop_list_name)
         self.dialog.dismiss()
         show_snackbar(db_result)
 
@@ -243,84 +163,52 @@ class MyKivyApp(MDApp):
         sm.current = screen_name
         self.update_top_bar()
 
-    def get_products(self):
-        self.data['prod']['entries'] = self.db.get_all_products()
-        curr_scr = self.root.ids.scr_manager.current
-        container_id = self.root.ids.prod_items
-        container_id.clear_widgets()
-        Clock.schedule_interval(
-            lambda dt: self.thread_widget(dt, curr_scr, container_id, self.data['prod']),
-            1 / 60)
+    def display_products(self):
+        rv_data = []
+        for entry in db.get_all_products():
+            item_data = {
+                'text': entry[1],
+                'secondary_text': entry[2],
+                'itm_icon': 'dots-vertical',
+            }
+            rv_data.append(item_data)
 
-    def get_collections(self):
-        self.data['collection']['entries'] = self.db.get_shop_lists()
-        curr_scr = self.root.ids.scr_manager.current
-        container_id = self.root.ids.collection_id
-        container_id.clear_widgets()
-        Clock.schedule_interval(
-            lambda dt: self.thread_widget(dt, curr_scr, container_id, self.data['collection']),
-            1 / 60)
+        self.root.ids.rv_prod_list.data = rv_data
 
-    def get_list_content(self, *args):
+    def display_collections(self):
+        rv_data = []
+        for entry in db.get_shop_lists():
+            name = entry[1]
+            stamp = entry[2].strftime("%Y-%m-%d %I:%M %p")
+            id_val = str(entry[0])
+            item_data = {
+                'id': id_val,
+                'text': name,
+                'secondary_text': stamp,
+                'itm_icon': 'dots-vertical',
+                'on_release': lambda x=id_val: self.display_list_products(x),
+            }
+            rv_data.append(item_data)
+
+        self.root.ids.rv_collection.data = rv_data
+
+    def display_list_products(self, *args):
         self.change_screen('list_content_scr')
-        list_id = args[0].id.split('_')[1]
-        self.data['list']['entries'] = self.db.get_shop_list(list_id)
-        curr_scr = self.root.ids.scr_manager.current
-        container_id = self.root.ids.list_content_items
-        container_id.clear_widgets()
-        Clock.schedule_interval(
-            lambda dt: self.thread_widget(dt, curr_scr, container_id, self.data['list']),
-            1 / 60)
+        rv_data = []
+        for entry in db.get_shop_list(args[0]):
+            item_data = {
+                'text': entry[1],
+                'img_path': entry[4],
+                '_no_ripple_effect': True,
+            }
+            rv_data.append(item_data)
 
-    def thread_widget(self, dt, current_screen, container_widget, entity):
-        if entity['i'] < len(entity['entries']):
-            entry = entity['entries'][entity['i']]
-            item = None
+        self.root.ids.rv_list_content.data = rv_data
 
-            match current_screen:
-                case 'collection_scr':
-                    name = entry[1]
-                    stamp = entry[2].strftime("%Y-%m-%d %I:%M %p")
-                    item = EditableItemList(
-                        id=f'e_{entry[0]}',
-                        text=name,
-                        secondary_text=stamp,
-                        on_release=lambda x: self.get_list_content(x)
-                    )
-                    item.add_widget(IconRightWidget(
-                        icon='dots-vertical',
-                        on_release=lambda x: print('no idea here')
-                    ))
-
-                case 'list_content_scr':
-                    item = OneLineAvatarListItem(
-                        ImageLeftWidget(
-                            source=entry[4]
-                        ),
-                        text=entry[1],
-                        _no_ripple_effect=True
-                    )
-
-                case 'products_list_scr':
-                    name = entry[1]
-                    category = entry[2]
-                    item = EditableItemList(
-                        id=f'e_{entry[0]}',
-                        text=name,
-                        secondary_text=category,
-                        _no_ripple_effect=True
-                    )
-                    item.add_widget(IconRightWidget(
-                        icon='dots-vertical',
-                        on_release=lambda x: print('no idea here')
-                    ))
-
-            container_widget.add_widget(item)
-            entity['i'] += 1
-        else:
-            entity['i'] = 0
-            return False
+    def display_bottom_sheet(self, *args):
+        print(args[0].id)
 
 
 if __name__ == '__main__':
+    db = Database()
     MyKivyApp().run()
