@@ -48,6 +48,9 @@ MainScreen:
                         required: True
                         multiline: False
 
+                    RV:
+                        viewclass:
+
             MDScreen:
                 name: 'add_unit_scr'
                 MDFloatLayout:
@@ -97,7 +100,7 @@ MainScreen:
                         helper_text: 'Cannot be empty'
                         required: True
                         multiline: False
-                        on_focus: if self.focus: app.toggle_dropdown(self)
+                        on_focus: if self.focus: app.drop.toggle(self)
 
                     MDTextField:
                         id: product_category_text
@@ -109,13 +112,7 @@ MainScreen:
                         helper_text: 'Cannot be empty'
                         required: True
                         multiline: False
-                        on_focus: if self.focus: app.toggle_dropdown(self)
-
-#                    MDDropDownItem:
-#                        id: product_category_text
-#                        pos_hint: {'center_x': .5, 'y': .45}
-#                        text: 'Item 0'
-#                        on_release: app.menu.toggle_dropdown(self)
+                        on_focus: if self.focus: app.drop.toggle(self)
 
                     MDRaisedButton:
                         text: 'Add'
@@ -163,15 +160,13 @@ MainScreen:
 <AddShoppingListContent>:
     orientation: 'vertical'
     size_hint_y: None
-
+    height: dp(120)
     MDLabel:
         theme_text_color: 'Custom'
         text_color: app.theme_cls.primary_dark
         text: 'Add Shopping List'
         pos_hint: {'top': 1, 'left': 1}
-
     HeadSpacer:
-
     MDTextField:
         id: shop_list_name_text
         pos_hint: {'left': 1, 'y': 0}
@@ -202,7 +197,6 @@ MainScreen:
 <MySnackbar>:
     size_hint_x: .8
     pos_hint: {'center_x': .5, 'y': .05}
-
     MDLabel:
         size_hint_y: None
         height: self.texture_size[1]
@@ -212,6 +206,9 @@ MainScreen:
         shorten: True
         shorten_from: 'right'
         pos_hint: {'center_y': .5}
+    MDSnackbarCloseButton:
+        icon: 'close-thick'
+        on_release: root.dismiss_sb()
 
 
 <HeadSpacer@MDBoxLayout>:

@@ -1,10 +1,18 @@
-from kivy.properties import StringProperty, NumericProperty, BooleanProperty, ObjectProperty
-from kivy.uix.recycleview import RecycleView
-from kivymd.uix.snackbar import MDSnackbar, MDSnackbarCloseButton
+from kivy.properties import StringProperty, NumericProperty, BooleanProperty
+from kivymd.uix.menu import MDDropdownMenu
+from kivymd.uix.recycleview import MDRecycleView
+
+from kivymd.uix.snackbar import MDSnackbar
 from kivymd.uix.list import OneLineAvatarListItem, TwoLineRightIconListItem
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.scrollview import MDScrollView
 from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.textfield import MDTextField
+from kivymd.uix.toolbar.toolbar import ActionTopAppBarButton
+
+from app.Database import Database
+
+db = Database()
 
 
 class MainScreen(MDScreen):
@@ -43,33 +51,83 @@ class ProdItemWithImg(OneLineAvatarListItem):
     img_path = StringProperty()
 
 
-class RV(RecycleView):
+class RV(MDRecycleView):
     pass
 
 
-class ShopListProduct(MDScrollView):
-    text = StringProperty()
-
-
 class MySnackbar(MDSnackbar):
-    text = StringProperty(None)
+    text = StringProperty('')
     font_size = NumericProperty('15sp')
     bold_text = BooleanProperty(False)
 
+    def __init__(self, db_res, **kwargs):
+        super().__init__(**kwargs)
+        self.text = 'Success' if db_res else 'Failure'
+        self.md_bg_color = (0, .65, 0, 1) if db_res else (.65, 0, 0, 1)
+        self.bold_text = True
+        self.show()
 
-def show_snackbar(db_result):
-    sb = MySnackbar(
-        MDSnackbarCloseButton(
-            icon='close-thick',
-            on_release=lambda _: sb.dismiss()
-        ),
-        text='Success' if db_result else 'Failure',
-        bold_text=True,
-        md_bg_color=(0, .65, 0, 1) if db_result else (.65, 0, 0, 1)
-    )
-    sb.open()
+    def show(self):
+        self.open()
+
+    def dismiss_sb(self):
+        self.dismiss()
 
 
-def on_dropdown_item_select(text_input, content, menu):
-    text_input.text = str(content[1])
-    menu.dismiss()
+class DropdownHandler(MDDropdownMenu):
+    def __init__(self, app_instance):
+        super().__init__(
+            width_mult=4,
+            radius=[12, 12, 12, 12],
+            position='center',
+            elevation=4,
+        )
+        self.app_instance = app_instance
+
+    def toggle(self, widget):
+        data = None
+        menu_items = []
+        self.caller = widget
+
+        if isinstance(widget, MDTextField):
+            if widget.hint_text == 'Category':
+                data = db.get_product_categories()
+            elif widget.hint_text == 'Unit':
+                data = db.get_product_units()
+
+            for entry in data:
+                menu_items.append(
+                    {
+                        'viewclass': 'OneLineListItem',
+                        'text': entry[1],
+                        'on_release': lambda item=entry: self.on_dropdown_item_select(widget, item)
+                    }
+                )
+        elif isinstance(widget, ActionTopAppBarButton):
+            menu_items = [
+                {
+                    'viewclass': 'OneLineListItem',
+                    'text': 'Add Product',
+                    'on_release': lambda target='add_product_scr': (
+                        self.app_instance.change_screen(target), self.dismiss())
+                },
+                {
+                    'viewclass': 'OneLineListItem',
+                    'text': 'Add Category',
+                    'on_release': lambda target='add_category_scr': (
+                        self.app_instance.change_screen(target), self.dismiss())
+                },
+                {
+                    'viewclass': 'OneLineListItem',
+                    'text': 'Add Unit',
+                    'on_release': lambda target='add_unit_scr': (
+                        self.app_instance.change_screen(target), self.dismiss())
+                }
+            ]
+
+        self.items = menu_items
+        self.open()
+
+    def on_dropdown_item_select(self, text_input, content):
+        text_input.text = str(content[1])
+        self.dismiss()
