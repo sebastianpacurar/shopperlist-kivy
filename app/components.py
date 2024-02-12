@@ -1,7 +1,6 @@
 from kivy.properties import StringProperty, NumericProperty, BooleanProperty
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
-
 from kivymd.uix.snackbar import MDSnackbar
 from kivymd.uix.list import OneLineAvatarListItem, TwoLineRightIconListItem
 from kivymd.uix.screen import MDScreen
@@ -10,9 +9,10 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.toolbar.toolbar import ActionTopAppBarButton
 
-from app.Database import Database
+from db.database import Database, SQLITE, MYSQL
 
-db = Database()
+# This is where the DB first gets instantiated
+db = Database(SQLITE)
 
 
 class MainScreen(MDScreen):
@@ -89,6 +89,7 @@ class DropdownHandler(MDDropdownMenu):
         menu_items = []
         self.caller = widget
 
+        # trigger items belonging to a specific table column
         if isinstance(widget, MDTextField):
             if widget.hint_text == 'Category':
                 data = db.get_product_categories()
@@ -103,6 +104,7 @@ class DropdownHandler(MDDropdownMenu):
                         'on_release': lambda item=entry: self.on_dropdown_item_select(widget, item)
                     }
                 )
+        # trigger items which trigger options from the ActionTopAppBarButton
         elif isinstance(widget, ActionTopAppBarButton):
             menu_items = [
                 {
@@ -129,5 +131,6 @@ class DropdownHandler(MDDropdownMenu):
         self.open()
 
     def on_dropdown_item_select(self, text_input, content):
+        """ perform menu_item selection and update the caller text value """
         text_input.text = str(content[1])
         self.dismiss()

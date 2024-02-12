@@ -13,9 +13,10 @@ CREATE TABLE product (
     name VARCHAR(50) NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     category_id INT,
-    unit VARCHAR(25),
+    unit_id INT,
     product_image VARCHAR(255),
-    FOREIGN KEY (category_id) REFERENCES category(category_id)
+    FOREIGN KEY (category_id) REFERENCES category(category_id),
+    FOREIGN KEY (unit_id) REFERENCES product_unit(unit_id)
 );
 
 CREATE TABLE shop_list (

@@ -1,5 +1,4 @@
 import os
-from decimal import Decimal
 
 from kivymd.app import MDApp
 from kivymd.uix.button import MDFlatButton
@@ -57,7 +56,7 @@ class MyKivyApp(MDApp):
 
     def perform_product_add(self):
         name = self.root.ids.product_name_text.text
-        price = Decimal(self.root.ids.product_price_text.text)
+        price = self.root.ids.product_price_text.text
         category = self.root.ids.product_category_text.text
         unit = self.root.ids.product_unit_text.text
         db_result = db.add_product(name, price, category, unit)
@@ -129,7 +128,12 @@ class MyKivyApp(MDApp):
         rv_data = []
         for entry in db.get_shop_lists():
             name = entry[1]
-            stamp = entry[2].strftime("%Y-%m-%d %I:%M %p")
+            if isinstance(entry[2], str):
+                # sqlite3
+                stamp = entry[2]
+            else:
+                # mysql
+                stamp = entry[2].strftime("%Y-%m-%d %I:%M %p")
             id_val = str(entry[0])
             item_data = {
                 'id': id_val,
@@ -160,5 +164,4 @@ class MyKivyApp(MDApp):
 
 
 if __name__ == '__main__':
-    db = Database()
     MyKivyApp().run()
