@@ -1,29 +1,28 @@
 import os
 import sqlite3
-from decimal import Decimal
-
 import mysql.connector
+from decimal import Decimal
 from decouple import config
 
-sqlite_db_path = os.path.join(os.getcwd(), 'shopping_list_db.db')
+from db.queries import QueriesSqlite, QueriesMysql
+
+sqlite_db_path = os.path.join(os.getcwd(), '..', 'db', 'shopping_list_db.db')
 SQLITE = 'sqlite'
 MYSQL = 'mysql'
 
 
 class Database:
     def __init__(self, rdbms):
-        self.sub = ''
+        self.queries = None
         self.rdbms = rdbms
-        self.tables = []
-        self.curr_table = None
 
     def set_conn(self):
         match self.rdbms:
             case 'sqlite':
-                self.sub = '?'
+                self.queries = QueriesSqlite(self.rdbms)
                 return sqlite3.connect(sqlite_db_path)
             case 'mysql':
-                self.sub = '%s'
+                self.queries = QueriesMysql(self.rdbms)
                 return mysql.connector.connect(
                     host=config('DB_HOST'),
                     user=config('DB_USER'),
@@ -36,8 +35,7 @@ class Database:
         conn = self.set_conn()
         cursor = conn.cursor()
         try:
-            cursor.execute(
-                f"SELECT product.product_id, product.name, category.name AS category_name FROM product JOIN category ON product.category_id = category.category_id")
+            cursor.execute(self.queries.get_all_products())
             return cursor.fetchall()
         finally:
             cursor.close()
@@ -47,7 +45,7 @@ class Database:
         conn = self.set_conn()
         cursor = conn.cursor()
         try:
-            cursor.execute("SELECT * FROM shop_list")
+            cursor.execute(self.queries.get_all_lists())
             result = cursor.fetchall()
             return result
         finally:
@@ -58,7 +56,7 @@ class Database:
         conn = self.set_conn()
         cursor = conn.cursor()
         try:
-            cursor.execute("SELECT * FROM category")
+            cursor.execute(self.queries.get_all_categories())
             result = cursor.fetchall()
             return result
         finally:
@@ -69,7 +67,7 @@ class Database:
         conn = self.set_conn()
         cursor = conn.cursor()
         try:
-            cursor.execute("SELECT * FROM product_unit")
+            cursor.execute(self.queries.get_all_product_units())
             return cursor.fetchall()
         finally:
             cursor.close()
@@ -79,24 +77,7 @@ class Database:
         conn = self.set_conn()
         cursor = conn.cursor()
         try:
-            cursor.execute(
-                ' '.join(f'''
-                    SELECT
-                        p.product_id,
-                        p.name AS product_name,
-                        p.price,
-                        c.name AS category_name,
-                        p.product_image,
-                        slp.quantity AS quantity_in_list
-                    FROM
-                        shop_list_product AS slp
-                    JOIN
-                        product AS p ON slp.product_id = p.product_id
-                    LEFT JOIN
-                        category AS c ON p.category_id = c.category_id
-                    WHERE
-                        slp.shop_list_id = {self.sub};
-                '''.split()), (list_id,))
+            cursor.execute(self.queries.get_single_list(), (list_id,))
             return cursor.fetchall()
         finally:
             cursor.close()
@@ -106,7 +87,7 @@ class Database:
         conn = self.set_conn()
         cursor = conn.cursor()
         try:
-            cursor.execute(f"INSERT INTO shop_list (name) VALUES ({self.sub})", (name,))
+            cursor.execute(self.queries.insert_into_shopping_list(), (name,))
             conn.commit()
             return 1
         except Exception as e:
@@ -120,18 +101,16 @@ class Database:
         conn = self.set_conn()
         cursor = conn.cursor()
         try:
-            cursor.execute(f"SELECT category_id FROM category WHERE name = {self.sub}", (category,))
+            cursor.execute(self.queries.get_category_id(), (category,))
             category_id = cursor.fetchone()[0]
 
-            cursor.execute(f"SELECT unit_id FROM product_unit WHERE name = {self.sub}", (unit,))
+            cursor.execute(self.queries.get_unit_id(), (unit,))
             unit_id = cursor.fetchone()[0]
 
             if self.rdbms == MYSQL:
                 price = Decimal(price)
 
-            cursor.execute(
-                f"INSERT INTO product (name, price, unit_id, category_id) VALUES ({self.sub}, {self.sub}, {self.sub}, {self.sub})",
-                (name, price, unit_id, category_id))
+            cursor.execute(self.queries.insert_into_product(), (name, price, unit_id, category_id))
             conn.commit()
             return 1
         except Exception as e:
