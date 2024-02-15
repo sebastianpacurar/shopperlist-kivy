@@ -1,3 +1,8 @@
+INSERT INTO user (name, email, password, online_status)
+VALUES ('John Doe', 'john@example.com', 'password123', 0),
+       ('Jane Smith', 'jane@example.com', 'password456', 0);
+
+
 INSERT INTO category (name)
 VALUES ('Electronics'),
        ('Clothing'),
@@ -28,28 +33,15 @@ VALUES ('Smartphone', 599.99, 3, 1),
        ('Coffee', 4.99, 3, 3),
        ('Chocolate', 3.99, 5, 3);
 
-INSERT INTO shop_list (name)
-VALUES ('Grocery List'),
-       ('Tech Shopping'),
-       ('Clothing Shopping');
+INSERT INTO shop_list (user_id, name)
+VALUES (1, 'Grocery List'),
+       (1, 'Tech Shopping'),
+       (1, 'Clothing Shopping');
 
 
-INSERT INTO shop_list_product (shop_list_id, product_id, quantity, category_id)
-VALUES (1, 5, 3, 3),
-       (1, 6, 2, 4),
-       (1, 7, 2, 5),
-       (1, 8, 3, 5),
-       (1, 9, 2, 1),
-       (1, 10, 1, 2),
-       (2, 1, 1, 1),
-       (2, 2, 2, 1),
-       (2, 3, 2, 2),
-       (2, 5, 1, 3),
-       (2, 7, 1, 5),
-       (2, 8, 2, 5),
-       (3, 3, 5, 2),
-       (3, 4, 4, 2),
-       (3, 1, 1, 1),
-       (3, 6, 1, 4),
-       (3, 7, 1, 5),
-       (3, 10, 1, 2);
+INSERT INTO shop_list_product (shop_list_id, product_id, quantity, category_id, active)
+VALUES (1, 1, 2, 1, 1),
+       (1, 2, 1, 1, 1),
+       (1, 3, 3, 2, 1),
+       (2, 4, 2, 2, 1),
+       (2, 5, 1, 3, 1);

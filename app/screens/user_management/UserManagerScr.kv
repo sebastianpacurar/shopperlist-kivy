@@ -1,0 +1,26 @@
+<UserManagerScr>:
+    name: 'usr_manager_scr'
+    MDBoxLayout:
+        orientation: 'vertical'
+
+        # Other widgets here...
+
+        ScreenManager:
+            id: user_screen_manager
+
+            Screen:
+                name: 'login_register_screen'
+                ScreenManager:
+                    id: login_register_screen_manager
+
+                    Screen:
+                        name: 'login_screen'
+                        BoxLayout:
+                            orientation: 'vertical'
+                            # Add login screen widgets here...
+
+                    Screen:
+                        name: 'register_screen'
+                        BoxLayout:
+                            orientation: 'vertical'
+                            # Add register screen widgets here...

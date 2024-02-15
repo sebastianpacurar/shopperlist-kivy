@@ -54,14 +54,6 @@ class MyKivyApp(MDApp):
     def clearDialog(self):
         self.dialog = None
 
-    def perform_product_add(self):
-        name = self.root.ids.product_name_text.text
-        price = self.root.ids.product_price_text.text
-        category = self.root.ids.product_category_text.text
-        unit = self.root.ids.product_unit_text.text
-        db_result = db.add_product(name, price, category, unit)
-        MySnackbar(db_result)
-
     def perform_shop_list_add(self):
         shop_list_name = self.dialog.content_cls.ids.shop_list_name_text.text
         db_result = db.add_shopping_list(shop_list_name)
@@ -86,8 +78,8 @@ class MyKivyApp(MDApp):
                 top_bar.title = 'Shopping List'
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = [['plus-thick', lambda _: print('show dialog for add item in list')]]
-            case 'add_product_scr':
-                top_bar.title = 'Add Product'
+            case 'add_prod_scr':
+                top_bar.title = 'Add product'
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = []
             case 'add_category_scr':

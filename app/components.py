@@ -19,10 +19,6 @@ class MainScreen(MDScreen):
     pass
 
 
-class ProductsScreen(MDScreen):
-    pass
-
-
 class CollectionScreen(MDScreen):
     pass
 
@@ -31,15 +27,7 @@ class ListScreen(MDScreen):
     pass
 
 
-class ContentNavigationDrawer(MDScrollView):
-    pass
-
-
 class AddShoppingListContent(MDBoxLayout):
-    pass
-
-
-class AddProductScreen(MDScreen):
     pass
 
 
@@ -109,8 +97,8 @@ class DropdownHandler(MDDropdownMenu):
             menu_items = [
                 {
                     'viewclass': 'OneLineListItem',
-                    'text': 'Add Product',
-                    'on_release': lambda target='add_product_scr': (
+                    'text': 'Add product',
+                    'on_release': lambda target='add_prod_scr': (
                         self.app_instance.change_screen(target), self.dismiss())
                 },
                 {

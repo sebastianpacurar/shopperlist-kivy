@@ -1,3 +1,9 @@
+#: import AddProdScr screens.product.AddProductScr.AddProdScr
+#: include screens/product/AddProdScr.kv
+
+#: import UserManagerScr screens.user_management.UserManagerScr.UserManagerScr
+#: include screens/user_management/UserManagerScr.kv
+
 MainScreen:
 
 <MainScreen>:
@@ -10,6 +16,8 @@ MainScreen:
     MDNavigationLayout:
         MDScreenManager:
             id: scr_manager
+
+#            UserManagerScr:
 
             MDScreen:
                 name: 'products_list_scr'
@@ -60,78 +68,59 @@ MainScreen:
                         required: True
                         multiline: False
 
-            MDScreen:
-                name: 'add_product_scr'
-                MDFloatLayout:
-                    MDTextField:
-                        id: product_name_text
-                        size_hint_x: .8
-                        pos_hint: {'center_x': .5, 'y': .75}
-                        size_hint: .5, None
-                        height: dp(20)
-                        hint_text: 'Name'
-                        helper_text: 'Cannot be empty'
-                        required: True
-                        multiline: False
+            AddProdScr:
 
-
-                    MDTextField:
-                        id: product_price_text
-                        size_hint_x: .8
-                        pos_hint: {'center_x': .5, 'y': .60}
-                        size_hint: .5, None
-                        height: dp(20)
-                        hint_text: 'Price'
-                        helper_text: 'Cannot be empty'
-                        required: True
-                        multiline: False
-                        input_filter: 'float'
-
-                    MDTextField:
-                        id: product_unit_text
-                        size_hint_x: .8
-                        pos_hint: {'center_x': .5, 'y': .30}
-                        size_hint: .5, None
-                        height: dp(20)
-                        hint_text: 'Unit'
-                        helper_text: 'Cannot be empty'
-                        required: True
-                        multiline: False
-                        on_focus: if self.focus: app.drop.toggle(self)
-
-                    MDTextField:
-                        id: product_category_text
-                        size_hint_x: .8
-                        pos_hint: {'center_x': .5, 'y': .45}
-                        size_hint: .5, None
-                        height: dp(20)
-                        hint_text: 'Category'
-                        helper_text: 'Cannot be empty'
-                        required: True
-                        multiline: False
-                        on_focus: if self.focus: app.drop.toggle(self)
-
-                    MDRaisedButton:
-                        text: 'Add'
-                        pos_hint: {'center_x': .4, 'y': .15}
-                        on_release: app.perform_product_add()
-
-                    MDRectangleFlatButton:
-                        text: "Cancel"
-                        pos_hint: {'center_x': .6, 'y': .15}
-                        theme_text_color: "Custom"
-                        text_color: app.theme_cls.error_color
-                        line_color: app.theme_cls.error_color
-                        on_release: app.navigate_back()
 
         MDNavigationDrawer:
             id: nav_drawer
             radius: (0, 16, 16, 0)
 
-            ContentNavigationDrawer:
-                screen_manager: scr_manager
-                nav_drawer: nav_drawer
+            MDNavigationDrawerMenu:
+                MDNavigationDrawerHeader:
+                    title: 'MyTitle'
+                    text: 'v1.1.1'
+                    spacing: dp(10)
+                    padding: dp(12), 0, 0, dp(50)
 
+                MDNavigationDrawerLabel:
+                    text: 'User'
+
+                MDNavigationDrawerLabel:
+                    text: 'Shopping'
+
+                MDNavigationDrawerItem:
+                    nav_drawer: nav_drawer
+                    text: 'Products'
+                    icon: 'food-drumstick-outline'
+                    on_press:
+                        nav_drawer.set_state('close')
+                        app.change_screen('products_list_scr')
+                        app.display_products()
+
+                MDNavigationDrawerItem:
+                    nav_drawer: nav_drawer
+                    text: 'Shopping Lists'
+                    icon: 'list-box-outline'
+                    on_press:
+                        nav_drawer.set_state('close')
+                        app.change_screen('collection_scr')
+                        app.display_collections()
+
+
+<ContentNavigationDrawer>:
+    MDList:
+        OneLineListItem:
+            text: 'Products'
+            on_press:
+                root.nav_drawer.set_state('close')
+                app.change_screen('products_list_scr')
+                app.display_products()
+        OneLineListItem:
+            text: 'Shopping Lists'
+            on_press:
+                root.nav_drawer.set_state('close')
+                app.change_screen('collection_scr')
+                app.display_collections()
 
 <RV>:
     RecycleBoxLayout:
@@ -175,7 +164,7 @@ MainScreen:
         multiline: False
 
 
-<ContentNavigationDrawer>:
+<ContentNavigationItems@MDScrollView>:
     MDList:
         OneLineListItem:
             text: 'Products'

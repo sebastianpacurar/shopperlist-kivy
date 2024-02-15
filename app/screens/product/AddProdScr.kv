@@ -1,0 +1,66 @@
+<AddProdScr>:
+    name: 'add_prod_scr'
+    MDFloatLayout:
+        MDTextField:
+            id: product_name_text
+            size_hint_x: .8
+            pos_hint: {'center_x': .5, 'y': .75}
+            size_hint: .5, None
+            height: dp(20)
+            hint_text: 'Name'
+            helper_text: 'Cannot be empty'
+            required: True
+            multiline: False
+
+
+        MDTextField:
+            id: product_price_text
+            size_hint_x: .8
+            pos_hint: {'center_x': .5, 'y': .60}
+            size_hint: .5, None
+            height: dp(20)
+            hint_text: 'Price'
+            helper_text: 'Cannot be empty'
+            required: True
+            multiline: False
+            input_filter: 'float'
+
+        MDTextField:
+            id: product_unit_text
+            size_hint_x: .8
+            pos_hint: {'center_x': .5, 'y': .30}
+            size_hint: .5, None
+            height: dp(20)
+            hint_text: 'Unit'
+            helper_text: 'Cannot be empty'
+            required: True
+            multiline: False
+            on_focus: if self.focus: app.drop.toggle(self)
+
+        MDTextField:
+            id: product_category_text
+            size_hint_x: .8
+            pos_hint: {'center_x': .5, 'y': .45}
+            size_hint: .5, None
+            height: dp(20)
+            hint_text: 'Category'
+            helper_text: 'Cannot be empty'
+            required: True
+            multiline: False
+            on_focus: if self.focus: app.drop.toggle(self)
+
+        MDRaisedButton:
+            text: 'Add'
+            pos_hint: {'center_x': .4, 'y': .15}
+            on_release:
+                root.perform_product_add()
+                if root.get_query_result(): (root.reset_fields(), app.navigate_back(), app.display_products())
+
+
+        MDRectangleFlatButton:
+            text: "Cancel"
+            pos_hint: {'center_x': .6, 'y': .15}
+            theme_text_color: "Custom"
+            text_color: app.theme_cls.error_color
+            line_color: app.theme_cls.error_color
+            on_release: app.navigate_back()
