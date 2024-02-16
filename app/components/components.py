@@ -19,14 +19,6 @@ class MainScreen(MDScreen):
     pass
 
 
-class CollectionScreen(MDScreen):
-    pass
-
-
-class ListScreen(MDScreen):
-    pass
-
-
 class AddShoppingListContent(MDBoxLayout):
     pass
 

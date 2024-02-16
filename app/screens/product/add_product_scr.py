@@ -1,9 +1,9 @@
 from kivymd.uix.screen import MDScreen
 
-from app.components import MySnackbar, db
+from app.components.components import MySnackbar, db
 
 
-class AddProdScr(MDScreen):
+class AddProdScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.db_result = None

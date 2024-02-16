@@ -1,0 +1,58 @@
+#: import EditableItemList components.components.EditableItemList
+#: import RV components.components.RV
+#: include components/components.kv
+
+
+<CollectionScreen>:
+    name: 'collection_scr'
+    MDFloatLayout:
+        orientation: 'vertical'
+
+        MDBoxLayout:
+            orientation: 'vertical'
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: .85, .70
+
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: self.children[0].height
+
+                MDFlatButton:
+                    text: 'My Lists'
+                    size_hint_x: None
+                    width: self.parent.width * 0.5
+                    on_release: root.switch_scr(self)
+
+
+                MDFlatButton:
+                    text: 'All Lists'
+                    size_hint_x: None
+                    width: self.parent.width * 0.5
+                    on_release: root.switch_scr(self)
+
+
+            MDScreenManager:
+                id: collections_manager
+                AllCollectionScr:
+                UserCollectionScr:
+
+
+
+<AllCollectionScr>:
+    name: 'all_collection_scr'
+    MDFloatLayout:
+        size_hint_y: .85
+        RV:
+            viewclass: 'EditableItemList'
+            id: rv_collection
+
+<UserCollectionScr>:
+    name: 'usr_collection_scr'
+    MDFloatLayout:
+        size_hint_y: .85
+        RV:
+            viewclass: 'EditableItemList'
+            id: rv_usr_collection
+
+

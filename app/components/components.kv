@@ -1,0 +1,55 @@
+<RV>:
+    RecycleBoxLayout:
+        orientation: 'vertical'
+        default_size: None, dp(56)
+        default_size_hint: 1, None
+        color: (0, 0.7, 0.4, 0.8)
+        size_hint_y: None
+        height: self.minimum_height
+
+
+<EditableItemList>:
+    IconRightWidget:
+        icon: root.itm_icon
+
+
+<AddShoppingListContent>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: dp(120)
+    MDLabel:
+        theme_text_color: 'Custom'
+        text_color: app.theme_cls.primary_dark
+        text: 'Add Shopping List'
+        pos_hint: {'top': 1, 'left': 1}
+    HeadSpacer:
+    MDTextField:
+        id: shop_list_name_text
+        pos_hint: {'left': 1, 'y': 0}
+        mode: 'rectangle'
+        icon_left: 'insert'
+        hint_text: 'Shop List Name'
+        helper_text: 'Cannot be empty'
+        required: True
+        multiline: False
+
+<MySnackbar>:
+    size_hint_x: .8
+    pos_hint: {'center_x': .5, 'y': .05}
+    MDLabel:
+        size_hint_y: None
+        height: self.texture_size[1]
+        text: root.text
+        font_size: root.font_size
+        bold: root.bold_text
+        shorten: True
+        shorten_from: 'right'
+        pos_hint: {'center_y': .5}
+    MDSnackbarCloseButton:
+        icon: 'close-thick'
+        on_release: root.dismiss_sb()
+
+
+<ProdItemWithImg>:
+    ImageLeftWidget:
+        source: root.img_path

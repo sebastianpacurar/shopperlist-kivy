@@ -18,6 +18,12 @@ class Queries:
     def get_all_product_units(self):
         return 'SELECT * FROM product_unit'
 
+    def check_if_any_user_active(self):
+        return 'SELECT * FROM user WHERE online_status = 1'
+
+    def get_all_lists_for_user(self):
+        pass
+
     def get_single_list(self):
         pass
 
@@ -31,6 +37,24 @@ class Queries:
         pass
 
     def insert_into_shopping_list(self):
+        pass
+
+    def create_user(self):
+        pass
+
+    def check_if_user_stored(self):
+        pass
+
+    def check_if_user_name_exists(self):
+        pass
+
+    def check_if_user_email_exists(self):
+        pass
+
+    def set_user_online_status(self):
+        pass
+
+    def unset_user_online_status(self):
         pass
 
 
@@ -54,6 +78,12 @@ class QueriesSqlite(Queries):
 
     def get_all_product_units(self):
         return super().get_all_product_units()
+
+    def check_if_any_user_active(self):
+        return super().check_if_any_user_active()
+
+    def get_all_lists_for_user(self):
+        return 'SELECT * FROM shop_list WHERE user_id = ?'
 
     def get_single_list(self):
         return ' '.join('''
@@ -80,7 +110,25 @@ class QueriesSqlite(Queries):
         return 'INSERT INTO product (name, price, unit_id, category_id) VALUES (?, ?, ?, ?)'
 
     def insert_into_shopping_list(self):
-        return 'INSERT INTO shop_list (name) VALUES (?)'
+        return 'INSERT INTO shop_list (name, user_id) VALUES (?, ?)'
+
+    def check_if_user_stored(self):
+        return 'SELECT * FROM user WHERE name = ? AND password = ?'
+
+    def check_if_user_name_exists(self):
+        return 'SELECT * FROM user WHERE name = ?'
+
+    def check_if_user_email_exists(self):
+        return 'SELECT * FROM user WHERE email = ?'
+
+    def create_user(self):
+        return 'INSERT INTO user (name, email, password, online_status) VALUES (?, ?, ?, 1)'
+
+    def set_user_online_status(self):
+        return 'UPDATE user SET online_status = 1 WHERE name= ?'
+
+    def unset_user_online_status(self):
+        return 'UPDATE user SET online_status = 0 WHERE name= ?'
 
 
 class QueriesMysql(Queries):
@@ -103,6 +151,12 @@ class QueriesMysql(Queries):
 
     def get_all_product_units(self):
         return super().get_all_product_units()
+
+    def check_if_any_user_active(self):
+        return super().check_if_any_user_active()
+
+    def get_all_lists_for_user(self):
+        return 'SELECT * FROM shop_list WHERE user_id = %s'
 
     def get_single_list(self):
         return ' '.join('''
@@ -129,4 +183,22 @@ class QueriesMysql(Queries):
         return 'INSERT INTO product (name, price, unit_id, category_id) VALUES (%s, %s, %s, %s)'
 
     def insert_into_shopping_list(self):
-        return 'INSERT INTO shop_list (name) VALUES (%s)'
+        return 'INSERT INTO shop_list (name, user_id) VALUES (%s, %s)'
+
+    def check_if_user_stored(self):
+        return 'SELECT * FROM user WHERE name = %s AND password = %s'
+
+    def check_if_user_name_exists(self):
+        return 'SELECT * FROM user WHERE name = %s'
+
+    def check_if_user_email_exists(self):
+        return 'SELECT * FROM user WHERE email = %s'
+
+    def create_user(self):
+        return 'INSERT INTO user (name, email, password, online_status) VALUES (%s, %s, %s, 1)'
+
+    def set_user_online_status(self):
+        return 'UPDATE user SET online_status = 1 WHERE name= %s'
+
+    def unset_user_online_status(self):
+        return 'UPDATE user SET online_status = 0 WHERE name= %s'

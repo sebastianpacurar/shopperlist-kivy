@@ -1,13 +1,15 @@
 import os
+import re
 
 from kivy.core.window import Window
 from kivymd.app import MDApp
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 
-from app.components import *
+from app.components.components import *
 
 placeholder_img = os.path.join(os.getcwd(), '..', 'images', 'placeholder_image.png')
+email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
 
 class MyKivyApp(MDApp):
@@ -16,6 +18,7 @@ class MyKivyApp(MDApp):
         self.dialog = None
         self.prev_screen = None
         self.drop = DropdownHandler(self)
+        self.user = {}
 
     def build(self):
         self.theme_cls.primary_palette = 'Blue'
@@ -24,6 +27,18 @@ class MyKivyApp(MDApp):
 
     def on_start(self):
         self.prev_screen = self.root.ids.scr_manager.current_screen.name
+        self.auto_login()
+
+    def auto_login(self):
+        data = db.user_auto_login()
+        if len(data) > 0:
+            self.user = data
+            self.init_landing_screen()
+        else:
+            self.change_screen('usr_manager_scr')
+
+    def init_landing_screen(self):
+        self.change_screen('products_list_scr')
         self.update_top_bar()
         self.display_products()
 
@@ -57,7 +72,7 @@ class MyKivyApp(MDApp):
 
     def perform_shop_list_add(self):
         shop_list_name = self.dialog.content_cls.ids.shop_list_name_text.text
-        db_result = db.add_shopping_list(shop_list_name)
+        db_result = db.add_shopping_list(shop_list_name, self.user['id'])
         self.dialog.dismiss()
         MySnackbar(db_result)
 
@@ -65,6 +80,12 @@ class MyKivyApp(MDApp):
         top_bar = self.root.ids.top_bar
         sm = self.root.ids.scr_manager
         nav_drawer = self.root.ids.nav_drawer
+        nav_drawer_header = self.root.ids.nav_drawer_header
+
+        # hack to prevent header from crashing
+        nav_drawer_header.title = self.get_user_name() if self.user else ''
+        nav_drawer_header.text = self.get_user_email() if self.user else ''
+
         match sm.current:
             case 'products_list_scr':
                 top_bar.title = 'Products'
@@ -98,13 +119,6 @@ class MyKivyApp(MDApp):
         sm.transition.direction = 'right'
         self.update_top_bar()
 
-    def change_screen(self, screen_name):
-        sm = self.root.ids.scr_manager
-        self.prev_screen = sm.current_screen.name
-        sm.transition.direction = 'left'
-        sm.current = screen_name
-        self.update_top_bar()
-
     def display_products(self):
         rv_data = []
         for entry in db.get_all_products():
@@ -117,43 +131,40 @@ class MyKivyApp(MDApp):
 
         self.root.ids.rv_prod_list.data = rv_data
 
-    def display_collections(self):
-        rv_data = []
-        for entry in db.get_shop_lists():
-            name = entry[1]
-            if isinstance(entry[2], str):
-                # sqlite3
-                stamp = entry[2]
-            else:
-                # mysql
-                stamp = entry[2].strftime("%Y-%m-%d %I:%M %p")
-            id_val = str(entry[0])
-            item_data = {
-                'id': id_val,
-                'text': name,
-                'secondary_text': stamp,
-                'itm_icon': 'dots-vertical',
-                'on_release': lambda x=id_val: self.display_list_products(x),
-            }
-            rv_data.append(item_data)
+    def change_screen(self, screen_name):
+        sm = self.root.ids.scr_manager
+        self.prev_screen = sm.current_screen.name
+        sm.transition.direction = 'left'
+        sm.current = screen_name
+        self.update_top_bar()
 
-        self.root.ids.rv_collection.data = rv_data
+    def set_app_user(self, user_data):
+        self.user = user_data
 
-    def display_list_products(self, *args):
-        self.change_screen('list_content_scr')
-        rv_data = []
-        for entry in db.get_shop_list(args[0]):
-            item_data = {
-                'text': entry[1],
-                'img_path': entry[4],
-                '_no_ripple_effect': True,
-            }
-            rv_data.append(item_data)
+    def get_user_name(self):
+        return self.user['name']
 
-        self.root.ids.rv_list_content.data = rv_data
+    def get_user_email(self):
+        return self.user['email']
 
-    def display_bottom_sheet(self, *args):
-        print('nothing to see here')
+    def unset_app_user(self):
+        nav_drawer = self.root.ids.nav_drawer
+        db.user_logout(self.user['name'])
+        self.user = {}
+        nav_drawer.set_state('close')
+        self.change_screen('usr_manager_scr')
+
+    def validate_text_field(self, widget):
+        is_email = widget.hint_text.lower() == 'email'
+        if len(widget.text) == 0:
+            widget.helper_text = 'Cannot be empty'
+            widget.error = True
+        elif is_email and not re.match(email_regex, widget.text):
+            widget.helper_text = 'Not a valid email'
+            widget.error = True
+        else:
+            widget.helper_text = ''
+            widget.error = False
 
 
 if __name__ == '__main__':

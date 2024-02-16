@@ -41,11 +41,22 @@ class Database:
             cursor.close()
             conn.close()
 
-    def get_shop_lists(self):
+    def get_all_shop_lists(self):
         conn = self.set_conn()
         cursor = conn.cursor()
         try:
             cursor.execute(self.queries.get_all_lists())
+            result = cursor.fetchall()
+            return result
+        finally:
+            cursor.close()
+            conn.close()
+
+    def get_shop_lists_for_active_user(self, user_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.get_all_lists_for_user(), (user_id,))
             result = cursor.fetchall()
             return result
         finally:
@@ -73,6 +84,40 @@ class Database:
             cursor.close()
             conn.close()
 
+    def get_active_user(self):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.check_if_any_user_active())
+            return cursor.fetchone()
+        finally:
+            cursor.close()
+            conn.close()
+
+    def get_login_user(self, name, password):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        user_data = {}
+        try:
+            cursor.execute(self.queries.check_if_user_stored(), (name, password))
+            entry = cursor.fetchone()
+
+            if entry:
+                user_data = {
+                    'id': entry[0],
+                    'name': entry[1],
+                    'email': entry[2]
+                }
+                try:
+                    cursor.execute(self.queries.set_user_online_status(), (user_data['name'],))
+                    conn.commit()
+                except Exception as e:
+                    conn.rollback()
+        finally:
+            cursor.close()
+            conn.close()
+        return user_data
+
     def get_shop_list(self, list_id):
         conn = self.set_conn()
         cursor = conn.cursor()
@@ -83,23 +128,80 @@ class Database:
             cursor.close()
             conn.close()
 
-    def add_shopping_list(self, name):
+    def user_logout(self, name):
         conn = self.set_conn()
         cursor = conn.cursor()
         try:
-            cursor.execute(self.queries.insert_into_shopping_list(), (name,))
+            cursor.execute(self.queries.unset_user_online_status(), (name,))
             conn.commit()
-            return 1
         except Exception as e:
             conn.rollback()
-            return 0
         finally:
             cursor.close()
             conn.close()
 
+    def user_auto_login(self):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        user_data = {}
+        try:
+            user = cursor.execute(self.queries.check_if_any_user_active()).fetchone()
+            if user:
+                user_data = {
+                    'id': user[0],
+                    'name': user[1],
+                    'email': user[2]
+                }
+        finally:
+            cursor.close()
+            conn.close()
+        return user_data
+
+    def add_user(self, user, email, password):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        user_data = {}
+        try:
+            check_one = cursor.execute(self.queries.check_if_user_email_exists(), (email,)).fetchone()
+            check_two = cursor.execute(self.queries.check_if_user_name_exists(), (user,)).fetchone()
+            if check_one or check_two:
+                print('Error: User or email already exists')
+            else:
+                try:
+                    cursor.execute(self.queries.create_user(), (user, email, password))
+                    conn.commit()
+                    user = cursor.execute(self.queries.check_if_user_stored(), (user, password)).fetchone()
+                    user_data = {
+                        'id': user[0],
+                        'name': user[1],
+                        'email': user[2]
+                    }
+                except Exception as e:
+                    conn.rollback()
+        finally:
+            cursor.close()
+            conn.close()
+        return user_data
+
+    def add_shopping_list(self, name, user_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res = False
+        try:
+            cursor.execute(self.queries.insert_into_shopping_list(), (name, user_id))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+        finally:
+            cursor.close()
+            conn.close()
+        return res
+
     def add_product(self, name, price, category, unit):
         conn = self.set_conn()
         cursor = conn.cursor()
+        res = False
         try:
             cursor.execute(self.queries.get_category_id(), (category,))
             category_id = cursor.fetchone()[0]
@@ -112,11 +214,11 @@ class Database:
 
             cursor.execute(self.queries.insert_into_product(), (name, price, unit_id, category_id))
             conn.commit()
-            return 1
+            res = True
         except Exception as e:
             conn.rollback()
             print(f'Exception when adding product: {e}')
-            return 0
         finally:
             cursor.close()
             conn.close()
+        return res

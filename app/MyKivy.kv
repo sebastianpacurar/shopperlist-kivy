@@ -1,8 +1,15 @@
-#: import AddProdScr screens.product.add_product_scr.AddProdScr
-#: include screens/product/AddProdScr.kv
+#: import AddProdScreen screens.product.add_product_scr.AddProdScreen
+#: include screens/product/AddProdScreen.kv
 
-#: import UserManagerScr screens.user_management.user_management_scr.UserManagerScr
-#: include screens/user_management/UserManagerScr.kv
+#: import UserManagerScreen screens.user_management.user_management_scr.UserManagerScreen
+#: include screens/user_management/UserManagerScreen.kv
+
+#: import CollectionScreen screens.collection.collection_scr.CollectionScreen
+#: include screens/collection/CollectionScreen.kv
+
+#: import EditableItemList components.components.EditableItemList
+#: import RV components.components.RV
+#: include components/components.kv
 
 MainScreen:
 
@@ -17,7 +24,7 @@ MainScreen:
         MDScreenManager:
             id: scr_manager
 
-            UserManagerScr:
+            UserManagerScreen:
 
             MDScreen:
                 name: 'products_list_scr'
@@ -27,13 +34,7 @@ MainScreen:
                         viewclass: 'EditableItemList'
                         id: rv_prod_list
 
-            MDScreen:
-                name: 'collection_scr'
-                MDFloatLayout:
-                    size_hint_y: .85
-                    RV:
-                        viewclass: 'EditableItemList'
-                        id: rv_collection
+            CollectionScreen:
 
             MDScreen:
                 name: 'list_content_scr'
@@ -68,7 +69,7 @@ MainScreen:
                         required: True
                         multiline: False
 
-            AddProdScr:
+            AddProdScreen:
 
 
         MDNavigationDrawer:
@@ -77,19 +78,22 @@ MainScreen:
 
             MDNavigationDrawerMenu:
                 MDNavigationDrawerHeader:
-                    title: 'MyTitle'
-                    text: 'v1.1.1'
+                    id: nav_drawer_header
                     spacing: dp(10)
                     padding: dp(12), 0, 0, dp(50)
 
                 MDNavigationDrawerLabel:
                     text: 'User'
 
+                MDNavigationDrawerItem:
+                    text: 'Logout'
+                    icon: 'logout-variant'
+                    on_press: app.unset_app_user()
+
                 MDNavigationDrawerLabel:
                     text: 'Shopping'
 
                 MDNavigationDrawerItem:
-                    nav_drawer: nav_drawer
                     text: 'Products'
                     icon: 'food-drumstick-outline'
                     on_press:
@@ -98,103 +102,14 @@ MainScreen:
                         app.display_products()
 
                 MDNavigationDrawerItem:
-                    nav_drawer: nav_drawer
                     text: 'Shopping Lists'
                     icon: 'list-box-outline'
                     on_press:
                         nav_drawer.set_state('close')
                         app.change_screen('collection_scr')
-                        app.display_collections()
 
 
-<ContentNavigationDrawer>:
-    MDList:
-        OneLineListItem:
-            text: 'Products'
-            on_press:
-                root.nav_drawer.set_state('close')
-                app.change_screen('products_list_scr')
-                app.display_products()
-        OneLineListItem:
-            text: 'Shopping Lists'
-            on_press:
-                root.nav_drawer.set_state('close')
-                app.change_screen('collection_scr')
-                app.display_collections()
 
-<RV>:
-    RecycleBoxLayout:
-        orientation: 'vertical'
-        default_size: None, dp(56)
-        default_size_hint: 1, None
-        color: (0, 0.7, 0.4, 0.8)
-        size_hint_y: None
-        height: self.minimum_height
-
-
-<EditableItemList>:
-    IconRightWidget:
-        icon: root.itm_icon
-        on_release: app.display_bottom_sheet(self)
-
-
-<ProdItemWithImg>:
-    ImageLeftWidget:
-        source: root.img_path
-
-
-<AddShoppingListContent>:
-    orientation: 'vertical'
-    size_hint_y: None
-    height: dp(120)
-    MDLabel:
-        theme_text_color: 'Custom'
-        text_color: app.theme_cls.primary_dark
-        text: 'Add Shopping List'
-        pos_hint: {'top': 1, 'left': 1}
-    HeadSpacer:
-    MDTextField:
-        id: shop_list_name_text
-        pos_hint: {'left': 1, 'y': 0}
-        mode: 'rectangle'
-        icon_left: 'insert'
-        hint_text: 'Shop List Name'
-        helper_text: 'Cannot be empty'
-        required: True
-        multiline: False
-
-
-<ContentNavigationItems@MDScrollView>:
-    MDList:
-        OneLineListItem:
-            text: 'Products'
-            on_press:
-                root.nav_drawer.set_state('close')
-                app.change_screen('products_list_scr')
-                app.display_products()
-        OneLineListItem:
-            text: 'Shopping Lists'
-            on_press:
-                root.nav_drawer.set_state('close')
-                app.change_screen('collection_scr')
-                app.display_collections()
-
-
-<MySnackbar>:
-    size_hint_x: .8
-    pos_hint: {'center_x': .5, 'y': .05}
-    MDLabel:
-        size_hint_y: None
-        height: self.texture_size[1]
-        text: root.text
-        font_size: root.font_size
-        bold: root.bold_text
-        shorten: True
-        shorten_from: 'right'
-        pos_hint: {'center_y': .5}
-    MDSnackbarCloseButton:
-        icon: 'close-thick'
-        on_release: root.dismiss_sb()
 
 
 <HeadSpacer@MDBoxLayout>:
