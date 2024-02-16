@@ -1,26 +1,143 @@
 <UserManagerScr>:
     name: 'usr_manager_scr'
-    MDBoxLayout:
+    MDFloatLayout:
         orientation: 'vertical'
+        md_bg_color: 'lightseagreen'
 
-        # Other widgets here...
+        MDBoxLayout:
+            md_bg_color: 'white'
+            orientation: 'vertical'
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: .85, .70
 
-        ScreenManager:
-            id: user_screen_manager
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: self.children[0].height
 
-            Screen:
-                name: 'login_register_screen'
-                ScreenManager:
-                    id: login_register_screen_manager
+                MDFlatButton:
+                    text: 'Login'
+                    size_hint_x: None
+                    width: self.parent.width * 0.5
+                    on_release:
+                        root.switch_scr(self)
+                MDFlatButton:
+                    text: 'Register'
+                    size_hint_x: None
+                    width: self.parent.width * 0.5
+                    on_release:
+                        root.switch_scr(self)
 
-                    Screen:
-                        name: 'login_screen'
-                        BoxLayout:
-                            orientation: 'vertical'
-                            # Add login screen widgets here...
+            MDScreenManager:
+                id: signin_signup_manager
+                LoginScr:
+                RegisterScr:
 
-                    Screen:
-                        name: 'register_screen'
-                        BoxLayout:
-                            orientation: 'vertical'
-                            # Add register screen widgets here...
+
+<LoginScr>:
+    name: 'login_scr'
+    MDBoxLayout:
+        md_bg_color: 'white'
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(15)
+
+        MDTextField:
+            id: enter_user
+            icon_left: 'account-outline'
+            hint_text: 'Username'
+            pos_hint: {'center_x': .5}
+
+        PasswordField:
+            id: enter_pass
+            hint_txt: 'Password'
+
+        Spacer:
+            height: dp(20)
+
+        MDRaisedButton:
+            text: 'Log in'
+            pos_hint: {'center_x': .5}
+            size_hint_x: .75
+            on_release:
+                root.sign_in(enter_user.text, enter_pass.value)
+
+        Spacer:
+            height: dp(10)
+
+        MDRoundFlatIconButton:
+            pos_hint: {'center_x': .5}
+            size_hint_x: .75
+            text: 'Sign in with google'
+            icon: 'google'
+            text_color: 'white'
+            md_bg_color: 'black'
+
+        MDLabel:
+            text: ''
+
+
+<RegisterScr>
+    name: 'register_scr'
+    MDBoxLayout:
+        md_bg_color: 'white'
+        orientation: 'vertical'
+        padding: dp(20)
+        spacing: dp(15)
+
+        MDTextField:
+            id: create_user
+            icon_left: 'account-outline'
+            hint_text: 'Username'
+            pos_hint: {'center_x': .5}
+
+        PasswordField:
+            id: create_pass
+            hint_txt: 'Password'
+
+        PasswordField:
+            id: confirm_pass
+            hint_txt: 'Confirm Password'
+
+        Spacer:
+            height: dp(10)
+
+        MDRaisedButton:
+            icon_left: 'account-outline'
+            text: 'Sign Up'
+            pos_hint: {'center_x': .5}
+            size_hint_x: .75
+            on_release:
+                root.sign_up(create_user.text, create_pass.value, confirm_pass.value)
+
+        MDLabel:
+            text: ''
+
+
+
+<Spacer@MDBoxLayout>:
+    orientation: 'vertical'
+    size_hint_y: None
+
+
+
+<PasswordField@MDRelativeLayout>:
+    size_hint_y: None
+    height: text_field.height
+    value: text_field.text
+
+    MDTextField:
+        id: text_field
+        hint_text: root.hint_txt
+        password: True
+        icon_left: "key-variant"
+
+    MDIconButton:
+        icon: "eye-off"
+        pos_hint: {"center_y": .5}
+        pos: text_field.width - self.width + dp(8), 0
+        theme_text_color: "Hint"
+        on_release:
+            self.icon = "eye" if self.icon == "eye-off" else "eye-off"
+            text_field.password = False if text_field.password is True else True
+

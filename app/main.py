@@ -1,5 +1,6 @@
 import os
 
+from kivy.core.window import Window
 from kivymd.app import MDApp
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
@@ -156,4 +157,7 @@ class MyKivyApp(MDApp):
 
 
 if __name__ == '__main__':
+    Window.size = (360, 640)  # Set window size to 360x640 pixels
+    # Window.borderless = True  # Remove window border
+
     MyKivyApp().run()
