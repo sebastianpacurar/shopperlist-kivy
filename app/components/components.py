@@ -1,10 +1,9 @@
-from kivy.properties import StringProperty, NumericProperty, BooleanProperty
+from kivy.properties import StringProperty, ColorProperty
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
 from kivymd.uix.snackbar import MDSnackbar
 from kivymd.uix.list import OneLineAvatarListItem, TwoLineRightIconListItem, ThreeLineRightIconListItem
 from kivymd.uix.screen import MDScreen
-from kivymd.uix.scrollview import MDScrollView
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.toolbar.toolbar import ActionTopAppBarButton
@@ -39,16 +38,25 @@ class RV(MDRecycleView):
     pass
 
 
+class SimpleSnackbar(MDSnackbar):
+    text = StringProperty()
+    color = ColorProperty()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.show()
+
+    def show(self):
+        self.open()
+
+
 class MySnackbar(MDSnackbar):
     text = StringProperty('')
-    font_size = NumericProperty('15sp')
-    bold_text = BooleanProperty(False)
 
     def __init__(self, db_res, **kwargs):
         super().__init__(**kwargs)
         self.text = 'Success' if db_res else 'Failure'
         self.md_bg_color = (0, .65, 0, 1) if db_res else (.65, 0, 0, 1)
-        self.bold_text = True
         self.show()
 
     def show(self):

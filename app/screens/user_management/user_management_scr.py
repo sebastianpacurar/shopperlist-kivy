@@ -2,7 +2,10 @@ from kivy.properties import StringProperty, DictProperty
 from kivymd.uix.relativelayout import MDRelativeLayout
 from kivymd.uix.screen import MDScreen
 
-from app.components.components import db
+from app.components.components import db, SimpleSnackbar
+
+success_color = (0, .65, 0, 1)
+error_color = (.65, 0, 0, 1)
 
 
 class UserManagerScreen(MDScreen):
@@ -27,25 +30,30 @@ class UserManagerScreen(MDScreen):
 class LoginScr(MDScreen):
     user_data = DictProperty()
 
-    # TODO: add snackbar for bad textfield inputs
     def sign_in(self, *args):
         user = args[0]
-        password = args[1]
-        self.user_data = db.get_login_user(user, password)
-        return len(self.user_data) > 0
+        password = args[1].ids.text_field
+        entry = [user.text.strip(), password.text.strip()]
+        if any([user.error, password.error]) or any([len(x) == 0 for x in entry]):
+            SimpleSnackbar(text='There are errors in the fields', color=error_color)
+            return False
+        else:
+            self.user_data = db.get_login_user(entry[0], entry[1])
+            return len(self.user_data) > 0
 
 
 class RegisterScr(MDScreen):
     user_data = DictProperty()
 
-    # TODO: add snackbar for bad textfield inputs
     def sign_up(self, *args):
         user, email = args[0], args[1]
         password = args[2].ids.text_field
-        if any([email.error, user.error, password.error]):
-            print('Handle text errors snackbar')
+        entry = [user.text.strip(), email.text.strip(), password.text.strip()]
+        if any([email.error, user.error, password.error]) or any([len(x) == 0 for x in entry]):
+            SimpleSnackbar(text='There are errors in the fields', color=error_color)
+            return False
         else:
-            self.user_data = db.add_user(user.text, email.text, password.text)
+            self.user_data = db.add_user(entry[0], entry[1], entry[2])
             return len(self.user_data) > 0
 
 

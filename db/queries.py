@@ -63,6 +63,9 @@ class Queries:
     def unset_user_online_status(self):
         pass
 
+    def filter_product_based_on_name(self):
+        pass
+
 
 class QueriesSqlite(Queries):
     _instance = None
@@ -136,6 +139,17 @@ class QueriesSqlite(Queries):
     def unset_user_online_status(self):
         return 'UPDATE user SET online_status = 0 WHERE name= ?'
 
+    def filter_product_based_on_name(self):
+        return ' '.join('''
+                SELECT
+                    product.product_id,
+                    product.name,
+                    category.name AS category_name
+                FROM product
+                JOIN category ON product.category_id = category.category_id
+                WHERE product.name LIKE ?;
+        '''.split())
+
 
 class QueriesMysql(Queries):
     _instance = None
@@ -208,3 +222,14 @@ class QueriesMysql(Queries):
 
     def unset_user_online_status(self):
         return 'UPDATE user SET online_status = 0 WHERE name= %s'
+
+    def filter_product_based_on_name(self):
+        return ' '.join('''
+                SELECT
+                    product.product_id,
+                    product.name,
+                    category.name AS category_name
+                FROM product
+                JOIN category ON product.category_id = category.category_id
+                WHERE product.name LIKE %s;
+        '''.split())

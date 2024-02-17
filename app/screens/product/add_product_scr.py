@@ -7,6 +7,7 @@ class AddProdScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.db_result = None
+        # self.bind(on_pre_leave=self.clean_up)
 
     def perform_product_add(self):
         name = self.ids.product_name_text.text
@@ -19,7 +20,7 @@ class AddProdScreen(MDScreen):
     def get_query_result(self):
         return self.db_result
 
-    def reset_fields(self):
+    def clean_up(self, *args):
         self.ids.product_name_text.text = ''
         self.ids.product_price_text.text = ''
         self.ids.product_category_text.text = ''

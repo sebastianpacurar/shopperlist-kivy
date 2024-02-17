@@ -9,8 +9,11 @@
 
 
 <EditableTwoLineItemList>:
+    font_style: 'Subtitle1'
+    secondary_font_style: 'Subtitle2'
     IconRightWidget:
         icon: root.itm_icon
+
 
 <EditableThreeLineItemList>:
     font_style: 'Subtitle1'
@@ -41,6 +44,19 @@
         multiline: False
 
 
+<SimpleSnackbar>
+    md_bg_color: root.color
+    MDLabel:
+        size_hint_y: None
+        height: self.texture_size[1]
+        text: root.text
+        font_size: sp(15)
+        bold: True
+        shorten: True
+        shorten_from: 'right'
+        pos_hint: {'center_y': .5}
+
+
 <MySnackbar>:
     size_hint_x: .8
     pos_hint: {'center_x': .5, 'y': .05}
@@ -48,8 +64,8 @@
         size_hint_y: None
         height: self.texture_size[1]
         text: root.text
-        font_size: root.font_size
-        bold: root.bold_text
+        font_size: sp(15)
+        bold: True
         shorten: True
         shorten_from: 'right'
         pos_hint: {'center_y': .5}
@@ -61,3 +77,13 @@
 <ProdItemWithImg>:
     ImageLeftWidget:
         source: root.img_path
+
+
+<HeadSpacer@MDBoxLayout>:
+    size_hint_y: None
+    height: dp(35)
+
+
+<Spacer@MDBoxLayout>:
+    size_hint_y: None
+    height: dp(20)

@@ -39,8 +39,6 @@ class MyKivyApp(MDApp):
 
     def init_landing_screen(self):
         self.change_screen('products_list_scr')
-        self.update_top_bar()
-        self.display_products()
 
     def show_dialog(self):
         content = AddShoppingListContent()
@@ -132,18 +130,6 @@ class MyKivyApp(MDApp):
             rv_data.append(item_data)
 
         self.root.ids.rv_list_content.data = rv_data
-
-    def display_products(self):
-        rv_data = []
-        for entry in db.get_all_products():
-            item_data = {
-                'text': entry[1],
-                'secondary_text': entry[2],
-                'itm_icon': 'dots-vertical',
-            }
-            rv_data.append(item_data)
-
-        self.root.ids.rv_prod_list.data = rv_data
 
     def change_screen(self, screen_name):
         sm = self.root.ids.scr_manager

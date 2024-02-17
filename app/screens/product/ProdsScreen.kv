@@ -1,0 +1,21 @@
+#: import EditableTwoLineItemList components.components.EditableTwoLineItemList
+#: import RV components.components.RV
+#: include components/components.kv
+
+
+<ProdsScreen>:
+    name: 'products_list_scr'
+    MDFloatLayout:
+        size_hint_y: .9
+
+        MDTextField:
+            id: text_field
+            size_hint_x: .8
+            pos_hint: {'center_x': .5, 'top': 1}
+            hint_text: 'Search Product'
+            on_text: root.display_search_results(self)
+
+        RV:
+            id: rv_prod_list
+            pos_hint: {'center_x': .5, 'top': .9}
+            viewclass: 'EditableTwoLineItemList'

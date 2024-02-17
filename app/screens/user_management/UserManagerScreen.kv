@@ -45,6 +45,8 @@
 
         MDTextField:
             id: enter_user
+            multiline: False
+            write_tab: False
             icon_left: 'account-outline'
             hint_text: 'Username'
             pos_hint: {'center_x': .5}
@@ -62,7 +64,7 @@
             pos_hint: {'center_x': .5}
             size_hint_x: .75
             on_release:
-                if root.sign_in(enter_user.text, enter_pass.value) : app.set_app_user(root.user_data), app.init_landing_screen()
+                if root.sign_in(enter_user, enter_pass) : app.set_app_user(root.user_data), app.init_landing_screen()
 
         Spacer:
             height: dp(10)
@@ -89,6 +91,8 @@
 
         MDTextField:
             id: create_email
+            multiline: False
+            write_tab: False
             icon_left: 'email-outline'
             hint_text: 'Email'
             pos_hint: {'center_x': .5}
@@ -98,6 +102,8 @@
 
         MDTextField:
             id: create_user
+            multiline: False
+            write_tab: False
             icon_left: 'account-outline'
             hint_text: 'Username'
             pos_hint: {'center_x': .5}
@@ -116,7 +122,7 @@
             pos_hint: {'center_x': .5}
             size_hint_x: .75
             on_release:
-                if root.sign_up(create_user, create_email, create_pass) : app.set_app_user(root.user_data), app.change_screen('products_list_scr')
+                if root.sign_up(create_user, create_email, create_pass) : app.set_app_user(root.user_data), app.init_landing_screen()
 
         MDLabel:
             text: ''
@@ -136,6 +142,8 @@
 
     MDTextField:
         id: text_field
+        multiline: False
+        write_tab: False
         hint_text: root.hint_txt
         password: True
         icon_left: "key-variant"

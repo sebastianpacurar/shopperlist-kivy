@@ -4,6 +4,9 @@
 #: import CollectionScreen screens.collection.collection_scr.CollectionScreen
 #: include screens/collection/CollectionScreen.kv
 
+#: import ProdScreen screens.product.products_scr.ProdsScreen
+#: include screens/product/ProdsScreen.kv
+
 #: import AddProdScreen screens.product.add_product_scr.AddProdScreen
 #: include screens/product/AddProdScreen.kv
 
@@ -13,7 +16,7 @@ MainScreen:
     MDTopAppBar:
         id: top_bar
         pos_hint: {'top': 1}
-        elevation: 4
+        elevation: 2
         left_action_items: [['menu', lambda _: nav_drawer.set_state('open')]]
 
     MDNavigationLayout:
@@ -22,13 +25,7 @@ MainScreen:
 
             UserManagerScreen:
 
-            MDScreen:
-                name: 'products_list_scr'
-                MDFloatLayout:
-                    size_hint_y: .85
-                    RV:
-                        viewclass: 'EditableTwoLineItemList'
-                        id: rv_prod_list
+            ProdsScreen:
 
             CollectionScreen:
                 select_list: lambda x: app.display_list_products(x)
@@ -96,7 +93,6 @@ MainScreen:
                     on_press:
                         nav_drawer.set_state('close')
                         app.change_screen('products_list_scr')
-                        app.display_products()
 
                 MDNavigationDrawerItem:
                     text: 'Shopping Lists'
@@ -104,16 +100,3 @@ MainScreen:
                     on_press:
                         nav_drawer.set_state('close')
                         app.change_screen('collection_scr')
-
-
-
-
-
-<HeadSpacer@MDBoxLayout>:
-    size_hint_y: None
-    height: dp(35)
-
-
-<Spacer@MDBoxLayout>:
-    size_hint_y: None
-    height: dp(20)

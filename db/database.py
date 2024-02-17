@@ -84,6 +84,19 @@ class Database:
             cursor.close()
             conn.close()
 
+    def filter_product_names(self, search_param):
+        like_query = search_param + '%'
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.filter_product_based_on_name(), (like_query,))
+            return cursor.fetchall()
+        except Exception as e:
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+
     def get_active_user(self):
         conn = self.set_conn()
         cursor = conn.cursor()
@@ -113,6 +126,9 @@ class Database:
                     conn.commit()
                 except Exception as e:
                     conn.rollback()
+                    print(e)
+        except Exception as e:
+            print(e)
         finally:
             cursor.close()
             conn.close()
@@ -136,6 +152,7 @@ class Database:
             conn.commit()
         except Exception as e:
             conn.rollback()
+            print(e)
         finally:
             cursor.close()
             conn.close()
@@ -178,6 +195,7 @@ class Database:
                     }
                 except Exception as e:
                     conn.rollback()
+                    print(e)
         finally:
             cursor.close()
             conn.close()
@@ -193,6 +211,7 @@ class Database:
             res = True
         except Exception as e:
             conn.rollback()
+            print(e)
         finally:
             cursor.close()
             conn.close()
