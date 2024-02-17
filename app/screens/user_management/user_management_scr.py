@@ -27,6 +27,7 @@ class UserManagerScreen(MDScreen):
 class LoginScr(MDScreen):
     user_data = DictProperty()
 
+    # TODO: add snackbar for bad textfield inputs
     def sign_in(self, *args):
         user = args[0]
         password = args[1]
@@ -37,6 +38,7 @@ class LoginScr(MDScreen):
 class RegisterScr(MDScreen):
     user_data = DictProperty()
 
+    # TODO: add snackbar for bad textfield inputs
     def sign_up(self, *args):
         user, email = args[0], args[1]
         password = args[2].ids.text_field

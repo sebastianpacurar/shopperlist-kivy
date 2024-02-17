@@ -10,7 +10,13 @@ class Queries:
         '''.split())
 
     def get_all_lists(self):
-        return 'SELECT * FROM shop_list'
+        return ' '.join('''
+                SELECT
+                    shop_list.*,
+                    user.name
+                FROM shop_list
+                INNER JOIN user ON shop_list.user_id = user.user_id
+        '''.split())
 
     def get_all_categories(self):
         return 'SELECT * FROM category'

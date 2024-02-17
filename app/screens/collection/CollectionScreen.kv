@@ -1,4 +1,4 @@
-#: import EditableItemList components.components.EditableItemList
+#: import EditableThreeLineItemList components.components.EditableThreeLineItemList
 #: import RV components.components.RV
 #: include components/components.kv
 
@@ -35,8 +35,9 @@
             MDScreenManager:
                 id: collections_manager
                 AllCollectionScr:
+                    select_list: root.select_list
                 UserCollectionScr:
-
+                    select_list: root.select_list
 
 
 <AllCollectionScr>:
@@ -44,7 +45,7 @@
     MDFloatLayout:
         size_hint_y: .85
         RV:
-            viewclass: 'EditableItemList'
+            viewclass: 'EditableThreeLineItemList'
             id: rv_collection
 
 <UserCollectionScr>:
@@ -52,7 +53,7 @@
     MDFloatLayout:
         size_hint_y: .85
         RV:
-            viewclass: 'EditableItemList'
+            viewclass: 'EditableThreeLineItemList'
             id: rv_usr_collection
 
 

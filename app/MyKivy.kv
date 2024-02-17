@@ -1,15 +1,11 @@
-#: import AddProdScreen screens.product.add_product_scr.AddProdScreen
-#: include screens/product/AddProdScreen.kv
-
 #: import UserManagerScreen screens.user_management.user_management_scr.UserManagerScreen
 #: include screens/user_management/UserManagerScreen.kv
 
 #: import CollectionScreen screens.collection.collection_scr.CollectionScreen
 #: include screens/collection/CollectionScreen.kv
 
-#: import EditableItemList components.components.EditableItemList
-#: import RV components.components.RV
-#: include components/components.kv
+#: import AddProdScreen screens.product.add_product_scr.AddProdScreen
+#: include screens/product/AddProdScreen.kv
 
 MainScreen:
 
@@ -31,10 +27,11 @@ MainScreen:
                 MDFloatLayout:
                     size_hint_y: .85
                     RV:
-                        viewclass: 'EditableItemList'
+                        viewclass: 'EditableTwoLineItemList'
                         id: rv_prod_list
 
             CollectionScreen:
+                select_list: lambda x: app.display_list_products(x)
 
             MDScreen:
                 name: 'list_content_scr'

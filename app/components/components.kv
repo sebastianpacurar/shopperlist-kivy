@@ -1,14 +1,21 @@
 <RV>:
     RecycleBoxLayout:
         orientation: 'vertical'
-        default_size: None, dp(56)
+        default_size: None, dp(72)
         default_size_hint: 1, None
         color: (0, 0.7, 0.4, 0.8)
         size_hint_y: None
         height: self.minimum_height
 
 
-<EditableItemList>:
+<EditableTwoLineItemList>:
+    IconRightWidget:
+        icon: root.itm_icon
+
+<EditableThreeLineItemList>:
+    font_style: 'Subtitle1'
+    secondary_font_style: 'Subtitle2'
+    tertiary_font_style: 'Subtitle2'
     IconRightWidget:
         icon: root.itm_icon
 
@@ -32,6 +39,7 @@
         helper_text: 'Cannot be empty'
         required: True
         multiline: False
+
 
 <MySnackbar>:
     size_hint_x: .8

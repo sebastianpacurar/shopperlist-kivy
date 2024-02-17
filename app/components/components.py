@@ -2,7 +2,7 @@ from kivy.properties import StringProperty, NumericProperty, BooleanProperty
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
 from kivymd.uix.snackbar import MDSnackbar
-from kivymd.uix.list import OneLineAvatarListItem, TwoLineRightIconListItem
+from kivymd.uix.list import OneLineAvatarListItem, TwoLineRightIconListItem, ThreeLineRightIconListItem
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.scrollview import MDScrollView
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -23,7 +23,11 @@ class AddShoppingListContent(MDBoxLayout):
     pass
 
 
-class EditableItemList(TwoLineRightIconListItem):
+class EditableTwoLineItemList(TwoLineRightIconListItem):
+    itm_icon = StringProperty()
+
+
+class EditableThreeLineItemList(ThreeLineRightIconListItem):
     itm_icon = StringProperty()
 
 

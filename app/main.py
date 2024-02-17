@@ -70,6 +70,7 @@ class MyKivyApp(MDApp):
     def clearDialog(self):
         self.dialog = None
 
+    # TODO: think of a better way to deal with this
     def perform_shop_list_add(self):
         shop_list_name = self.dialog.content_cls.ids.shop_list_name_text.text
         db_result = db.add_shopping_list(shop_list_name, self.user['id'])
@@ -118,6 +119,19 @@ class MyKivyApp(MDApp):
         sm.current = self.prev_screen
         sm.transition.direction = 'right'
         self.update_top_bar()
+
+    def display_list_products(self, *args):
+        self.change_screen('list_content_scr')
+        rv_data = []
+        for entry in db.get_shop_list(args[0]):
+            item_data = {
+                'text': entry[1],
+                'img_path': entry[4],
+                '_no_ripple_effect': True,
+            }
+            rv_data.append(item_data)
+
+        self.root.ids.rv_list_content.data = rv_data
 
     def display_products(self):
         rv_data = []
@@ -168,7 +182,5 @@ class MyKivyApp(MDApp):
 
 
 if __name__ == '__main__':
-    Window.size = (360, 640)  # Set window size to 360x640 pixels
-    # Window.borderless = True  # Remove window border
-
+    Window.size = (360, 640)
     MyKivyApp().run()
