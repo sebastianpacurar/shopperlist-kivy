@@ -1,4 +1,5 @@
 from kivy.properties import StringProperty, DictProperty
+from kivy.uix.screenmanager import FadeTransition, SlideTransition
 from kivymd.uix.relativelayout import MDRelativeLayout
 from kivymd.uix.screen import MDScreen
 
@@ -12,19 +13,50 @@ class UserManagerScreen(MDScreen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.login = 'login_scr'
+        self.login = 'log_in_scr'
         self.register = 'register_scr'
+        self.bind(on_kv_post=self.init_login_screen)
+        self.bind(on_pre_leave=self.set_back_to_login)
+
+    def init_login_screen(self, *args):
+        login_btn = self.ids.login_btn
+        register_btn = self.ids.register_btn
+        login_btn.disabled = True
+        register_btn.disabled = False
+
+    def set_back_to_login(self, *args):
+        login_btn = self.ids.login_btn
+        register_btn = self.ids.register_btn
+        sm = self.ids.signin_signup_manager
+        if sm.current == self.register:
+            sm.transition = FadeTransition()
+            sm.current = self.login
+            login_btn.disabled = True
+            register_btn.disabled = False
+            sm.transition = SlideTransition()
 
     def switch_scr(self, *args):
-        selection_text = args[0].text.lower()
+        login_btn = self.ids.login_btn
+        register_btn = self.ids.register_btn
         sm = self.ids.signin_signup_manager
+
+        selection_text = args[0].text.lower().replace(' ', '_')
 
         if self.login.startswith(selection_text):
             sm.transition.direction = 'right'
             sm.current = self.login
+            login_btn.disabled = True
+            register_btn.disabled = False
+            login_btn.bold = False
+            register_btn.bold = True
+
         elif self.register.startswith(selection_text):
             sm.transition.direction = 'left'
             sm.current = self.register
+            login_btn.disabled = False
+            register_btn.disabled = True
+            login_btn.bold = True
+            register_btn.bold = False
 
 
 class LoginScr(MDScreen):

@@ -5,11 +5,16 @@ from kivy.core.window import Window
 from kivymd.app import MDApp
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.screen import MDScreen
 
 from app.components.components import *
 
 placeholder_img = os.path.join(os.getcwd(), '..', 'images', 'placeholder_image.png')
 email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+
+class MainScreen(MDScreen):
+    pass
 
 
 class MyKivyApp(MDApp):
@@ -22,7 +27,7 @@ class MyKivyApp(MDApp):
 
     def build(self):
         self.theme_cls.primary_palette = 'Blue'
-        self.theme_cls.accent_palette = 'Teal'
+        self.theme_cls.accent_palette = 'Orange'
         self.theme_cls.theme_style = 'Light'
 
     def on_start(self):

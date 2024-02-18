@@ -1,24 +1,19 @@
-from kivy.properties import StringProperty, ColorProperty
+from kivy.properties import StringProperty, ColorProperty, NumericProperty
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
 from kivymd.uix.snackbar import MDSnackbar
 from kivymd.uix.list import OneLineAvatarListItem, TwoLineRightIconListItem, ThreeLineRightIconListItem
-from kivymd.uix.screen import MDScreen
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.toolbar.toolbar import ActionTopAppBarButton
 
 from db.database import Database, SQLITE, MYSQL
 
-# This is where the DB first gets instantiated
+# This is where the DB gets instantiated
 db = Database(SQLITE)
 
 
-class MainScreen(MDScreen):
-    pass
-
-
-class AddShoppingListContent(MDBoxLayout):
+class RV(MDRecycleView):
     pass
 
 
@@ -34,8 +29,24 @@ class ProdItemWithImg(OneLineAvatarListItem):
     img_path = StringProperty()
 
 
-class RV(MDRecycleView):
+class AddShoppingListContent(MDBoxLayout):
     pass
+
+
+class Spacer(MDBoxLayout):
+    value = NumericProperty()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.bind(on_kv_post=self.init_spacer)
+
+    def init_spacer(self, *args):
+        if self.orientation == 'vertical':
+            self.size_hint_y = None
+            self.height = self.value
+        else:
+            self.size_hint_x: None
+            self.width = self.value
 
 
 class SimpleSnackbar(MDSnackbar):

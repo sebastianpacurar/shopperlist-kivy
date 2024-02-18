@@ -23,6 +23,11 @@
         icon: root.itm_icon
 
 
+<ProdItemWithImg>:
+    ImageLeftWidget:
+        source: root.img_path
+
+
 <AddShoppingListContent>:
     orientation: 'vertical'
     size_hint_y: None
@@ -32,7 +37,9 @@
         text_color: app.theme_cls.primary_dark
         text: 'Add Shopping List'
         pos_hint: {'top': 1, 'left': 1}
-    HeadSpacer:
+    Spacer:
+        orientation: 'vertical'
+        value: dp(35)
     MDTextField:
         id: shop_list_name_text
         pos_hint: {'left': 1, 'y': 0}
@@ -73,17 +80,3 @@
         icon: 'close-thick'
         on_release: root.dismiss_sb()
 
-
-<ProdItemWithImg>:
-    ImageLeftWidget:
-        source: root.img_path
-
-
-<HeadSpacer@MDBoxLayout>:
-    size_hint_y: None
-    height: dp(35)
-
-
-<Spacer@MDBoxLayout>:
-    size_hint_y: None
-    height: dp(20)

@@ -18,26 +18,39 @@
                 size_hint_y: None
                 height: self.children[0].height
 
-                MDFlatButton:
+                SelectListScreenButton:
+                    id: my_lists_btn
                     text: 'My Lists'
-                    size_hint_x: None
-                    width: self.parent.width * 0.5
                     on_release: root.switch_scr(self)
 
+                Spacer:
+                    orientation: 'horizontal'
+                    value: self.parent.width * 0.01
 
-                MDFlatButton:
+                SelectListScreenButton:
+                    id: all_lists_btn
                     text: 'All Lists'
-                    size_hint_x: None
-                    width: self.parent.width * 0.5
                     on_release: root.switch_scr(self)
 
 
             MDScreenManager:
                 id: collections_manager
-                AllCollectionScr:
-                    select_list: root.select_list
                 UserCollectionScr:
                     select_list: root.select_list
+                AllCollectionScr:
+                    select_list: root.select_list
+
+
+<SelectListScreenButton@MDRectangleFlatButton>:
+    radius: [0, 0, 0, 0]
+    line_color: app.theme_cls.primary_dark
+    size_hint_x: None
+    width: self.parent.width * 0.49
+    md_bg_color_disabled: app.theme_cls.primary_light
+    font_style: 'Body2'
+    disabled_color: 'white'
+    theme_text_color: 'Custom'
+    text_color: app.theme_cls.primary_color
 
 
 <AllCollectionScr>:

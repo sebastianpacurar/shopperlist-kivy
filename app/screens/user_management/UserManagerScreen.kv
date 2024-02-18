@@ -1,3 +1,6 @@
+#: import Spacer components.components.Spacer
+
+
 <UserManagerScreen>:
     name: 'usr_manager_scr'
     MDFloatLayout:
@@ -15,17 +18,19 @@
                 size_hint_y: None
                 height: self.children[0].height
 
-                MDFlatButton:
-                    text: 'Login'
-                    size_hint_x: None
-                    width: self.parent.width * 0.5
+                SelectSignInSignUpButton:
+                    id: login_btn
+                    text: 'Log In'
                     on_release:
                         root.switch_scr(self)
 
-                MDFlatButton:
+                Spacer:
+                    orientation: 'horizontal'
+                    value: self.parent.width * 0.01
+
+                SelectSignInSignUpButton:
+                    id: register_btn
                     text: 'Register'
-                    size_hint_x: None
-                    width: self.parent.width * 0.5
                     on_release:
                         root.switch_scr(self)
 
@@ -35,8 +40,18 @@
                 RegisterScr:
 
 
+<SelectSignInSignUpButton@MDFlatButton>:
+    size_hint_x: None
+    width: self.parent.width * 0.49
+    md_bg_color_disabled: app.theme_cls.accent_dark
+    font_style: 'Button'
+    disabled_color: 'white'
+    theme_text_color: 'Custom'
+    text_color: app.theme_cls.primary_color
+
+
 <LoginScr>:
-    name: 'login_scr'
+    name: 'log_in_scr'
     MDBoxLayout:
         md_bg_color: 'white'
         orientation: 'vertical'
@@ -57,7 +72,8 @@
             hint_txt: 'Password'
 
         Spacer:
-            height: dp(20)
+            orientation: 'vertical'
+            value: dp(20)
 
         MDRaisedButton:
             text: 'Log in'
@@ -67,7 +83,8 @@
                 if root.sign_in(enter_user, enter_pass) : app.set_app_user(root.user_data), app.init_landing_screen()
 
         Spacer:
-            height: dp(10)
+            orientation: 'vertical'
+            value: dp(10)
 
         MDRoundFlatIconButton:
             pos_hint: {'center_x': .5}
@@ -114,7 +131,8 @@
             hint_txt: 'Password'
 
         Spacer:
-            height: dp(10)
+            orientation: 'vertical'
+            value: dp(10)
 
         MDRaisedButton:
             icon_left: 'account-outline'
@@ -126,12 +144,6 @@
 
         MDLabel:
             text: ''
-
-
-
-<Spacer@MDBoxLayout>:
-    orientation: 'vertical'
-    size_hint_y: None
 
 
 
