@@ -4,7 +4,8 @@ class Queries:
                 SELECT 
                     product.product_id,
                     product.name,
-                    category.name AS category_name 
+                    category.name,
+                    product.product_image
                 FROM product 
                 JOIN category ON product.category_id = category.category_id
         '''.split())
@@ -144,7 +145,8 @@ class QueriesSqlite(Queries):
                 SELECT
                     product.product_id,
                     product.name,
-                    category.name AS category_name
+                    category.name,
+                    product.product_image
                 FROM product
                 JOIN category ON product.category_id = category.category_id
                 WHERE product.name LIKE ?;
@@ -228,7 +230,8 @@ class QueriesMysql(Queries):
                 SELECT
                     product.product_id,
                     product.name,
-                    category.name AS category_name
+                    category.name,
+                    product.product_image
                 FROM product
                 JOIN category ON product.category_id = category.category_id
                 WHERE product.name LIKE %s;

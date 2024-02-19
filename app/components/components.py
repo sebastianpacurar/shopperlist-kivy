@@ -1,8 +1,9 @@
-from kivy.properties import StringProperty, ColorProperty, NumericProperty
+from kivy.properties import StringProperty, ColorProperty, NumericProperty, ObjectProperty
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
 from kivymd.uix.snackbar import MDSnackbar
-from kivymd.uix.list import OneLineAvatarListItem, TwoLineRightIconListItem, ThreeLineRightIconListItem
+from kivymd.uix.list import OneLineAvatarListItem, TwoLineRightIconListItem, ThreeLineRightIconListItem, \
+ TwoLineAvatarIconListItem
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.toolbar.toolbar import ActionTopAppBarButton
@@ -27,6 +28,13 @@ class EditableThreeLineItemList(ThreeLineRightIconListItem):
 
 class ProdItemWithImg(OneLineAvatarListItem):
     img_path = StringProperty()
+
+
+class TwoLineProdImgListItem(TwoLineAvatarIconListItem):
+    img_path = StringProperty()
+    itm_icon = StringProperty()
+    image_func = ObjectProperty()
+    icon_func = ObjectProperty()
 
 
 class AddShoppingListContent(MDBoxLayout):
@@ -114,19 +122,19 @@ class DropdownHandler(MDDropdownMenu):
                     'viewclass': 'OneLineListItem',
                     'text': 'Add product',
                     'on_release': lambda target='add_prod_scr': (
-                        self.app_instance.change_screen(target), self.dismiss())
+                        self.app_instance.change_screen_and_update_bar(target), self.dismiss())
                 },
                 {
                     'viewclass': 'OneLineListItem',
                     'text': 'Add Category',
                     'on_release': lambda target='add_category_scr': (
-                        self.app_instance.change_screen(target), self.dismiss())
+                        self.app_instance.change_screen_and_update_bar(target), self.dismiss())
                 },
                 {
                     'viewclass': 'OneLineListItem',
                     'text': 'Add Unit',
                     'on_release': lambda target='add_unit_scr': (
-                        self.app_instance.change_screen(target), self.dismiss())
+                        self.app_instance.change_screen_and_update_bar(target), self.dismiss())
                 }
             ]
 

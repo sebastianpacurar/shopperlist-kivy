@@ -38,12 +38,9 @@ class MyKivyApp(MDApp):
         data = db.user_auto_login()
         if len(data) > 0:
             self.user = data
-            self.init_landing_screen()
+            self.change_screen_and_update_bar('products_list_scr')
         else:
             self.change_screen('usr_manager_scr')
-
-    def init_landing_screen(self):
-        self.change_screen('products_list_scr')
 
     def show_dialog(self):
         content = AddShoppingListContent()
@@ -87,8 +84,8 @@ class MyKivyApp(MDApp):
         nav_drawer_header = self.root.ids.nav_drawer_header
 
         # hack to prevent header from crashing
-        nav_drawer_header.title = self.get_user_name() if self.user else ''
-        nav_drawer_header.text = self.get_user_email() if self.user else ''
+        nav_drawer_header.title = self.get_user_name()
+        nav_drawer_header.text = self.get_user_email()
 
         match sm.current:
             case 'products_list_scr':
@@ -124,7 +121,7 @@ class MyKivyApp(MDApp):
         self.update_top_bar()
 
     def display_list_products(self, *args):
-        self.change_screen('list_content_scr')
+        self.change_screen_and_update_bar('list_content_scr')
         rv_data = []
         for entry in db.get_shop_list(args[0]):
             item_data = {
@@ -141,6 +138,9 @@ class MyKivyApp(MDApp):
         self.prev_screen = sm.current_screen.name
         sm.transition.direction = 'left'
         sm.current = screen_name
+
+    def change_screen_and_update_bar(self, screen_name):
+        self.change_screen(screen_name)
         self.update_top_bar()
 
     def set_app_user(self, user_data):

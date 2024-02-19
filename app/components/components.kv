@@ -27,6 +27,15 @@
     ImageLeftWidget:
         source: root.img_path
 
+<TwoLineProdImgListItem>:
+    font_style: 'Subtitle1'
+    secondary_font_style: 'Subtitle2'
+    ImageLeftWidget:
+        source: root.img_path
+    IconRightWidget:
+        icon: root.itm_icon
+        on_release: root.icon_func(root)
+
 
 <AddShoppingListContent>:
     orientation: 'vertical'

@@ -53,7 +53,7 @@ class BaseCollectionScr(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def create_item_data(self, entry, ):
+    def create_item_data(self, entry):
         entry = [str(x) for x in entry]
         stamp = entry[3]
         if not isinstance(stamp, str):

@@ -92,11 +92,11 @@ MainScreen:
                     icon: 'food-drumstick-outline'
                     on_press:
                         nav_drawer.set_state('close')
-                        app.change_screen('products_list_scr')
+                        app.change_screen_and_update_bar('products_list_scr')
 
                 MDNavigationDrawerItem:
                     text: 'Shopping Lists'
                     icon: 'list-box-outline'
                     on_press:
                         nav_drawer.set_state('close')
-                        app.change_screen('collection_scr')
+                        app.change_screen_and_update_bar('collection_scr')
