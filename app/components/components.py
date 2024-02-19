@@ -1,9 +1,12 @@
+import os
+
 from kivy.properties import StringProperty, ColorProperty, NumericProperty, ObjectProperty
+from kivymd.app import MDApp
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
 from kivymd.uix.snackbar import MDSnackbar
 from kivymd.uix.list import OneLineAvatarListItem, TwoLineRightIconListItem, ThreeLineRightIconListItem, \
- TwoLineAvatarIconListItem
+    TwoLineAvatarIconListItem
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.toolbar.toolbar import ActionTopAppBarButton
@@ -12,6 +15,8 @@ from db.database import Database, SQLITE, MYSQL
 
 # This is where the DB gets instantiated
 db = Database(SQLITE)
+
+kv_file = os.path.join(os.path.dirname(__file__), 'components.kv')
 
 
 class RV(MDRecycleView):
@@ -86,14 +91,16 @@ class MySnackbar(MDSnackbar):
 
 
 class DropdownHandler(MDDropdownMenu):
-    def __init__(self, app_instance):
+    change_screen_func = ObjectProperty
+
+    def __init__(self):
         super().__init__(
             width_mult=4,
             radius=[12, 12, 12, 12],
             position='center',
             elevation=4,
         )
-        self.app_instance = app_instance
+        self.main_app = MDApp.get_running_app()
 
     def toggle(self, widget):
         data = None
@@ -122,19 +129,45 @@ class DropdownHandler(MDDropdownMenu):
                     'viewclass': 'OneLineListItem',
                     'text': 'Add product',
                     'on_release': lambda target='add_prod_scr': (
-                        self.app_instance.change_screen_and_update_bar(target), self.dismiss())
+                        self.main_app.change_screen_and_update_bar(target), self.dismiss())
                 },
                 {
                     'viewclass': 'OneLineListItem',
                     'text': 'Add Category',
                     'on_release': lambda target='add_category_scr': (
-                        self.app_instance.change_screen_and_update_bar(target), self.dismiss())
+                        self.main_app.change_screen_and_update_bar(target), self.dismiss())
                 },
                 {
                     'viewclass': 'OneLineListItem',
                     'text': 'Add Unit',
                     'on_release': lambda target='add_unit_scr': (
-                        self.app_instance.change_screen_and_update_bar(target), self.dismiss())
+                        self.main_app.change_screen_and_update_bar(target), self.dismiss())
+                }
+            ]
+
+        elif isinstance(widget, TwoLineProdImgListItem):
+            self.caller = widget.children[0].children[0]
+            menu_items = [
+                {
+                    'viewclass': 'OneLineListItem',
+                    'text': 'View',
+                    'on_release': lambda target='prod_scr': (
+                        self.main_app.change_screen_and_update_bar(target), self.dismiss())
+
+                },
+                {
+                    'viewclass': 'OneLineListItem',
+                    'text': 'Edit',
+                    'on_release': lambda target='prod_scr': (
+                        self.main_app.change_screen_and_update_bar(target), self.dismiss())
+
+                },
+                {
+                    'viewclass': 'OneLineListItem',
+                    'text': 'Delete',
+                    'on_release': lambda target='prod_scr': (
+                        self.main_app.change_screen_and_update_bar(target), self.dismiss())
+
                 }
             ]
 

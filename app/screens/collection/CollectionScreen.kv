@@ -36,9 +36,7 @@
             MDScreenManager:
                 id: collections_manager
                 UserCollectionScr:
-                    select_list: root.select_list
                 AllCollectionScr:
-                    select_list: root.select_list
 
 
 <SelectListScreenButton@MDRectangleFlatButton>:
@@ -55,6 +53,7 @@
 
 <AllCollectionScr>:
     name: 'all_collection_scr'
+    select_list: lambda x: app.display_list_products(x)
     MDFloatLayout:
         size_hint_y: .85
         RV:
@@ -63,6 +62,7 @@
 
 <UserCollectionScr>:
     name: 'usr_collection_scr'
+    select_list: lambda x: app.display_list_products(x)
     MDFloatLayout:
         size_hint_y: .85
         RV:

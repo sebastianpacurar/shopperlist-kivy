@@ -1,14 +1,12 @@
-from kivy.properties import ObjectProperty
 from kivymd.uix.screen import MDScreen
 
-from app.components.components import db
+from app.components.components import db, DropdownHandler
 
 
 class ProdsScreen(MDScreen):
-    icon_func = ObjectProperty()
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.drop = DropdownHandler()
         self.bind(on_pre_enter=self.display_products)
         self.bind(on_pre_leave=self.clean_up)
 
@@ -20,14 +18,11 @@ class ProdsScreen(MDScreen):
                 'secondary_text': entry[2],
                 'itm_icon': 'dots-vertical',
                 'img_path': entry[3],
-                'icon_func': lambda x: self.test(x)  # Pass icon_func to each item
+                'icon_func': lambda x: self.drop.toggle(x)  # Pass icon_func to each item
             }
 
             rv_data.append(item_data)
         self.ids.rv_prod_list.data = rv_data
-
-    def test(self, *args):
-        print(args[0].text)
 
     def display_search_results(self, widget):
         rv_data = []
@@ -37,7 +32,7 @@ class ProdsScreen(MDScreen):
                 'secondary_text': entry[2],
                 'itm_icon': 'dots-vertical',
                 'img_path': entry[3],
-                'icon_func': lambda x: self.test(x)  # Pass icon_func to each item
+                'icon_func': lambda x: self.drop.toggle(x)  # Pass icon_func to each item
             }
 
             rv_data.append(item_data)

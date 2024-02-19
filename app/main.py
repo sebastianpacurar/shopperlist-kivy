@@ -22,7 +22,7 @@ class MyKivyApp(MDApp):
         super().__init__(**kwargs)
         self.dialog = None
         self.prev_screen = None
-        self.drop = DropdownHandler(self)
+        self.drop = DropdownHandler()
         self.user = {}
 
     def build(self):
