@@ -18,7 +18,7 @@ class ProdsScreen(MDScreen):
                 'secondary_text': entry[2],
                 'itm_icon': 'dots-vertical',
                 'img_path': entry[3],
-                'icon_func': lambda x: self.drop.toggle(x)  # Pass icon_func to each item
+                'icon_func': lambda x: self.drop.toggle(x)
             }
 
             rv_data.append(item_data)

@@ -6,7 +6,7 @@ from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
 from kivymd.uix.snackbar import MDSnackbar
 from kivymd.uix.list import OneLineAvatarListItem, TwoLineRightIconListItem, ThreeLineRightIconListItem, \
-    TwoLineAvatarIconListItem
+    TwoLineAvatarIconListItem, IconRightWidget
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.toolbar.toolbar import ActionTopAppBarButton
@@ -97,10 +97,15 @@ class DropdownHandler(MDDropdownMenu):
         super().__init__(
             width_mult=4,
             radius=[12, 12, 12, 12],
-            position='center',
             elevation=4,
         )
+        self.parent_caller = None
         self.main_app = MDApp.get_running_app()
+
+    def on_dismiss(self):
+        super().on_dismiss()
+        if isinstance(self.caller, IconRightWidget):
+            self.parent_caller.bg_color = 'white'
 
     def toggle(self, widget):
         data = None
@@ -109,6 +114,10 @@ class DropdownHandler(MDDropdownMenu):
 
         # trigger items belonging to a specific table column
         if isinstance(widget, MDTextField):
+            self.hor_growth = 'left'
+            self.ver_growth = 'down'
+            self.position = 'center'
+
             if widget.hint_text == 'Category':
                 data = db.get_product_categories()
             elif widget.hint_text == 'Unit':
@@ -124,6 +133,7 @@ class DropdownHandler(MDDropdownMenu):
                 )
         # trigger items which trigger options from the ActionTopAppBarButton
         elif isinstance(widget, ActionTopAppBarButton):
+
             menu_items = [
                 {
                     'viewclass': 'OneLineListItem',
@@ -146,6 +156,8 @@ class DropdownHandler(MDDropdownMenu):
             ]
 
         elif isinstance(widget, TwoLineProdImgListItem):
+            widget.bg_color = self.theme_cls.primary_light
+            self.parent_caller = widget
             self.caller = widget.children[0].children[0]
             menu_items = [
                 {
