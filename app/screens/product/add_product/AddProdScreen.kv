@@ -31,9 +31,7 @@
             icon: 'plus-thick'
             pos_hint: {'center_x': .5, 'y': .15}
             md_bg_color: app.theme_cls.primary_color
-            on_release:
-                root.perform_product_add()
-                if root.get_query_result(): app.navigate_back()
+            on_release: root.perform_product_add()
 
 
 <CustomTextField@MDTextField>:

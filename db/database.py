@@ -213,23 +213,24 @@ class Database:
     def add_shopping_list(self, name, user_id):
         conn = self.set_conn()
         cursor = conn.cursor()
-        res = False
+        res, row_id = False, None
         try:
             cursor.execute(self.queries.insert_into_shopping_list(), (name, user_id))
             conn.commit()
             res = True
+            row_id = cursor.lastrowid
         except Exception as e:
             conn.rollback()
             print(e)
         finally:
             cursor.close()
             conn.close()
-        return res
+        return res, row_id, 'list_content_scr'
 
     def add_product(self, name, price, category, unit, img_path):
         conn = self.set_conn()
         cursor = conn.cursor()
-        res = False
+        res, row_id = False, None
         try:
             cursor.execute(self.queries.get_category_id(), (category,))
             category_id = cursor.fetchone()[0]
@@ -243,10 +244,11 @@ class Database:
             cursor.execute(self.queries.insert_into_product(), (name, price, unit_id, category_id, img_path))
             conn.commit()
             res = True
+            row_id = cursor.lastrowid
         except Exception as e:
             conn.rollback()
             print(f'Exception when adding product: {e}')
         finally:
             cursor.close()
             conn.close()
-        return res
+        return res, row_id, 'prod_scr'

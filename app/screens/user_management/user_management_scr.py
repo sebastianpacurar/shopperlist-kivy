@@ -1,4 +1,4 @@
-from kivy.properties import StringProperty, DictProperty
+from kivy.properties import StringProperty, DictProperty, ObjectProperty
 from kivy.uix.screenmanager import FadeTransition, SlideTransition
 from kivymd.uix.relativelayout import MDRelativeLayout
 from kivymd.uix.screen import MDScreen
@@ -10,6 +10,7 @@ error_color = (.65, 0, 0, 1)
 
 
 class UserManagerScreen(MDScreen):
+    top_bar = ObjectProperty()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -19,6 +20,7 @@ class UserManagerScreen(MDScreen):
         self.bind(on_pre_leave=self.set_back_to_login)
 
     def init_login_screen(self, *args):
+        self.top_bar.disabled = True
         login_btn = self.ids.login_btn
         register_btn = self.ids.register_btn
         login_btn.disabled = True
@@ -60,6 +62,7 @@ class UserManagerScreen(MDScreen):
 
 
 class LoginScr(MDScreen):
+    top_bar = ObjectProperty()
     user_data = DictProperty()
 
     def sign_in(self, *args):
@@ -71,10 +74,12 @@ class LoginScr(MDScreen):
             return False
         else:
             self.user_data = db.get_login_user(entry[0], entry[1])
+            self.top_bar.disabled = False
             return len(self.user_data) > 0
 
 
 class RegisterScr(MDScreen):
+    top_bar = ObjectProperty()
     user_data = DictProperty()
 
     def sign_up(self, *args):
@@ -86,6 +91,7 @@ class RegisterScr(MDScreen):
             return False
         else:
             self.user_data = db.add_user(entry[0], entry[1], entry[2])
+            self.top_bar.disabled = False
             return len(self.user_data) > 0
 
 

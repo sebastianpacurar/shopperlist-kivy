@@ -22,7 +22,7 @@ class AddProdScreen(MDScreen):
             self.db_result = db.add_product(name, price, category, unit, placeholder_img)
             msg = f'{name} added to {category}'
 
-        MySnackbar(self.db_result, msg)
+        MySnackbar(msg, self.db_result)
 
     def get_query_result(self):
         return self.db_result

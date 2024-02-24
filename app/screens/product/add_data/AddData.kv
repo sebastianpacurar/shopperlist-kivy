@@ -1,3 +1,6 @@
+#: import RV components.components.RV
+#: include components/components.kv
+
 <AddDataScreen>:
     name: 'add_data_scr'
     MDFloatLayout:
@@ -5,30 +8,49 @@
 
         MDBoxLayout:
             orientation: 'vertical'
-            pos_hint: {'center_x': .5, 'center_y': .5}
-            size_hint: .85, .70
+            pos_hint: {'center_x': .5, 'center_y': .375}
+            size_hint: .85, .95
+            spacing: dp(20)
 
             MDBoxLayout:
                 orientation: 'horizontal'
                 size_hint_y: None
                 height: self.children[0].height
 
-                SelectListScreenButton:
+                SelectDataScreenButton:
+                    id: category_btn
                     text: 'Categories'
+                    on_release: root.switch_scr(self)
 
                 Spacer:
                     orientation: 'horizontal'
                     value: self.parent.width * 0.01
 
-                SelectListScreenButton:
+                SelectDataScreenButton:
+                    id: unit_btn
                     text: 'Units'
+                    on_release: root.switch_scr(self)
 
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: self.children[0].height
+                spacing: dp(20)
+                MDTextField:
+                    text: 'test'
+
+                MDFloatingActionButton:
+                    icon: 'plus-thick'
+                    type: 'small'
+                    md_bg_color: app.theme_cls.primary_color
 
             MDScreenManager:
-                id: collections_manager
+                id: data_manager
+                CategoryScr:
+                UnitScr:
 
 
-<SelectListScreenButton@MDRectangleFlatButton>:
+<SelectDataScreenButton@MDRectangleFlatButton>:
     radius: [0, 0, 0, 0]
     line_color: app.theme_cls.primary_dark
     size_hint_x: None
@@ -39,3 +61,17 @@
     theme_text_color: 'Custom'
     text_color: app.theme_cls.primary_color
 
+
+<CategoryScr>:
+    name: 'category_scr'
+    MDFloatLayout:
+        RV:
+            viewclass: 'OneLineListItem'
+            id: rv_category
+
+<UnitScr>:
+    name: 'unit_scr'
+    MDFloatLayout:
+        RV:
+            viewclass: 'OneLineListItem'
+            id: rv_unit

@@ -18,10 +18,10 @@ class MainScreen(MDScreen):
 class MyKivyApp(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.dialog = None
-        self.prev_screen = None
-        self.drop = DropdownHandler()
         self.user = {}
+        self.screen_stack = []
+        self.dialog = None
+        self.drop = DropdownHandler()
 
     def build(self):
         self.theme_cls.primary_palette = 'Blue'
@@ -29,13 +29,13 @@ class MyKivyApp(MDApp):
         self.theme_cls.theme_style = 'Light'
 
     def on_start(self):
-        self.prev_screen = self.root.ids.scr_manager.current_screen.name
         self.auto_login()
 
     def auto_login(self):
         data = db.user_auto_login()
         if len(data) > 0:
             self.user = data
+            self.root.ids.top_bar.disabled = False
             self.change_screen_and_update_bar('products_list_scr')
         else:
             self.change_screen('usr_manager_scr')
@@ -75,7 +75,7 @@ class MyKivyApp(MDApp):
             db_result = db.add_shopping_list(shop_list_name, self.user['id'])
             msg = f'{shop_list_name} created'
             self.dialog.dismiss()
-        MySnackbar(db_result, msg)
+        MySnackbar(msg, db_result)
 
     def update_top_bar(self):
         top_bar = self.root.ids.top_bar
@@ -105,29 +105,29 @@ class MyKivyApp(MDApp):
                 top_bar.title = 'Add product'
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = []
-            case 'add_category_scr':
-                top_bar.title = 'Add Category'
-                top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                top_bar.right_action_items = []
-            case 'add_unit_scr':
-                top_bar.title = 'Add Unit'
+            case 'add_data_scr':
+                top_bar.title = 'Add data'
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = []
             case 'prod_scr':
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = []
-
-    def navigate_back(self):
-        sm = self.root.ids.scr_manager
-        sm.current = self.prev_screen
-        sm.transition.direction = 'right'
-        self.update_top_bar()
+            case 'usr_manager_scr':
+                top_bar.left_action_items = []
+                top_bar.right_action_items = []
 
     def change_screen(self, screen_name):
+        self.screen_stack.append(screen_name)
         sm = self.root.ids.scr_manager
-        self.prev_screen = sm.current_screen.name
         sm.transition.direction = 'left'
-        sm.current = screen_name
+        sm.current = self.screen_stack[-1]
+
+    def navigate_back(self):
+        self.screen_stack = self.screen_stack[:-1]
+        sm = self.root.ids.scr_manager
+        sm.transition.direction = 'right'
+        sm.current = self.screen_stack[-1]
+        self.update_top_bar()
 
     def change_screen_and_update_bar(self, screen_name):
         self.change_screen(screen_name)
@@ -155,10 +155,10 @@ class MyKivyApp(MDApp):
         return self.user['email']
 
     def unset_app_user(self):
-        nav_drawer = self.root.ids.nav_drawer
         db.user_logout(self.user['name'])
         self.user = {}
-        nav_drawer.set_state('close')
+        self.root.ids.nav_drawer.set_state('close')
+        self.root.ids.top_bar.disabled = True
         self.change_screen('usr_manager_scr')
 
     def validate_text_field(self, widget):

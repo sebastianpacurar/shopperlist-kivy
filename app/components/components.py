@@ -80,21 +80,30 @@ class SimpleSnackbar(MDSnackbar):
 class MySnackbar(MDSnackbar):
     text = StringProperty('')
 
-    def __init__(self, db_res, message, **kwargs):
+    def __init__(self, message, db_res, **kwargs):
         super().__init__(**kwargs)
+        self.main_app = MDApp.get_running_app()
         self.text = message
         self.md_bg_color = (0, .65, 0, 1) if db_res else (.65, 0, 0, 1)
         self.show()
 
-        # display View added item only when response is 1 from query
         if db_res:
-            item = MDSnackbarActionButton(
-                text='View',
-                theme_text_color='Custom',
-                text_color='white',
-                font_size=sp(17.5),
-                on_release=lambda x: print(x)
-            )
+            response, val_id, screen_name = db_res
+            if response and screen_name:
+                func = None
+                match screen_name:
+                    case 'list_content_scr':
+                        func = lambda _: (self.main_app.change_screen_to_list_scr(val_id), self.dismiss_sb())
+                    case 'prod_scr':
+                        func = lambda _: (self.main_app.change_screen_to_prod_scr(val_id), self.dismiss_sb())
+
+                item = MDSnackbarActionButton(
+                    text='View',
+                    theme_text_color='Custom',
+                    text_color='white',
+                    font_size=sp(17.5),
+                    on_release=func
+                )
 
             self.add_widget(item)
 
@@ -159,7 +168,7 @@ class DropdownHandler(MDDropdownMenu):
                 {
                     'viewclass': 'OneLineListItem',
                     'text': 'Add Data',
-                    'on_release': lambda target='add_category_scr': (
+                    'on_release': lambda target='add_data_scr': (
                         self.main_app.change_screen_and_update_bar(target), self.dismiss())
                 },
             ]
