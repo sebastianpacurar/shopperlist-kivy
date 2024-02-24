@@ -7,7 +7,7 @@ class AddProdScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.db_result = None
-        # self.bind(on_pre_leave=self.clean_up)
+        self.bind(on_pre_leave=self.clean_up)
 
     def perform_product_add(self):
         name = self.ids.product_name_text.text

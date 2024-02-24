@@ -10,6 +10,9 @@ class Queries:
                 JOIN category ON product.category_id = category.category_id
         '''.split())
 
+    def get_product_details(self):
+        pass
+
     def get_all_lists(self):
         return ' '.join('''
                 SELECT
@@ -152,6 +155,25 @@ class QueriesSqlite(Queries):
                 WHERE product.name LIKE ?;
         '''.split())
 
+    def get_product_details(self):
+        return ' '.join('''
+                SELECT 
+                    product.product_id,
+                    product.name,
+                    category.name,
+                    product_unit.name,
+                    product.price,
+                    product.product_image
+                FROM 
+                    product
+                JOIN 
+                    category ON product.category_id = category.category_id
+                JOIN 
+                    product_unit ON product.unit_id = product_unit.unit_id
+                WHERE 
+                    product.product_id = ?        
+        '''.split())
+
 
 class QueriesMysql(Queries):
     _instance = None
@@ -235,4 +257,23 @@ class QueriesMysql(Queries):
                 FROM product
                 JOIN category ON product.category_id = category.category_id
                 WHERE product.name LIKE %s;
+        '''.split())
+
+    def get_product_details(self):
+        return ' '.join('''
+                SELECT 
+                    product.product_id,
+                    product.name,
+                    category.name,
+                    product_unit.name,
+                    product.price,
+                    product.product_image
+                FROM 
+                    product
+                JOIN 
+                    category ON product.category_id = category.category_id
+                JOIN 
+                    product_unit ON product.unit_id = product_unit.unit_id
+                WHERE 
+                    product.product_id = ?        
         '''.split())

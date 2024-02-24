@@ -36,6 +36,7 @@ class ProdItemWithImg(OneLineAvatarListItem):
 
 
 class TwoLineProdImgListItem(TwoLineAvatarIconListItem):
+    prod_id = NumericProperty()
     img_path = StringProperty()
     itm_icon = StringProperty()
     image_func = ObjectProperty()
@@ -159,27 +160,25 @@ class DropdownHandler(MDDropdownMenu):
             widget.bg_color = self.theme_cls.primary_light
             self.parent_caller = widget
             self.caller = widget.children[0].children[0]
+            prod_id = self.parent_caller.prod_id
+
             menu_items = [
                 {
                     'viewclass': 'OneLineListItem',
                     'text': 'View',
-                    'on_release': lambda target='prod_scr': (
-                        self.main_app.change_screen_and_update_bar(target), self.dismiss())
-
-                },
-                {
-                    'viewclass': 'OneLineListItem',
-                    'text': 'Edit',
-                    'on_release': lambda target='prod_scr': (
-                        self.main_app.change_screen_and_update_bar(target), self.dismiss())
+                    'on_release': lambda target=prod_id: (
+                        self.main_app.change_screen_to_prod_scr(target),
+                        self.dismiss()
+                    )
 
                 },
                 {
                     'viewclass': 'OneLineListItem',
                     'text': 'Delete',
-                    'on_release': lambda target='prod_scr': (
-                        self.main_app.change_screen_and_update_bar(target), self.dismiss())
-
+                    'on_release': lambda target=prod_id: (
+                        print('delete me?'),
+                        self.dismiss()
+                    )
                 }
             ]
 

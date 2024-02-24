@@ -7,6 +7,9 @@
 #: import ProdScreen screens.product.product_list.products_scr.ProdsScreen
 #: include screens/product/product_list/ProdsScreen.kv
 
+#: import ProdScreen screens.product.single_product.product_scr.ProdScreen
+#: include screens/product/single_product/ProdScreen.kv
+
 #: import AddProdScreen screens.product.add_product.add_product_scr.AddProdScreen
 #: include screens/product/add_product/AddProdScreen.kv
 
@@ -63,6 +66,9 @@ MainScreen:
                         multiline: False
 
             AddProdScreen:
+
+            ProdScreen:
+                top_bar: top_bar
 
 
         MDNavigationDrawer:

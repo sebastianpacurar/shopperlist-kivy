@@ -31,12 +31,21 @@ class Database:
                 )
 
     def get_all_products(self):
-        """ get all columns of a table """
         conn = self.set_conn()
         cursor = conn.cursor()
         try:
             cursor.execute(self.queries.get_all_products())
             return cursor.fetchall()
+        finally:
+            cursor.close()
+            conn.close()
+
+    def get_product(self, product_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.get_product_details(), (product_id,))
+            return cursor.fetchone()
         finally:
             cursor.close()
             conn.close()

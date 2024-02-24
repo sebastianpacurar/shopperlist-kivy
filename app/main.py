@@ -113,6 +113,9 @@ class MyKivyApp(MDApp):
                 top_bar.title = 'Add Category'
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = []
+            case 'prod_scr':
+                top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
+                top_bar.right_action_items = []
 
     def navigate_back(self):
         sm = self.root.ids.scr_manager
@@ -141,6 +144,12 @@ class MyKivyApp(MDApp):
 
     def change_screen_and_update_bar(self, screen_name):
         self.change_screen(screen_name)
+        self.update_top_bar()
+
+    def change_screen_to_prod_scr(self, product_id):
+        prod_screen = self.root.ids.scr_manager.get_screen('prod_scr')
+        prod_screen.prod_id = product_id
+        self.change_screen('prod_scr')
         self.update_top_bar()
 
     def set_app_user(self, user_data):
