@@ -27,20 +27,13 @@
             hint_text: 'Category'
             on_focus: if self.focus: app.drop.toggle(self)
 
-        MDRaisedButton:
-            text: 'Add'
-            pos_hint: {'center_x': .4, 'y': .15}
+        MDFloatingActionButton:
+            icon: 'plus-thick'
+            pos_hint: {'center_x': .5, 'y': .15}
+            md_bg_color: app.theme_cls.primary_color
             on_release:
                 root.perform_product_add()
                 if root.get_query_result(): app.navigate_back()
-
-        MDRectangleFlatButton:
-            text: "Cancel"
-            pos_hint: {'center_x': .6, 'y': .15}
-            theme_text_color: "Custom"
-            text_color: app.theme_cls.error_color
-            line_color: app.theme_cls.error_color
-            on_release: app.navigate_back()
 
 
 <CustomTextField@MDTextField>:

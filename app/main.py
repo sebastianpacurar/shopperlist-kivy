@@ -1,8 +1,6 @@
-import os
 import re
 
 from kivy.core.window import Window
-from kivymd.app import MDApp
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.screen import MDScreen
@@ -70,12 +68,14 @@ class MyKivyApp(MDApp):
     def clearDialog(self):
         self.dialog = None
 
-    # TODO: think of a better way to deal with this
     def perform_shop_list_add(self):
         shop_list_name = self.dialog.content_cls.ids.shop_list_name_text.text
-        db_result = db.add_shopping_list(shop_list_name, self.user['id'])
-        self.dialog.dismiss()
-        MySnackbar(db_result)
+        db_result, msg = 0, "List can't be empty!"
+        if len(shop_list_name) > 0:
+            db_result = db.add_shopping_list(shop_list_name, self.user['id'])
+            msg = f'{shop_list_name} created'
+            self.dialog.dismiss()
+        MySnackbar(db_result, msg)
 
     def update_top_bar(self):
         top_bar = self.root.ids.top_bar
@@ -110,7 +110,7 @@ class MyKivyApp(MDApp):
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = []
             case 'add_unit_scr':
-                top_bar.title = 'Add Category'
+                top_bar.title = 'Add Unit'
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = []
             case 'prod_scr':
@@ -122,19 +122,6 @@ class MyKivyApp(MDApp):
         sm.current = self.prev_screen
         sm.transition.direction = 'right'
         self.update_top_bar()
-
-    def display_list_products(self, *args):
-        self.change_screen_and_update_bar('list_content_scr')
-        rv_data = []
-        for entry in db.get_shop_list(args[0]):
-            item_data = {
-                'text': entry[1],
-                'img_path': entry[4],
-                '_no_ripple_effect': True,
-            }
-            rv_data.append(item_data)
-
-        self.root.ids.rv_list_content.data = rv_data
 
     def change_screen(self, screen_name):
         sm = self.root.ids.scr_manager
@@ -150,6 +137,12 @@ class MyKivyApp(MDApp):
         prod_screen = self.root.ids.scr_manager.get_screen('prod_scr')
         prod_screen.prod_id = product_id
         self.change_screen('prod_scr')
+        self.update_top_bar()
+
+    def change_screen_to_list_scr(self, list_id):
+        list_screen = self.root.ids.scr_manager.get_screen('list_content_scr')
+        list_screen.list_id = list_id
+        self.change_screen('list_content_scr')
         self.update_top_bar()
 
     def set_app_user(self, user_data):
@@ -170,6 +163,7 @@ class MyKivyApp(MDApp):
 
     def validate_text_field(self, widget):
         is_email = widget.hint_text.lower() == 'email'
+
         if len(widget.text) == 0:
             widget.helper_text = 'Cannot be empty'
             widget.error = True

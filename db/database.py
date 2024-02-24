@@ -226,7 +226,7 @@ class Database:
             conn.close()
         return res
 
-    def add_product(self, name, price, category, unit):
+    def add_product(self, name, price, category, unit, img_path):
         conn = self.set_conn()
         cursor = conn.cursor()
         res = False
@@ -240,7 +240,7 @@ class Database:
             if self.rdbms == MYSQL:
                 price = Decimal(price)
 
-            cursor.execute(self.queries.insert_into_product(), (name, price, unit_id, category_id))
+            cursor.execute(self.queries.insert_into_product(), (name, price, unit_id, category_id, img_path))
             conn.commit()
             res = True
         except Exception as e:

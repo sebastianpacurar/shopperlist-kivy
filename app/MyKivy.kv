@@ -13,6 +13,9 @@
 #: import AddProdScreen screens.product.add_product.add_product_scr.AddProdScreen
 #: include screens/product/add_product/AddProdScreen.kv
 
+#: import ListScreen screens.list.list_scr.ListScreen
+#: include screens/list/ListScreen.kv
+
 MainScreen:
 
 <MainScreen>:
@@ -32,14 +35,7 @@ MainScreen:
 
             CollectionScreen:
 
-            MDScreen:
-                name: 'list_content_scr'
-                MDFloatLayout:
-                    size_hint_y: .85
-                    RV:
-                        viewclass: 'ProdItemWithImg'
-                        id: rv_list_content
-
+            ListScreen:
 
             MDScreen:
                 name: 'add_category_scr'
@@ -49,7 +45,6 @@ MainScreen:
                         size_hint_x: .8
                         pos_hint: {'center_x': .5, 'y': .75}
                         hint_text: 'Name'
-                        helper_text: 'Cannot be empty'
                         required: True
                         multiline: False
 
@@ -61,7 +56,6 @@ MainScreen:
                         size_hint_x: .8
                         pos_hint: {'center_x': .5, 'y': .75}
                         hint_text: 'Name'
-                        helper_text: 'Cannot be empty'
                         required: True
                         multiline: False
 

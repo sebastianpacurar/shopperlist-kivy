@@ -21,6 +21,7 @@ class CollectionScreen(MDScreen):
         my_lists_btn.bold = False
         all_lists_btn.bold = True
         sm = self.ids.collections_manager
+        sm.current = self.mine
         sm.get_screen(self.mine).display_user_collections()
 
     def switch_scr(self, *args):
@@ -37,7 +38,6 @@ class CollectionScreen(MDScreen):
             my_lists_btn.bold = False
             all_lists_btn.bold = True
         else:
-
             sm.transition.direction = 'left'
             sm.current = self.all
             sm.get_screen(self.all).display_all_collections()

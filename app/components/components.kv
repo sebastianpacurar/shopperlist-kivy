@@ -53,11 +53,11 @@
         id: shop_list_name_text
         pos_hint: {'left': 1, 'y': 0}
         mode: 'rectangle'
-        icon_left: 'insert'
         hint_text: 'Shop List Name'
-        helper_text: 'Cannot be empty'
+        helper_text_mode: 'on_error'
         required: True
         multiline: False
+        on_text: app.validate_text_field(self)
 
 
 <SimpleSnackbar>
@@ -74,8 +74,7 @@
 
 
 <MySnackbar>:
-    size_hint_x: .8
-    pos_hint: {'center_x': .5, 'y': .05}
+    pos_hint: {'center_x': .5}
     MDLabel:
         size_hint_y: None
         height: self.texture_size[1]
@@ -85,6 +84,12 @@
         shorten: True
         shorten_from: 'right'
         pos_hint: {'center_y': .5}
+#    MDSnackbarActionButton:
+#        text: 'View'
+#        theme_text_color: 'Custom'
+#        text_color: 'white'
+#        font_size: sp(17.5)
+#        bold: True
     MDSnackbarCloseButton:
         icon: 'close-thick'
         on_release: root.dismiss_sb()

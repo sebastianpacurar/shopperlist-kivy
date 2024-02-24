@@ -120,7 +120,7 @@ class QueriesSqlite(Queries):
         return 'SELECT unit_id FROM product_unit WHERE name = ?'
 
     def insert_into_product(self):
-        return 'INSERT INTO product (name, price, unit_id, category_id) VALUES (?, ?, ?, ?)'
+        return 'INSERT INTO product (name, price, unit_id, category_id, product_image) VALUES (?, ?, ?, ?, ?)'
 
     def insert_into_shopping_list(self):
         return 'INSERT INTO shop_list (name, user_id) VALUES (?, ?)'
@@ -224,7 +224,7 @@ class QueriesMysql(Queries):
         return 'SELECT unit_id FROM product_unit WHERE name = %s'
 
     def insert_into_product(self):
-        return 'INSERT INTO product (name, price, unit_id, category_id) VALUES (%s, %s, %s, %s)'
+        return 'INSERT INTO product (name, price, unit_id, category_id, product_image) VALUES (%s, %s, %s, %s, %s)'
 
     def insert_into_shopping_list(self):
         return 'INSERT INTO shop_list (name, user_id) VALUES (%s, %s)'
@@ -275,5 +275,5 @@ class QueriesMysql(Queries):
                 JOIN 
                     product_unit ON product.unit_id = product_unit.unit_id
                 WHERE 
-                    product.product_id = ?        
+                    product.product_id = %s        
         '''.split())

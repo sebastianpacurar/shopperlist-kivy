@@ -9,6 +9,11 @@ ProdScreen:
         orientation: 'vertical'
 
         MDList:
+            OneLineAvatarListItem:
+                text: 'Image'
+                ImageLeftWidget:
+                    source: root.img_path
+
             TwoLineRightIconListItem:
                 id: prod_id
                 text: 'id'
@@ -43,11 +48,6 @@ ProdScreen:
                 secondary_text: ''
                 IconRightWidget:
                     icon: 'pencil-outline'
-
-            OneLineAvatarListItem:
-                text: 'Image'
-                ImageLeftWidget:
-                    source: root.img_path
 
         MDLabel:
             text: ''

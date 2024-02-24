@@ -53,7 +53,7 @@
 
 <AllCollectionScr>:
     name: 'all_collection_scr'
-    select_list: lambda x: app.display_list_products(x)
+    select_list: lambda x: app.change_screen_to_list_scr(x)
     MDFloatLayout:
         size_hint_y: .85
         RV:
@@ -62,7 +62,7 @@
 
 <UserCollectionScr>:
     name: 'usr_collection_scr'
-    select_list: lambda x: app.display_list_products(x)
+    select_list: lambda x: app.change_screen_to_list_scr(x)
     MDFloatLayout:
         size_hint_y: .85
         RV:

@@ -1,10 +1,11 @@
 import os
 
+from kivy.metrics import sp
 from kivy.properties import StringProperty, ColorProperty, NumericProperty, ObjectProperty
 from kivymd.app import MDApp
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
-from kivymd.uix.snackbar import MDSnackbar
+from kivymd.uix.snackbar import MDSnackbar, MDSnackbarActionButton
 from kivymd.uix.list import OneLineAvatarListItem, TwoLineRightIconListItem, ThreeLineRightIconListItem, \
     TwoLineAvatarIconListItem, IconRightWidget
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -44,7 +45,8 @@ class TwoLineProdImgListItem(TwoLineAvatarIconListItem):
 
 
 class AddShoppingListContent(MDBoxLayout):
-    pass
+    def get_field_validation(self):
+        return self.ids.shop_list_name_text.error
 
 
 class Spacer(MDBoxLayout):
@@ -78,11 +80,23 @@ class SimpleSnackbar(MDSnackbar):
 class MySnackbar(MDSnackbar):
     text = StringProperty('')
 
-    def __init__(self, db_res, **kwargs):
+    def __init__(self, db_res, message, **kwargs):
         super().__init__(**kwargs)
-        self.text = 'Success' if db_res else 'Failure'
+        self.text = message
         self.md_bg_color = (0, .65, 0, 1) if db_res else (.65, 0, 0, 1)
         self.show()
+
+        # display View added item only when response is 1 from query
+        if db_res:
+            item = MDSnackbarActionButton(
+                text='View',
+                theme_text_color='Custom',
+                text_color='white',
+                font_size=sp(17.5),
+                on_release=lambda x: print(x)
+            )
+
+            self.add_widget(item)
 
     def show(self):
         self.open()
@@ -144,16 +158,10 @@ class DropdownHandler(MDDropdownMenu):
                 },
                 {
                     'viewclass': 'OneLineListItem',
-                    'text': 'Add Category',
+                    'text': 'Add Data',
                     'on_release': lambda target='add_category_scr': (
                         self.main_app.change_screen_and_update_bar(target), self.dismiss())
                 },
-                {
-                    'viewclass': 'OneLineListItem',
-                    'text': 'Add Unit',
-                    'on_release': lambda target='add_unit_scr': (
-                        self.main_app.change_screen_and_update_bar(target), self.dismiss())
-                }
             ]
 
         elif isinstance(widget, TwoLineProdImgListItem):
