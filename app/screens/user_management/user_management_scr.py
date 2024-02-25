@@ -63,7 +63,7 @@ class LoginScr(MDScreen):
         self.main_app = MDApp.get_running_app()
         self.enter_user = None
         self.enter_pass = None
-        self.bind(on_kv_post=self.set_definitions)
+        # self.bind(on_kv_post=self.set_definitions)
 
     def set_definitions(self, *args):
         self.enter_user = self.ids.enter_user
@@ -95,7 +95,7 @@ class RegisterScr(MDScreen):
         self.created_email = None
         self.created_user = None
         self.created_pass = None
-        self.bind(on_kv_post=self.set_definitions)
+        # self.bind(on_kv_post=self.set_definitions)
 
     def set_definitions(self, *args):
         self.created_user = self.ids.create_user

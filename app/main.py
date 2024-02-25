@@ -2,7 +2,7 @@ import re
 
 from kivy.core.window import Window
 from kivy.uix.screenmanager import SlideTransition, SwapTransition
-from kivymd.uix.button import MDFlatButton
+from kivymd.uix.button import MDButton, MDButtonText
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.screen import MDScreen
 
@@ -56,18 +56,22 @@ class MyKivyApp(MDApp):
                 content_cls=content,
                 on_dismiss=lambda _: self.clearDialog(),
                 buttons=[
-                    MDFlatButton(
-                        text='Add',
-                        theme_text_color='Custom',
-                        text_color=self.theme_cls.primary_color,
-                        on_release=lambda _: self.perform_shop_list_add(),
+                    MDButton(
+                        MDButtonText(text='Add'),
+                        style='tonal',
                     ),
-                    MDFlatButton(
-                        text='Cancel',
-                        theme_text_color='Custom',
-                        text_color=self.theme_cls.error_color,
-                        on_release=lambda _: self.dialog.dismiss()
-                    )
+                    # MDFlatButton(
+                    #     text='Add',
+                    #     theme_text_color='Custom',
+                    #     text_color=self.theme_cls.primary_color,
+                    #     on_release=lambda _: self.perform_shop_list_add(),
+                    # ),
+                    # MDFlatButton(
+                    #     text='Cancel',
+                    #     theme_text_color='Custom',
+                    #     text_color=self.theme_cls.error_color,
+                    #     on_release=lambda _: self.dialog.dismiss()
+                    # )
                 ]
             )
             self.dialog.open()

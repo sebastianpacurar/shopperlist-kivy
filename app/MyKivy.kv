@@ -1,29 +1,11 @@
 #: import UserManagerScreen screens.user_management.user_management_scr.UserManagerScreen
 #: include screens/user_management/UserManagerScreen.kv
 
-#: import CollectionScreen screens.collection.collection_scr.CollectionScreen
-#: include screens/collection/CollectionScreen.kv
-
-#: import ProdScreen screens.product.product_list.products_scr.ProdsScreen
-#: include screens/product/product_list/ProdsScreen.kv
-
-#: import ProdScreen screens.product.single_product.product_scr.ProdScreen
-#: include screens/product/single_product/ProdScreen.kv
-
-#: import AddProdScreen screens.product.add_product.add_product_scr.AddProdScreen
-#: include screens/product/add_product/AddProdScreen.kv
-
-#: import ListScreen screens.list.list_scr.ListScreen
-#: include screens/list/ListScreen.kv
-
-#: import ListScreen screens.product.add_data.add_data_scr.AddDataScreen
-#: include screens/product/add_data/AddData.kv
-
 MainScreen:
 
 <MainScreen>:
-    md_bg_color: app.theme_cls.bg_darkest
-    MDTopAppBar:
+#    md_bg_color: app.theme_cls.bg_darkest
+    MDNavigationBar:
         id: top_bar
         pos_hint: {'top': 1}
         elevation: 2
@@ -34,19 +16,19 @@ MainScreen:
 
             UserManagerScreen:
                 top_bar: top_bar
-
-            ProdsScreen:
-
-            CollectionScreen:
-
-            ListScreen:
-
-            AddDataScreen:
-
-            AddProdScreen:
-
-            ProdScreen:
-                top_bar: top_bar
+#
+#            ProdsScreen:
+#
+#            CollectionScreen:
+#
+#            ListScreen:
+#
+#            AddDataScreen:
+#
+#            AddProdScreen:
+#
+#            ProdScreen:
+#                top_bar: top_bar
 
 
         MDNavigationDrawer:

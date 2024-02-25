@@ -6,11 +6,10 @@ from kivymd.app import MDApp
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
 from kivymd.uix.snackbar import MDSnackbar, MDSnackbarActionButton
-from kivymd.uix.list import OneLineAvatarListItem, TwoLineRightIconListItem, ThreeLineRightIconListItem, \
-    TwoLineAvatarIconListItem, IconRightWidget
+from kivymd.uix.list import MDListItem, MDListItemTrailingIcon
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
-from kivymd.uix.toolbar.toolbar import ActionTopAppBarButton
+from kivymd.uix.navigationbar import MDNavigationItemIcon
 
 from db.database import Database, SQLITE
 from app.utils import constants as const
@@ -25,19 +24,23 @@ class RV(MDRecycleView):
     pass
 
 
-class EditableTwoLineItemList(TwoLineRightIconListItem):
+# TwoLineRightIconListItem
+class EditableTwoLineItemList(MDListItem):
     itm_icon = StringProperty()
 
 
-class EditableThreeLineItemList(ThreeLineRightIconListItem):
+# ThreeLineRightIconListItem
+class EditableThreeLineItemList(MDListItem):
     itm_icon = StringProperty()
 
 
-class ProdItemWithImg(OneLineAvatarListItem):
+# OneLineAvatarListItem
+class ProdItemWithImg(MDListItem):
     img_path = StringProperty()
 
 
-class TwoLineProdImgListItem(TwoLineAvatarIconListItem):
+# TwoLineAvatarIconListItem
+class TwoLineProdImgListItem(MDListItem):
     prod_id = NumericProperty()
     img_path = StringProperty()
     itm_icon = StringProperty()
@@ -128,7 +131,7 @@ class DropdownHandler(MDDropdownMenu):
 
     def on_dismiss(self):
         super().on_dismiss()
-        if isinstance(self.caller, IconRightWidget):
+        if isinstance(self.caller, MDListItemTrailingIcon):
             self.parent_caller.bg_color = self.theme_cls.bg_darkest
 
     def toggle(self, widget):
@@ -156,7 +159,7 @@ class DropdownHandler(MDDropdownMenu):
                     }
                 )
         # trigger items which trigger options from the ActionTopAppBarButton
-        elif isinstance(widget, ActionTopAppBarButton):
+        elif isinstance(widget, MDNavigationItemIcon):
 
             menu_items = [
                 {
@@ -185,7 +188,6 @@ class DropdownHandler(MDDropdownMenu):
 
             menu_items = [
                 {
-                    'viewclass': 'OneLineListItem',
                     'text': 'View',
                     'on_release': lambda target=prod_id: (
                         self.main_app.change_screen_to_prod_scr(target),
@@ -194,7 +196,6 @@ class DropdownHandler(MDDropdownMenu):
 
                 },
                 {
-                    'viewclass': 'OneLineListItem',
                     'text': 'Delete',
                     'on_release': lambda target=prod_id: (
                         print('delete me?'),

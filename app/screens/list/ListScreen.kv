@@ -5,6 +5,13 @@
     name: 'list_content_scr'
     MDFloatLayout:
         size_hint_y: .85
-        RV:
-            viewclass: 'ProdItemWithImg'
-            id: rv_list_content
+
+        MDBoxLayout:
+            orientation: 'vertical'
+
+            MDLabel:
+                md_bg_color: 'blue'
+
+            RV:
+                viewclass: 'ProdItemWithImg'
+                id: rv_list_content
