@@ -7,46 +7,43 @@ from app.utils import constants as const
 class AddDataScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind(on_pre_enter=self.init_on_category)
+        self.sm = None
+        self.category_btn = None
+        self.unit_btn = None
+        self.bind(on_kv_post=self.set_definitions)
 
-    def init_on_category(self, *args):
-        category_btn = self.ids.category_btn
-        unit_btn = self.ids.unit_btn
-        category_btn.disabled = True
-        unit_btn.disabled = False
-        category_btn.bold = False
-        unit_btn.bold = True
-        sm = self.ids.data_manager
-        sm.current = const.PROD_CATEGORY_SCR
-        sm.get_screen(const.PROD_CATEGORY_SCR).display_all_categories()
+    def set_definitions(self, *args):
+        self.sm = self.ids.data_manager
+        self.sm.get_screen(const.PROD_CATEGORY_SCR).display_all_categories()
+        self.category_btn = self.ids.category_btn
+        self.unit_btn = self.ids.unit_btn
+        self.category_btn.disabled = True
+        self.unit_btn.disabled = False
+        self.category_btn.bold = False
+        self.unit_btn.bold = True
 
     def switch_scr(self, *args):
-        category_btn = self.ids.category_btn
-        unit_btn = self.ids.unit_btn
-        sm = self.ids.data_manager
-
         if args[0].text == 'Categories':
-            sm.transition.direction = 'right'
-            sm.current = const.PROD_CATEGORY_SCR
-            sm.get_screen(const.PROD_CATEGORY_SCR).display_all_categories()
-            category_btn.disabled = True
-            unit_btn.disabled = False
-            category_btn.bold = False
-            unit_btn.bold = True
+            self.sm.transition.direction = 'right'
+            self.sm.current = const.PROD_CATEGORY_SCR
+            self.sm.get_screen(const.PROD_CATEGORY_SCR).display_all_categories()
+            self.category_btn.disabled = True
+            self.unit_btn.disabled = False
+            self.category_btn.bold = False
+            self.unit_btn.bold = True
         else:
-            sm.transition.direction = 'left'
-            sm.current = const.PROD_UNIT_SCR
-            sm.get_screen(const.PROD_UNIT_SCR).display_all_units()
-            category_btn.disabled = False
-            unit_btn.disabled = True
-            category_btn.bold = True
-            unit_btn.bold = False
+            self.sm.transition.direction = 'left'
+            self.sm.current = const.PROD_UNIT_SCR
+            self.sm.get_screen(const.PROD_UNIT_SCR).display_all_units()
+            self.category_btn.disabled = False
+            self.unit_btn.disabled = True
+            self.category_btn.bold = True
+            self.unit_btn.bold = False
 
 
 class CategoryScr(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind(on_kv_post=self.display_all_categories)
 
     def display_all_categories(self, *args):
         rv_data = []
@@ -59,7 +56,6 @@ class CategoryScr(MDScreen):
 class UnitScr(MDScreen):
     def __init(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind(on_kv_post=self.display_all_units)
 
     def display_all_units(self, *args):
         rv_data = []

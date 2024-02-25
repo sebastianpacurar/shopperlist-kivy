@@ -18,9 +18,12 @@ class MainScreen(MDScreen):
 class MyKivyApp(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.user = {}
         self.screen_stack = []
+        self.sm = None
+        self.top_bar = None
+        self.nav_drawer = None
         self.dialog = None
+        self.user = {}
         self.drop = DropdownHandler()
 
     def build(self):
@@ -29,13 +32,16 @@ class MyKivyApp(MDApp):
         self.theme_cls.theme_style = 'Light'
 
     def on_start(self):
+        self.nav_drawer = self.root.ids.nav_drawer
+        self.sm = self.root.ids.scr_manager
+        self.top_bar = self.root.ids.top_bar
         self.auto_login()
 
     def auto_login(self):
         data = db.user_auto_login()
         if len(data) > 0:
             self.user = data
-            self.root.ids.top_bar.disabled = False
+            self.top_bar.disabled = False
             self.change_screen_and_update_bar(const.MULTI_PROD_SCR)
         else:
             self.change_screen(const.USER_MANAGER_SCREEN)
@@ -78,55 +84,50 @@ class MyKivyApp(MDApp):
         MySnackbar(msg, db_result)
 
     def update_top_bar(self):
-        top_bar = self.root.ids.top_bar
-        sm = self.root.ids.scr_manager
-        nav_drawer = self.root.ids.nav_drawer
         nav_drawer_header = self.root.ids.nav_drawer_header
 
         # hack to prevent header from crashing
         nav_drawer_header.title = self.get_user_name()
         nav_drawer_header.text = self.get_user_email()
 
-        match sm.current:
+        match self.sm.current:
             case const.MULTI_PROD_SCR:
-                top_bar.title = 'Products'
-                top_bar.left_action_items = [['menu', lambda _: nav_drawer.set_state('open')]]
-                top_bar.right_action_items = [
+                self.top_bar.title = 'Products'
+                self.top_bar.left_action_items = [['menu', lambda _: self.nav_drawer.set_state('open')]]
+                self.top_bar.right_action_items = [
                     ['dots-horizontal-circle-outline', lambda x: self.drop.toggle(x)]]
             case const.COLLECTION_SCR:
-                top_bar.title = 'Collections'
-                top_bar.left_action_items = [['menu', lambda _: nav_drawer.set_state('open')]]
-                top_bar.right_action_items = [['plus-thick', lambda _: self.show_dialog()]]
+                self.top_bar.title = 'Collections'
+                self.top_bar.left_action_items = [['menu', lambda _: self.nav_drawer.set_state('open')]]
+                self.top_bar.right_action_items = [['plus-thick', lambda _: self.show_dialog()]]
             case const.LIST_SCR:
-                top_bar.title = 'Shopping List'
-                top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                top_bar.right_action_items = [['plus-thick', lambda _: print('show dialog for add item in list')]]
+                self.top_bar.title = 'Shopping List'
+                self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
+                self.top_bar.right_action_items = [['plus-thick', lambda _: print('show dialog for add item in list')]]
             case const.ADD_PROD_SCR:
-                top_bar.title = 'Add product'
-                top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                top_bar.right_action_items = []
+                self.top_bar.title = 'Add product'
+                self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
+                self.top_bar.right_action_items = []
             case const.ADD_DATA_SCR:
-                top_bar.title = 'Add data'
-                top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                top_bar.right_action_items = []
+                self.top_bar.title = 'Add data'
+                self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
+                self.top_bar.right_action_items = []
             case const.PROD_SCR:
-                top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                top_bar.right_action_items = []
+                self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
+                self.top_bar.right_action_items = []
             case const.USER_MANAGER_SCREEN:
-                top_bar.left_action_items = []
-                top_bar.right_action_items = []
+                self.top_bar.left_action_items = []
+                self.top_bar.right_action_items = []
 
     def change_screen(self, screen_name):
         self.screen_stack.append(screen_name)
-        sm = self.root.ids.scr_manager
-        sm.transition.direction = 'left'
-        sm.current = self.screen_stack[-1]
+        self.sm.transition.direction = 'left'
+        self.sm.current = self.screen_stack[-1]
 
     def navigate_back(self):
         self.screen_stack = self.screen_stack[:-1]
-        sm = self.root.ids.scr_manager
-        sm.transition.direction = 'right'
-        sm.current = self.screen_stack[-1]
+        self.sm.transition.direction = 'right'
+        self.sm.current = self.screen_stack[-1]
         self.update_top_bar()
 
     def change_screen_and_update_bar(self, screen_name):
@@ -134,13 +135,13 @@ class MyKivyApp(MDApp):
         self.update_top_bar()
 
     def change_screen_to_prod_scr(self, product_id):
-        prod_screen = self.root.ids.scr_manager.get_screen(const.PROD_SCR)
-        prod_screen.prod_id = product_id
+        prod_screen = self.sm.get_screen(const.PROD_SCR)
+        prod_screen.incoming_prod_id = product_id
         self.change_screen(const.PROD_SCR)
         self.update_top_bar()
 
     def change_screen_to_list_scr(self, list_id):
-        list_screen = self.root.ids.scr_manager.get_screen(const.LIST_SCR)
+        list_screen = self.sm.get_screen(const.LIST_SCR)
         list_screen.list_id = list_id
         self.change_screen(const.LIST_SCR)
         self.update_top_bar()
@@ -157,8 +158,8 @@ class MyKivyApp(MDApp):
     def unset_app_user(self):
         db.user_logout(self.user['name'])
         self.user = {}
-        self.root.ids.nav_drawer.set_state('close')
-        self.root.ids.top_bar.disabled = True
+        self.nav_drawer.set_state('close')
+        self.top_bar.disabled = True
         self.change_screen(const.USER_MANAGER_SCREEN)
 
     def validate_text_field(self, widget):

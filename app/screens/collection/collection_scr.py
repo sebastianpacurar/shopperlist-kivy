@@ -10,40 +10,38 @@ class CollectionScreen(MDScreen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind(on_pre_enter=self.init_on_my_lists)
+        self.sm = None
+        self.my_lists_btn = None
+        self.all_lists_btn = None
+        self.bind(on_kv_post=self.set_definitions)
 
-    def init_on_my_lists(self, *args):
-        my_lists_btn = self.ids.my_lists_btn
-        all_lists_btn = self.ids.all_lists_btn
-        my_lists_btn.disabled = True
-        all_lists_btn.disabled = False
-        my_lists_btn.bold = False
-        all_lists_btn.bold = True
-        sm = self.ids.collections_manager
-        sm.current = const.USER_COLLECTION_SCR
-        sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
+    def set_definitions(self, *args):
+        self.sm = self.ids.collections_manager
+        self.sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
+        self.my_lists_btn = self.ids.my_lists_btn
+        self.all_lists_btn = self.ids.all_lists_btn
+        self.my_lists_btn.disabled = True
+        self.all_lists_btn.disabled = False
+        self.my_lists_btn.bold = False
+        self.all_lists_btn.bold = True
 
     def switch_scr(self, *args):
-        my_lists_btn = self.ids.my_lists_btn
-        all_lists_btn = self.ids.all_lists_btn
-        sm = self.ids.collections_manager
-
         if args[0].text == 'My Lists':
-            sm.transition.direction = 'right'
-            sm.current = const.USER_COLLECTION_SCR
-            sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
-            my_lists_btn.disabled = True
-            all_lists_btn.disabled = False
-            my_lists_btn.bold = False
-            all_lists_btn.bold = True
+            self.sm.transition.direction = 'right'
+            self.sm.current = const.USER_COLLECTION_SCR
+            self.sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
+            self.my_lists_btn.disabled = True
+            self.all_lists_btn.disabled = False
+            self.my_lists_btn.bold = False
+            self.all_lists_btn.bold = True
         else:
-            sm.transition.direction = 'left'
-            sm.current = const.ALL_COLLECTION_SCR
-            sm.get_screen(const.ALL_COLLECTION_SCR).display_all_collections()
-            my_lists_btn.disabled = False
-            all_lists_btn.disabled = True
-            my_lists_btn.bold = True
-            all_lists_btn.bold = False
+            self.sm.transition.direction = 'left'
+            self.sm.current = const.ALL_COLLECTION_SCR
+            self.sm.get_screen(const.ALL_COLLECTION_SCR).display_all_collections()
+            self.my_lists_btn.disabled = False
+            self.all_lists_btn.disabled = True
+            self.my_lists_btn.bold = True
+            self.all_lists_btn.bold = False
 
 
 class BaseCollectionScr(MDScreen):
@@ -77,24 +75,9 @@ class BaseCollectionScr(MDScreen):
         return item_data
 
 
-class AllCollectionScr(BaseCollectionScr):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.bind(on_kv_post=self.display_all_collections)
-
-    def display_all_collections(self, *args):
-        rv_data = []
-        for entry in db.get_all_shop_lists():
-            item_data = self.create_item_data(entry)
-            rv_data.append(item_data)
-
-        self.ids.rv_collection.data = rv_data
-
-
 class UserCollectionScr(BaseCollectionScr):
     def __init(self, **kwargs):
         super().__init__(**kwargs)
-        self.bind(on_kv_post=self.display_user_collections)
 
     def display_user_collections(self, *args):
         rv_data = []
@@ -105,3 +88,16 @@ class UserCollectionScr(BaseCollectionScr):
             rv_data.append(item_data)
 
         self.ids.rv_usr_collection.data = rv_data
+
+
+class AllCollectionScr(BaseCollectionScr):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def display_all_collections(self, *args):
+        rv_data = []
+        for entry in db.get_all_shop_lists():
+            item_data = self.create_item_data(entry)
+            rv_data.append(item_data)
+
+        self.ids.rv_collection.data = rv_data
