@@ -6,8 +6,8 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.screen import MDScreen
 
 from app.components.components import *
+from app.utils import constants as const
 
-placeholder_img = os.path.join(os.getcwd(), '..', 'images', 'placeholder_image.png')
 email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
 
@@ -36,9 +36,9 @@ class MyKivyApp(MDApp):
         if len(data) > 0:
             self.user = data
             self.root.ids.top_bar.disabled = False
-            self.change_screen_and_update_bar('products_list_scr')
+            self.change_screen_and_update_bar(const.MULTI_PROD_SCR)
         else:
-            self.change_screen('usr_manager_scr')
+            self.change_screen(const.USER_MANAGER_SCREEN)
 
     def show_dialog(self):
         content = AddShoppingListContent()
@@ -88,31 +88,31 @@ class MyKivyApp(MDApp):
         nav_drawer_header.text = self.get_user_email()
 
         match sm.current:
-            case 'products_list_scr':
+            case const.MULTI_PROD_SCR:
                 top_bar.title = 'Products'
                 top_bar.left_action_items = [['menu', lambda _: nav_drawer.set_state('open')]]
                 top_bar.right_action_items = [
                     ['dots-horizontal-circle-outline', lambda x: self.drop.toggle(x)]]
-            case 'collection_scr':
+            case const.COLLECTION_SCR:
                 top_bar.title = 'Collections'
                 top_bar.left_action_items = [['menu', lambda _: nav_drawer.set_state('open')]]
                 top_bar.right_action_items = [['plus-thick', lambda _: self.show_dialog()]]
-            case 'list_content_scr':
+            case const.LIST_SCR:
                 top_bar.title = 'Shopping List'
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = [['plus-thick', lambda _: print('show dialog for add item in list')]]
-            case 'add_prod_scr':
+            case const.ADD_PROD_SCR:
                 top_bar.title = 'Add product'
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = []
-            case 'add_data_scr':
+            case const.ADD_DATA_SCR:
                 top_bar.title = 'Add data'
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = []
-            case 'prod_scr':
+            case const.PROD_SCR:
                 top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
                 top_bar.right_action_items = []
-            case 'usr_manager_scr':
+            case const.USER_MANAGER_SCREEN:
                 top_bar.left_action_items = []
                 top_bar.right_action_items = []
 
@@ -134,15 +134,15 @@ class MyKivyApp(MDApp):
         self.update_top_bar()
 
     def change_screen_to_prod_scr(self, product_id):
-        prod_screen = self.root.ids.scr_manager.get_screen('prod_scr')
+        prod_screen = self.root.ids.scr_manager.get_screen(const.PROD_SCR)
         prod_screen.prod_id = product_id
-        self.change_screen('prod_scr')
+        self.change_screen(const.PROD_SCR)
         self.update_top_bar()
 
     def change_screen_to_list_scr(self, list_id):
-        list_screen = self.root.ids.scr_manager.get_screen('list_content_scr')
+        list_screen = self.root.ids.scr_manager.get_screen(const.LIST_SCR)
         list_screen.list_id = list_id
-        self.change_screen('list_content_scr')
+        self.change_screen(const.LIST_SCR)
         self.update_top_bar()
 
     def set_app_user(self, user_data):
@@ -159,7 +159,7 @@ class MyKivyApp(MDApp):
         self.user = {}
         self.root.ids.nav_drawer.set_state('close')
         self.root.ids.top_bar.disabled = True
-        self.change_screen('usr_manager_scr')
+        self.change_screen(const.USER_MANAGER_SCREEN)
 
     def validate_text_field(self, widget):
         is_email = widget.hint_text.lower() == 'email'

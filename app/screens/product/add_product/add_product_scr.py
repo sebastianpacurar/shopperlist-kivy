@@ -1,7 +1,10 @@
+import os
+
 from kivymd.uix.screen import MDScreen
 
 from app.components.components import MySnackbar, db
-from app.main import placeholder_img
+
+placeholder_img = os.path.join(os.getcwd(), '..', 'images', 'placeholder_image.png')
 
 
 class AddProdScreen(MDScreen):

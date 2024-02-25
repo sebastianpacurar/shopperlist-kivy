@@ -12,7 +12,8 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.toolbar.toolbar import ActionTopAppBarButton
 
-from db.database import Database, SQLITE, MYSQL
+from db.database import Database, SQLITE
+from app.utils import constants as const
 
 # This is where the DB gets instantiated
 db = Database(SQLITE)
@@ -45,8 +46,7 @@ class TwoLineProdImgListItem(TwoLineAvatarIconListItem):
 
 
 class AddShoppingListContent(MDBoxLayout):
-    def get_field_validation(self):
-        return self.ids.shop_list_name_text.error
+    pass
 
 
 class Spacer(MDBoxLayout):
@@ -84,7 +84,7 @@ class MySnackbar(MDSnackbar):
         super().__init__(**kwargs)
         self.main_app = MDApp.get_running_app()
         self.text = message
-        self.md_bg_color = (0, .65, 0, 1) if db_res else (.65, 0, 0, 1)
+        self.md_bg_color = const.RGB_SUCCESS if db_res else const.RGB_ERROR
         self.show()
 
         if db_res:
@@ -92,9 +92,9 @@ class MySnackbar(MDSnackbar):
             if response and screen_name:
                 func = None
                 match screen_name:
-                    case 'list_content_scr':
+                    case const.LIST_SCR:
                         func = lambda _: (self.main_app.change_screen_to_list_scr(val_id), self.dismiss_sb())
-                    case 'prod_scr':
+                    case const.PROD_SCR:
                         func = lambda _: (self.main_app.change_screen_to_prod_scr(val_id), self.dismiss_sb())
 
                 item = MDSnackbarActionButton(
@@ -162,14 +162,18 @@ class DropdownHandler(MDDropdownMenu):
                 {
                     'viewclass': 'OneLineListItem',
                     'text': 'Add product',
-                    'on_release': lambda target='add_prod_scr': (
-                        self.main_app.change_screen_and_update_bar(target), self.dismiss())
+                    'on_release': lambda screen=const.ADD_PROD_SCR: (
+                        self.main_app.change_screen_and_update_bar(screen),
+                        self.dismiss()
+                    )
                 },
                 {
                     'viewclass': 'OneLineListItem',
                     'text': 'Add Data',
-                    'on_release': lambda target='add_data_scr': (
-                        self.main_app.change_screen_and_update_bar(target), self.dismiss())
+                    'on_release': lambda screen=const.ADD_DATA_SCR: (
+                        self.main_app.change_screen_and_update_bar(screen),
+                        self.dismiss()
+                    )
                 },
             ]
 

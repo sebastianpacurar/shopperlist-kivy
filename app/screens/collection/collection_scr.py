@@ -2,6 +2,7 @@ from kivy.properties import ObjectProperty
 from kivymd.uix.screen import MDScreen
 
 from app.components.components import db
+from app.utils import constants as const
 
 
 class CollectionScreen(MDScreen):
@@ -9,8 +10,6 @@ class CollectionScreen(MDScreen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.all = 'all_collection_scr'
-        self.mine = 'usr_collection_scr'
         self.bind(on_pre_enter=self.init_on_my_lists)
 
     def init_on_my_lists(self, *args):
@@ -21,8 +20,8 @@ class CollectionScreen(MDScreen):
         my_lists_btn.bold = False
         all_lists_btn.bold = True
         sm = self.ids.collections_manager
-        sm.current = self.mine
-        sm.get_screen(self.mine).display_user_collections()
+        sm.current = const.USER_COLLECTION_SCR
+        sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
 
     def switch_scr(self, *args):
         my_lists_btn = self.ids.my_lists_btn
@@ -31,16 +30,16 @@ class CollectionScreen(MDScreen):
 
         if args[0].text == 'My Lists':
             sm.transition.direction = 'right'
-            sm.current = self.mine
-            sm.get_screen(self.mine).display_user_collections()
+            sm.current = const.USER_COLLECTION_SCR
+            sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
             my_lists_btn.disabled = True
             all_lists_btn.disabled = False
             my_lists_btn.bold = False
             all_lists_btn.bold = True
         else:
             sm.transition.direction = 'left'
-            sm.current = self.all
-            sm.get_screen(self.all).display_all_collections()
+            sm.current = const.ALL_COLLECTION_SCR
+            sm.get_screen(const.ALL_COLLECTION_SCR).display_all_collections()
             my_lists_btn.disabled = False
             all_lists_btn.disabled = True
             my_lists_btn.bold = True

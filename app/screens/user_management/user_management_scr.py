@@ -4,9 +4,8 @@ from kivymd.uix.relativelayout import MDRelativeLayout
 from kivymd.uix.screen import MDScreen
 
 from app.components.components import db, SimpleSnackbar
+from app.utils import constants as const
 
-success_color = (0, .65, 0, 1)
-error_color = (.65, 0, 0, 1)
 
 
 class UserManagerScreen(MDScreen):
@@ -14,8 +13,6 @@ class UserManagerScreen(MDScreen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.login = 'log_in_scr'
-        self.register = 'register_scr'
         self.bind(on_kv_post=self.init_login_screen)
         self.bind(on_pre_leave=self.set_back_to_login)
 
@@ -30,9 +27,9 @@ class UserManagerScreen(MDScreen):
         login_btn = self.ids.login_btn
         register_btn = self.ids.register_btn
         sm = self.ids.signin_signup_manager
-        if sm.current == self.register:
+        if sm.current == const.REGISTER_SCR:
             sm.transition = FadeTransition()
-            sm.current = self.login
+            sm.current = const.LOGIN_SCR
             login_btn.disabled = True
             register_btn.disabled = False
             sm.transition = SlideTransition()
@@ -44,17 +41,17 @@ class UserManagerScreen(MDScreen):
 
         selection_text = args[0].text.lower().replace(' ', '_')
 
-        if self.login.startswith(selection_text):
+        if const.LOGIN_SCR.startswith(selection_text):
             sm.transition.direction = 'right'
-            sm.current = self.login
+            sm.current = const.LOGIN_SCR
             login_btn.disabled = True
             register_btn.disabled = False
             login_btn.bold = False
             register_btn.bold = True
 
-        elif self.register.startswith(selection_text):
+        elif const.REGISTER_SCR.startswith(selection_text):
             sm.transition.direction = 'left'
-            sm.current = self.register
+            sm.current = const.REGISTER_SCR
             login_btn.disabled = False
             register_btn.disabled = True
             login_btn.bold = True

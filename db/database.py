@@ -5,6 +5,7 @@ from decimal import Decimal
 from decouple import config
 
 from db.queries import QueriesSqlite, QueriesMysql
+from app.utils import constants as const
 
 sqlite_db_path = os.path.join(os.getcwd(), '..', 'db', 'shopping_list_db.db')
 SQLITE = 'sqlite'
@@ -225,7 +226,7 @@ class Database:
         finally:
             cursor.close()
             conn.close()
-        return res, row_id, 'list_content_scr'
+        return res, row_id, const.LIST_SCR
 
     def add_product(self, name, price, category, unit, img_path):
         conn = self.set_conn()
@@ -251,4 +252,4 @@ class Database:
         finally:
             cursor.close()
             conn.close()
-        return res, row_id, 'prod_scr'
+        return res, row_id, const.PROD_SCR
