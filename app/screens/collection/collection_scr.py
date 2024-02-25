@@ -1,4 +1,4 @@
-from kivy.properties import ObjectProperty
+from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 
 from app.components.components import db
@@ -6,14 +6,12 @@ from app.utils import constants as const
 
 
 class CollectionScreen(MDScreen):
-    select_list = ObjectProperty()
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.sm = None
         self.my_lists_btn = None
         self.all_lists_btn = None
-        self.bind(on_kv_post=self.set_definitions)
+        self.bind(on_pre_enter=self.set_definitions)
 
     def set_definitions(self, *args):
         self.sm = self.ids.collections_manager
@@ -45,10 +43,9 @@ class CollectionScreen(MDScreen):
 
 
 class BaseCollectionScr(MDScreen):
-    select_list = ObjectProperty()
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.main_app = MDApp.get_running_app()
 
     def create_item_data(self, entry):
         entry = [str(x) for x in entry]
@@ -62,7 +59,7 @@ class BaseCollectionScr(MDScreen):
                 'secondary_text': f'created by {entry[4]}',
                 'tertiary_text': stamp,
                 'itm_icon': 'dots-vertical',
-                'on_release': lambda x=entry[0]: self.select_list(x),
+                'on_release': lambda list_id=entry[0]: self.main_app.change_screen_to_list_scr(list_id),
             }
         else:
             item_data = {
@@ -70,7 +67,7 @@ class BaseCollectionScr(MDScreen):
                 'text': entry[2],
                 'secondary_text': stamp,
                 'itm_icon': 'dots-vertical',
-                'on_release': lambda x=entry[0]: self.select_list(x),
+                'on_release': lambda list_id=entry[0]: self.main_app.change_screen_to_list_scr(list_id),
             }
         return item_data
 

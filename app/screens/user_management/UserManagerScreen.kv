@@ -81,8 +81,7 @@
             text: 'Log in'
             pos_hint: {'center_x': .5}
             size_hint_x: .75
-            on_release:
-                if root.sign_in(enter_user, enter_pass) : app.set_app_user(root.user_data), app.change_screen_and_update_bar('products_list_scr')
+            on_release: root.perform_login()
 
         Spacer:
             orientation: 'vertical'
@@ -141,8 +140,7 @@
             text: 'Sign Up'
             pos_hint: {'center_x': .5}
             size_hint_x: .75
-            on_release:
-                if root.sign_up(create_user, create_email, create_pass) : app.set_app_user(root.user_data), app.change_screen_and_update_bar('products_list_scr')
+            on_release: root.perform_register()
 
         MDLabel:
             text: ''

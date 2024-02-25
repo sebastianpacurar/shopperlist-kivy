@@ -129,7 +129,7 @@ class DropdownHandler(MDDropdownMenu):
     def on_dismiss(self):
         super().on_dismiss()
         if isinstance(self.caller, IconRightWidget):
-            self.parent_caller.bg_color = 'white'
+            self.parent_caller.bg_color = self.theme_cls.bg_darkest
 
     def toggle(self, widget):
         data = None

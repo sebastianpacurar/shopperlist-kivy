@@ -7,7 +7,7 @@ class ProdsScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.drop = DropdownHandler()
-        self.bind(on_pre_enter=self.display_products)
+        self.bind(on_enter=self.display_products)
         self.bind(on_pre_leave=self.clean_up)
 
     def display_products(self, *args):

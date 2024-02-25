@@ -1,5 +1,5 @@
 from kivy.properties import StringProperty, DictProperty, ObjectProperty
-from kivy.uix.screenmanager import FadeTransition, SlideTransition
+from kivymd.app import MDApp
 from kivymd.uix.relativelayout import MDRelativeLayout
 from kivymd.uix.screen import MDScreen
 
@@ -31,14 +31,12 @@ class UserManagerScreen(MDScreen):
 
     def set_back_to_login(self, *args):
         if self.sm.current == const.REGISTER_SCR:
-            self.sm.transition = FadeTransition()
             self.sm.current = const.LOGIN_SCR
             self.login_btn.disabled = True
             self.register_btn.disabled = False
-            self.sm.transition = SlideTransition()
 
     def switch_scr(self, *args):
-        selection_text = args[0].text.lower().replace(' ', '_')  # stupid hack for bad screen naming
+        selection_text = args[0].text.lower().replace(' ', '_')  # stupid hack for bad screen naming: log in -> log_in
         if const.LOGIN_SCR.startswith(selection_text):
             self.sm.transition.direction = 'right'
             self.sm.current = const.LOGIN_SCR
@@ -60,9 +58,23 @@ class LoginScr(MDScreen):
     top_bar = ObjectProperty()
     user_data = DictProperty()
 
-    def sign_in(self, *args):
-        user = args[0]
-        password = args[1].ids.text_field
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.main_app = MDApp.get_running_app()
+        self.enter_user = None
+        self.enter_pass = None
+        self.bind(on_kv_post=self.set_definitions)
+
+    def set_definitions(self, *args):
+        self.enter_user = self.ids.enter_user
+        self.enter_pass = self.ids.enter_pass.ids.text_field
+
+    def perform_login(self):
+        if self.validate_sign_in(self.enter_user, self.enter_pass):
+            self.main_app.set_app_user(self.user_data)
+            self.main_app.change_login_app_screen(const.COLLECTION_SCR)
+
+    def validate_sign_in(self, user, password):
         entry = [user.text.strip(), password.text.strip()]
         if any([user.error, password.error]) or any([len(x) == 0 for x in entry]):
             SimpleSnackbar(text='There are errors in the fields', color=const.RGB_ERROR)
@@ -77,9 +89,25 @@ class RegisterScr(MDScreen):
     top_bar = ObjectProperty()
     user_data = DictProperty()
 
-    def sign_up(self, *args):
-        user, email = args[0], args[1]
-        password = args[2].ids.text_field
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.main_app = MDApp.get_running_app()
+        self.created_email = None
+        self.created_user = None
+        self.created_pass = None
+        self.bind(on_kv_post=self.set_definitions)
+
+    def set_definitions(self, *args):
+        self.created_user = self.ids.create_user
+        self.created_email = self.ids.create_email
+        self.created_pass = self.ids.create_pass.ids.text_field
+
+    def perform_register(self):
+        if self.validate_sign_up(self.created_user, self.created_email, self.created_pass):
+            self.main_app.set_app_user(self.user_data)
+            self.main_app.change_login_app_screen(const.COLLECTION_SCR)
+
+    def validate_sign_up(self, user, email, password):
         entry = [user.text.strip(), email.text.strip(), password.text.strip()]
         if any([email.error, user.error, password.error]) or any([len(x) == 0 for x in entry]):
             SimpleSnackbar(text='There are errors in the fields', color=const.RGB_ERROR)

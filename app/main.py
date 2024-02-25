@@ -1,6 +1,7 @@
 import re
 
 from kivy.core.window import Window
+from kivy.uix.screenmanager import SlideTransition, SwapTransition
 from kivymd.uix.button import MDFlatButton
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.screen import MDScreen
@@ -42,7 +43,7 @@ class MyKivyApp(MDApp):
         if len(data) > 0:
             self.user = data
             self.top_bar.disabled = False
-            self.change_screen_and_update_bar(const.MULTI_PROD_SCR)
+            self.change_screen_and_update_bar(const.COLLECTION_SCR)
         else:
             self.change_screen(const.USER_MANAGER_SCREEN)
 
@@ -134,6 +135,12 @@ class MyKivyApp(MDApp):
         self.change_screen(screen_name)
         self.update_top_bar()
 
+    def change_login_app_screen(self, screen_name):
+        self.sm.transition = SwapTransition()
+        self.change_screen(screen_name)
+        self.sm.transition = SlideTransition()
+        self.update_top_bar()
+
     def change_screen_to_prod_scr(self, product_id):
         prod_screen = self.sm.get_screen(const.PROD_SCR)
         prod_screen.incoming_prod_id = product_id
@@ -160,7 +167,9 @@ class MyKivyApp(MDApp):
         self.user = {}
         self.nav_drawer.set_state('close')
         self.top_bar.disabled = True
+        self.sm.transition = SwapTransition()
         self.change_screen(const.USER_MANAGER_SCREEN)
+        self.sm.transition = SlideTransition()
 
     def validate_text_field(self, widget):
         is_email = widget.hint_text.lower() == 'email'
