@@ -1,6 +1,6 @@
 INSERT INTO user (name, email, password, online_status)
-VALUES ('John Doe', 'john@example.com', 'password123', 0),
-       ('Jane Smith', 'jane@example.com', 'password456', 0);
+VALUES ('user', 'user@example.com', '1234', 0),
+       ('user2', 'user2@example.com', '1234', 0);
 
 
 INSERT INTO category (name)

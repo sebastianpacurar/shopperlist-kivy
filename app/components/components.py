@@ -12,7 +12,7 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.toolbar.toolbar import ActionTopAppBarButton
 
-from db.database import Database, SQLITE
+from db.database import Database, SQLITE, MYSQL
 from app.utils import constants as const
 
 # This is where the DB gets instantiated
