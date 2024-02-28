@@ -3,6 +3,7 @@ import os
 from kivy.metrics import sp
 from kivy.properties import StringProperty, ColorProperty, NumericProperty, ObjectProperty
 from kivymd.app import MDApp
+from kivymd.uix.button import MDButton
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
 from kivymd.uix.snackbar import MDSnackbar, MDSnackbarActionButton
@@ -46,6 +47,10 @@ class TwoLineProdImgListItem(MDListItem):
     itm_icon = StringProperty()
     image_func = ObjectProperty()
     icon_func = ObjectProperty()
+
+
+class SelectSignInSignUpButton(MDButton):
+    text = StringProperty()
 
 
 class AddShoppingListContent(MDBoxLayout):

@@ -1,4 +1,5 @@
 #: import Spacer components.components.Spacer
+#: import SelectSignInSignUpButton components.components.SelectSignInSignUpButton
 
 
 <UserManagerScreen>:
@@ -8,7 +9,6 @@
         md_bg_color: 'lightseagreen'
 
         MDBoxLayout:
-            md_bg_color: 'white'
             orientation: 'vertical'
             pos_hint: {'center_x': .5, 'center_y': .5}
             size_hint: .85, .70
@@ -19,22 +19,18 @@
                 height: self.children[0].height
 
                 SelectSignInSignUpButton:
+                    text: 'Log in'
                     id: login_btn
-                    on_release:
-                        root.switch_scr(self)
-                    MDButtonText:
-                        text: 'Log In'
+                    on_release: root.switch_scr(self)
 
                 Spacer:
                     orientation: 'horizontal'
-                    value: self.parent.width * 0.01
+                    value: self.parent.width * 0.05
 
                 SelectSignInSignUpButton:
+                    text: 'Register'
                     id: register_btn
-                    on_release:
-                        root.switch_scr(self)
-                    MDButtonText:
-                        text: 'Register'
+                    on_release: root.switch_scr(self)
 
 
             MDScreenManager:
@@ -45,33 +41,38 @@
                     top_bar: root.top_bar
 
 
-<SelectSignInSignUpButton@MDButton>:
-    style: 'elevated'
+<SelectSignInSignUpButton>:
+    style: 'filled'
     size_hint_x: None
     width: self.parent.width * 0.49
-    md_bg_color_disabled: 'red' #TODO
-    font_style: 'Button'
-    disabled_color: 'white'
-    theme_text_color: 'Custom'
-    text_color: 'red' # TODO
+    radius: dp(0)
+
+    MDButtonText:
+        pos_hint: {'center_x': .5, 'center_y': .5}
+        text: root.text
+        theme_text_color: 'Custom'
+        text_color: 'blue'
+        disabled_color: 'grey'
 
 
 <LoginScr>:
     name: 'log_in_scr'
     MDBoxLayout:
-        md_bg_color: 'white'
+        md_bg_color: 'grey'
         orientation: 'vertical'
         padding: dp(20)
         spacing: dp(15)
 
-#        MDTextField:
-#            id: enter_user
-#            multiline: False
-#            write_tab: False
-#            icon_left: 'account-outline'
-#            hint_text: 'Username'
-#            pos_hint: {'center_x': .5}
-#            set_text: app.validate_text_field(self)
+        MDTextField:
+            id: enter_user
+            mode: 'filled'
+
+
+            MDTextFieldLeadingIcon:
+                icon: 'account-outline'
+
+            MDTextFieldHintText:
+                text: 'Username'
 
         PasswordField:
             id: enter_pass
@@ -90,14 +91,7 @@
         Spacer:
             orientation: 'vertical'
             value: dp(10)
-#
-#        MDRoundFlatIconButton:
-#            pos_hint: {'center_x': .5}
-#            size_hint_x: .75
-#            text: 'Sign in with google'
-#            icon: 'google'
-#            text_color: 'white'
-#            md_bg_color: 'black'
+
 
         MDLabel:
             text: ''

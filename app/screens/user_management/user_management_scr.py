@@ -55,6 +55,7 @@ class UserManagerScreen(MDScreen):
 
 
 class LoginScr(MDScreen):
+    pass
     top_bar = ObjectProperty()
     user_data = DictProperty()
 
@@ -86,6 +87,7 @@ class LoginScr(MDScreen):
 
 
 class RegisterScr(MDScreen):
+    pass
     top_bar = ObjectProperty()
     user_data = DictProperty()
 
@@ -119,5 +121,6 @@ class RegisterScr(MDScreen):
 
 
 class PasswordField(MDRelativeLayout):
+    pass
     hint_txt = StringProperty()
     value = StringProperty()
