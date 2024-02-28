@@ -1,6 +1,8 @@
 import os
 
-from kivy.metrics import sp
+from kivymd.uix.snackbar import MDSnackbar, MDSnackbarButtonContainer, MDSnackbarActionButton, \
+    MDSnackbarActionButtonText, MDSnackbarSupportingText
+from kivy.metrics import sp, dp
 from kivy.properties import StringProperty, ColorProperty, NumericProperty, ObjectProperty
 from kivymd.app import MDApp
 from kivymd.uix.button import MDButton
@@ -53,6 +55,10 @@ class SelectSignInSignUpButton(MDButton):
     text = StringProperty()
 
 
+class PasswordField(MDTextField):
+    hint_txt = StringProperty()
+
+
 class AddShoppingListContent(MDBoxLayout):
     pass
 
@@ -77,16 +83,35 @@ class SimpleSnackbar(MDSnackbar):
     text = StringProperty()
     color = ColorProperty()
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.show()
-
     def show(self):
-        self.open()
+        MDSnackbar(
+            MDSnackbarSupportingText(text=self.text),
+            y=dp(24),
+            orientation='horizontal',
+            pos_hint={'center_x': 0.5, 'y': 0},
+            background_color=self.color,
+        ).open()
 
 
 class MySnackbar(MDSnackbar):
     text = StringProperty('')
+
+    # def show(self):
+    #     MDSnackbar(
+    #         MDSnackbarSupportingText(text=self.text),
+    #         MDSnackbarButtonContainer(
+    #             MDSnackbarActionButton(
+    #                 MDSnackbarActionButtonText(
+    #                     text='Action button'
+    #                 ),
+    #             ),
+    #             pos_hint={'center_y': 0.5}
+    #         ),
+    #         y=dp(24),
+    #         orientation='horizontal',
+    #         pos_hint={'center_x': .5, 'y':0},
+    #         background_color=self.color,
+    #     ).open()
 
     def __init__(self, message, db_res, **kwargs):
         super().__init__(**kwargs)
@@ -116,7 +141,23 @@ class MySnackbar(MDSnackbar):
             self.add_widget(item)
 
     def show(self):
-        self.open()
+        MDSnackbar(
+            MDSnackbarSupportingText(
+                text='Single-line snackbar with action',
+            ),
+            MDSnackbarButtonContainer(
+                MDSnackbarActionButton(
+                    MDSnackbarActionButtonText(
+                        text='Action button'
+                    ),
+                ),
+                pos_hint={'center_y': 0.5}
+            ),
+            y=dp(24),
+            orientation='horizontal',
+            pos_hint={'center_x': .5},
+            background_color=self.color,
+        ).open()
 
     def dismiss_sb(self):
         self.dismiss()
@@ -213,6 +254,6 @@ class DropdownHandler(MDDropdownMenu):
         self.open()
 
     def on_dropdown_item_select(self, text_input, content):
-        """ perform menu_item selection and update the caller text value """
+        ''' perform menu_item selection and update the caller text value '''
         text_input.text = str(content[1])
         self.dismiss()

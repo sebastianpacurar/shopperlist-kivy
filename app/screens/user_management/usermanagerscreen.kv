@@ -50,22 +50,21 @@
     MDButtonText:
         pos_hint: {'center_x': .5, 'center_y': .5}
         text: root.text
-        theme_text_color: 'Custom'
-        text_color: 'blue'
-        disabled_color: 'grey'
 
 
 <LoginScr>:
     name: 'log_in_scr'
     MDBoxLayout:
-        md_bg_color: 'grey'
+        md_bg_color: app.theme_cls.backgroundColor
         orientation: 'vertical'
         padding: dp(20)
         spacing: dp(15)
 
         MDTextField:
             id: enter_user
-            mode: 'filled'
+            mode: 'outlined'
+            multiline: False
+            write_tab: False
 
 
             MDTextFieldLeadingIcon:
@@ -82,11 +81,14 @@
             orientation: 'vertical'
             value: dp(20)
 
-#        MDRaisedButton:
-#            text: 'Log in'
-#            pos_hint: {'center_x': .5}
-#            size_hint_x: .75
-#            on_release: root.perform_login()
+        MDButton:
+            type: 'tonal'
+            pos_hint: {'center_x': .5}
+            size_hint_x: .75
+            on_release: root.perform_login()
+
+            MDButtonText:
+                text: 'Log in'
 
         Spacer:
             orientation: 'vertical'
@@ -100,30 +102,9 @@
 <RegisterScr>
     name: 'register_scr'
     MDBoxLayout:
-        md_bg_color: 'white'
         orientation: 'vertical'
         padding: dp(20)
         spacing: dp(15)
-
-#        MDTextField:
-#            id: create_email
-#            multiline: False
-#            write_tab: False
-#            icon_left: 'email-outline'
-#            hint_text: 'Email'
-#            pos_hint: {'center_x': .5}
-#            helper_text: "Not a valid email"
-#            helper_text_mode: "on_error"
-#            set_text: app.validate_text_field(self)
-#
-#        MDTextField:
-#            id: create_user
-#            multiline: False
-#            write_tab: False
-#            icon_left: 'account-outline'
-#            hint_text: 'Username'
-#            pos_hint: {'center_x': .5}
-#            set_text: app.validate_text_field(self)
 
         PasswordField:
             id: create_pass
@@ -133,28 +114,16 @@
             orientation: 'vertical'
             value: dp(10)
 
-#        MDRaisedButton:
-#            icon_left: 'account-outline'
-#            text: 'Sign Up'
-#            pos_hint: {'center_x': .5}
-#            size_hint_x: .75
-#            on_release: root.perform_register()
-
         MDLabel:
             text: ''
 
 
 
-<PasswordField@MDTextField>:
+<PasswordField>:
     id: text_field
-    mode: 'filled'
+    mode: 'outlined'
     multiline: False
     write_tab: False
-    password: True  # This will mask the inputted text
-    password_mask: "*"  # Optional: specify the character used for masking (default is "*")
-    password_mask_delay: 1000  # Optional: delay in milliseconds before masking characters (default is 0)
-
-#    set_text: app.validate_text_field(self)
 
     MDTextFieldHintText:
         text: root.hint_txt
@@ -162,12 +131,8 @@
     MDTextFieldLeadingIcon:
         icon: "key-variant"
 
-    MDTextFieldTrailingIcon:
-        icon: 'eye-off'
-
     MDIconButton:
         icon: "eye-off"
         pos_hint: {"center_y": .5}
-        on_release:
-            self.icon = "eye" if self.icon == "eye-off" else "eye-off"
-
+#        on_release:
+#            self.icon = "eye" if self.icon == "eye-off" else "eye-off"

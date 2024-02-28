@@ -28,8 +28,7 @@ class MyKivyApp(MDApp):
         self.drop = DropdownHandler()
 
     def build(self):
-        self.theme_cls.primary_palette = 'Blue'
-        self.theme_cls.accent_palette = 'Orange'
+        self.theme_cls.primary_palette = 'Slateblue'
         self.theme_cls.theme_style = 'Light'
 
     def on_start(self):
@@ -37,6 +36,7 @@ class MyKivyApp(MDApp):
         self.sm = self.root.ids.scr_manager
         self.top_bar = self.root.ids.top_bar
         self.auto_login()
+        super().on_start()
 
     def auto_login(self):
         data = db.user_auto_login()

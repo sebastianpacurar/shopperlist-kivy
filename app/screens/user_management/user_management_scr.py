@@ -64,11 +64,11 @@ class LoginScr(MDScreen):
         self.main_app = MDApp.get_running_app()
         self.enter_user = None
         self.enter_pass = None
-        # self.bind(on_kv_post=self.set_definitions)
+        self.bind(on_kv_post=self.set_definitions)
 
     def set_definitions(self, *args):
         self.enter_user = self.ids.enter_user
-        self.enter_pass = self.ids.enter_pass.ids.text_field
+        self.enter_pass = self.ids.enter_pass
 
     def perform_login(self):
         if self.validate_sign_in(self.enter_user, self.enter_pass):
@@ -78,7 +78,7 @@ class LoginScr(MDScreen):
     def validate_sign_in(self, user, password):
         entry = [user.text.strip(), password.text.strip()]
         if any([user.error, password.error]) or any([len(x) == 0 for x in entry]):
-            SimpleSnackbar(text='There are errors in the fields', color=const.RGB_ERROR)
+            SimpleSnackbar(text='There are errors in the fields', color=const.RGB_ERROR).show()
             return False
         else:
             self.user_data = db.get_login_user(entry[0], entry[1])
@@ -112,7 +112,7 @@ class RegisterScr(MDScreen):
     def validate_sign_up(self, user, email, password):
         entry = [user.text.strip(), email.text.strip(), password.text.strip()]
         if any([email.error, user.error, password.error]) or any([len(x) == 0 for x in entry]):
-            SimpleSnackbar(text='There are errors in the fields', color=const.RGB_ERROR)
+            SimpleSnackbar(text='There are errors in the fields', color=const.RGB_ERROR).show()
             return False
         else:
             self.user_data = db.add_user(entry[0], entry[1], entry[2])

@@ -60,19 +60,6 @@
         on_text: app.validate_text_field(self)
 
 
-<SimpleSnackbar>
-    md_bg_color: root.color
-    MDLabel:
-        size_hint_y: None
-        height: self.texture_size[1]
-        text: root.text
-        font_size: sp(15)
-        bold: True
-        shorten: True
-        shorten_from: 'right'
-        pos_hint: {'center_y': .5}
-
-
 <MySnackbar>:
     pos_hint: {'center_x': .5}
     MDLabel:
