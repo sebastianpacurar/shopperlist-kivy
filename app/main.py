@@ -88,6 +88,9 @@ class MyKivyApp(MDApp):
             self.dialog.dismiss()
         MySnackbar(msg, db_result)
 
+    def open_navbar(self):
+        self.nav_drawer.set_state('open')
+
     def update_top_bar(self):
         nav_drawer_header = self.root.ids.nav_drawer_header
 
@@ -95,34 +98,44 @@ class MyKivyApp(MDApp):
         nav_drawer_header.title = self.get_user_name()
         nav_drawer_header.text = self.get_user_email()
 
+        left_btn = self.root.ids.top_bar_left_btn
+        right_btn = self.root.ids.top_bar_right_btn
+        scr_name = self.root.ids.top_bar_name
+
+        # TODO: continue from here (really broken)
         match self.sm.current:
             case const.MULTI_PROD_SCR:
-                self.top_bar.title = 'Products'
-                self.top_bar.left_action_items = [['menu', lambda _: self.nav_drawer.set_state('open')]]
-                self.top_bar.right_action_items = [
-                    ['dots-horizontal-circle-outline', lambda x: self.drop.toggle(x)]]
+                scr_name.text = 'Products'
+                left_btn.icon = 'menu'
+                right_btn.icon = 'dots-horizontal-circle-outline'
+
+                # self.top_bar.left_action_items = [['menu', lambda _: self.nav_drawer.set_state('open')]]
+                # self.top_bar.right_action_items = [
+                #     ['dots-horizontal-circle-outline', lambda x: self.drop.toggle(x)]]
             case const.COLLECTION_SCR:
-                self.top_bar.title = 'Collections'
-                self.top_bar.left_action_items = [['menu', lambda _: self.nav_drawer.set_state('open')]]
-                self.top_bar.right_action_items = [['plus-thick', lambda _: self.show_dialog()]]
+                scr_name.text = 'Collections'
+                left_btn.icon = 'menu'
+                right_btn.icon = 'dots-horizontal-circle-outline'
             case const.LIST_SCR:
-                self.top_bar.title = 'Shopping List'
-                self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                self.top_bar.right_action_items = [['plus-thick', lambda _: print('show dialog for add item in list')]]
+                scr_name.text = 'Shopping List'
+                left_btn.icon = 'arrow-left'
+                right_btn.icon = 'plus-thick'
+                # self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
+                # self.top_bar.right_action_items = [['plus-thick', lambda _: print('show dialog for add item in list')]]
             case const.ADD_PROD_SCR:
-                self.top_bar.title = 'Add product'
-                self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                self.top_bar.right_action_items = []
+                scr_name.text = 'Add product'
+                left_btn.icon = 'arrow-left'
+                right_btn.icon = ''
             case const.ADD_DATA_SCR:
-                self.top_bar.title = 'Add data'
-                self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                self.top_bar.right_action_items = []
+                scr_name.text = 'Add data'
+                left_btn.icon = 'arrow-left'
+                right_btn.icon = ''
             case const.PROD_SCR:
-                self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                self.top_bar.right_action_items = []
+                left_btn.icon = 'arrow-left'
+                right_btn.icon = ''
             case const.USER_MANAGER_SCREEN:
-                self.top_bar.left_action_items = []
-                self.top_bar.right_action_items = []
+                left_btn.icon = ''
+                right_btn.icon = ''
 
     def change_screen(self, screen_name):
         self.screen_stack.append(screen_name)
