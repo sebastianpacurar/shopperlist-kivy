@@ -17,26 +17,33 @@
 MainScreen:
 
 <MainScreen>:
-    md_bg_color: app.theme_cls.backgroundColor
+    md_bg_color: app.theme_cls.secondaryContainerColor
     MDTopAppBar:
         id: top_bar
         type: 'small'
         pos_hint: {'top': 1}
+        theme_bg_color: 'Custom'
+        md_bg_color: app.theme_cls.primaryColor
 
         MDTopAppBarLeadingButtonContainer:
-
             MDActionTopAppBarButton:
                 id: top_bar_left_btn
                 on_press: app.open_navbar() if self.icon=='menu' else app.navigate_back()
+                theme_icon_color: 'Custom'
+                icon_color: 'white'
 
         MDTopAppBarTitle:
             id: top_bar_name
             text: "AppBar small"
+            theme_text_color: 'Custom'
+            text_color: 'white'
 
         MDTopAppBarTrailingButtonContainer:
-
             MDActionTopAppBarButton:
                 id: top_bar_right_btn
+                theme_icon_color: 'Custom'
+                icon_color: 'white'
+
 
     MDNavigationLayout:
         MDScreenManager:
@@ -44,7 +51,9 @@ MainScreen:
             UserManagerScreen:
                 top_bar: top_bar
             ProdsScreen:
+                top_bar_height: top_bar.height
             CollectionScreen:
+                top_bar_height: top_bar.height
             ListScreen:
 #            AddDataScreen:
 #            AddProdScreen:
@@ -52,69 +61,71 @@ MainScreen:
                 top_bar: top_bar
 
         MDNavigationDrawer:
-            radius: (0, 16, 16, 0)
             id: nav_drawer
+            radius: (0, 16, 16, 0)
 
             MDNavigationDrawerMenu:
                 MDNavigationDrawerHeader:
                     id: nav_drawer_header
-                    orientation: 'vertical'
-                    padding: 0, 0, 0, dp(6)
+                    orientation: "vertical"
+                    padding: 0, 0, 0, "12dp"
                     adaptive_height: True
 
-                MDLabel:
-                    text: "Header title"
-                    theme_text_color: "Custom"
-                    theme_line_height: "Custom"
-                    line_height: 0
-                    text_color: "#4a4939"
-                    adaptive_height: True
-                    padding_x: "16dp"
-                    font_style: "Display"
-                    role: "small"
+                    MDLabel:
+                        text: "Header title"
+                        theme_text_color: "Custom"
+                        theme_line_height: "Custom"
+                        text_color: "#4a4939"
+                        adaptive_height: True
+                        padding_x: "16dp"
+                        font_style: "Display"
+                        role: "small"
 
-            MDNavigationDrawerDivider:
+                    MDLabel:
+                        text: "Header text"
+                        padding_x: "18dp"
+                        adaptive_height: True
+                        font_style: "Title"
+                        role: "medium"
 
-            MDNavigationDrawerItem:
-                on_press:
-                    nav_drawer.set_state('close')
-                    app.change_screen_and_update_bar('products_list_scr')
-                MDNavigationDrawerItemLeadingIcon:
-                    icon: 'food-drumstick-outline'
-                    theme_icon_color: "Custom"
-                    icon_color: "#4a4939"
+                MDNavigationDrawerDivider:
+                MDNavigationDrawerItem:
+                    on_press:
+                        nav_drawer.set_state('close')
+                        app.unset_app_user()
+                    MDNavigationDrawerItemLeadingIcon:
+                        icon: 'logout-variant'
+                        theme_icon_color: "Custom"
+                        icon_color: "#4a4939"
+                    MDNavigationDrawerItemText:
+                        text: 'Logout'
+                        theme_text_color: "Custom"
+                        text_color: "#4a4939"
 
-                MDNavigationDrawerItemText:
-                    text: 'Products'
-                    theme_text_color: "Custom"
-                    text_color: "#4a4939"
+                MDNavigationDrawerDivider:
+                MDNavigationDrawerItem:
+                    on_press:
+                        nav_drawer.set_state('close')
+                        app.change_screen_and_update_bar('products_list_scr')
+                    MDNavigationDrawerItemLeadingIcon:
+                        icon: 'food-drumstick-outline'
+                        theme_icon_color: "Custom"
+                        icon_color: "#4a4939"
+                    MDNavigationDrawerItemText:
+                        text: 'Products'
+                        theme_text_color: "Custom"
+                        text_color: "#4a4939"
 
-            MDNavigationDrawerDivider:
-
-            MDNavigationDrawerItem:
-                on_press:
-                    nav_drawer.set_state('close')
-                    app.change_screen_and_update_bar('collection_scr')
-                MDNavigationDrawerItemLeadingIcon:
-                    icon: 'list-box-outline'
-                    theme_icon_color: "Custom"
-                    icon_color: "#4a4939"
-
-                MDNavigationDrawerItemText:
-                    text: 'Shopping Lists'
-                    theme_text_color: "Custom"
-                    text_color: "#4a4939"
-
-
-#<DrawerItem>:
-#    active_indicator_color: "#e7e4c0"
-#
-#    MDNavigationDrawerItemLeadingIcon:
-#        icon: root.icon
-#        theme_icon_color: "Custom"
-#        icon_color: "#4a4939"
-#
-#    MDNavigationDrawerItemText:
-#        text: root.text
-#        theme_text_color: "Custom"
-#        text_color: "#4a4939"
+                MDNavigationDrawerDivider:
+                MDNavigationDrawerItem:
+                    on_press:
+                        nav_drawer.set_state('close')
+                        app.change_screen_and_update_bar('collection_scr')
+                    MDNavigationDrawerItemLeadingIcon:
+                        icon: 'list-box-outline'
+                        theme_icon_color: "Custom"
+                        icon_color: "#4a4939"
+                    MDNavigationDrawerItemText:
+                        text: 'Shopping Lists'
+                        theme_text_color: "Custom"
+                        text_color: "#4a4939"

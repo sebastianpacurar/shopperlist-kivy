@@ -1,37 +1,33 @@
 #: import Spacer components.components.Spacer
 #: import SelectSignInSignUpButton components.components.SelectSignInSignUpButton
 
+#: import LOGIN_SCR utils.constants.LOGIN_SCR
+#: import REGISTER_SCR utils.constants.REGISTER_SCR
+
 
 <UserManagerScreen>:
     name: 'usr_manager_scr'
     MDFloatLayout:
         orientation: 'vertical'
-        md_bg_color: 'lightseagreen'
+        md_bg_color: app.theme_cls.secondaryContainerColor
 
         MDBoxLayout:
+            md_bg_color: app.theme_cls.secondaryContainerColor
             orientation: 'vertical'
             pos_hint: {'center_x': .5, 'center_y': .5}
             size_hint: .85, .70
 
-            MDBoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: None
-                height: self.children[0].height
-
-                SelectSignInSignUpButton:
-                    text: 'Log in'
-                    id: login_btn
-                    on_release: root.switch_scr(self)
-
-                Spacer:
-                    orientation: 'horizontal'
-                    value: self.parent.width * 0.05
-
-                SelectSignInSignUpButton:
-                    text: 'Register'
-                    id: register_btn
-                    on_release: root.switch_scr(self)
-
+            MDSegmentedButton:
+                type:'large'
+                MDSegmentedButtonItem:
+                    on_release: root.switch_scr(LOGIN_SCR)
+                    active: True
+                    MDSegmentButtonLabel:
+                        text: 'Log in'
+                MDSegmentedButtonItem:
+                    on_release: root.switch_scr(REGISTER_SCR)
+                    MDSegmentButtonLabel:
+                        text: 'Register'
 
             MDScreenManager:
                 id: signin_signup_manager
@@ -41,21 +37,10 @@
                     top_bar: root.top_bar
 
 
-<SelectSignInSignUpButton>:
-    style: 'filled'
-    size_hint_x: None
-    width: self.parent.width * 0.49
-    radius: dp(0)
-
-    MDButtonText:
-        pos_hint: {'center_x': .5, 'center_y': .5}
-        text: root.text
-
-
 <LoginScr>:
     name: 'log_in_scr'
     MDBoxLayout:
-        md_bg_color: app.theme_cls.backgroundColor
+        md_bg_color: app.theme_cls.tertiaryContainerColor
         orientation: 'vertical'
         padding: dp(20)
         spacing: dp(15)
@@ -99,7 +84,7 @@
 <RegisterScr>
     name: 'register_scr'
     MDBoxLayout:
-        md_bg_color: app.theme_cls.backgroundColor
+        md_bg_color: app.theme_cls.tertiaryContainerColor
         orientation: 'vertical'
         padding: dp(20)
         spacing: dp(15)
@@ -150,7 +135,6 @@
 
         MDLabel:
             text: ''
-
 
 
 <PasswordField>:

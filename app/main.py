@@ -28,7 +28,7 @@ class MyKivyApp(MDApp):
         self.drop = DropdownHandler()
 
     def build(self):
-        self.theme_cls.primary_palette = 'Slateblue'
+        self.theme_cls.primary_palette = 'Lightblue'
         self.theme_cls.theme_style = 'Light'
 
     def on_start(self):
@@ -108,10 +108,6 @@ class MyKivyApp(MDApp):
                 scr_name.text = 'Products'
                 left_btn.icon = 'menu'
                 right_btn.icon = 'dots-horizontal-circle-outline'
-
-                # self.top_bar.left_action_items = [['menu', lambda _: self.nav_drawer.set_state('open')]]
-                # self.top_bar.right_action_items = [
-                #     ['dots-horizontal-circle-outline', lambda x: self.drop.toggle(x)]]
             case const.COLLECTION_SCR:
                 scr_name.text = 'Collections'
                 left_btn.icon = 'menu'
@@ -120,8 +116,6 @@ class MyKivyApp(MDApp):
                 scr_name.text = 'Shopping List'
                 left_btn.icon = 'arrow-left'
                 right_btn.icon = 'plus-thick'
-                # self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                # self.top_bar.right_action_items = [['plus-thick', lambda _: print('show dialog for add item in list')]]
             case const.ADD_PROD_SCR:
                 scr_name.text = 'Add product'
                 left_btn.icon = 'arrow-left'

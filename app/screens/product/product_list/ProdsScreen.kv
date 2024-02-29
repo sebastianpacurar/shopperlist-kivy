@@ -1,23 +1,37 @@
 #: import TwoLineProdImgListItem components.components.TwoLineProdImgListItem
 #: import RV components.components.RV
-#: include components/components.kv
 
 
 <ProdsScreen>:
     name: 'products_list_scr'
-    MDFloatLayout:
-        size_hint_y: .9
 
-        MDTextField:
-            id: text_field
-            size_hint_x: .8
-            pos_hint: {'center_x': .5, 'top': 1}
-            on_text: root.display_search_results(self)
-            MDTextFieldHintText:
-                text: 'Search Product'
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: dp(20), 0, dp(20), 0
 
-        RV:
-            id: rv_prod_list
-            pos_hint: {'center_x': .5, 'top': .9}
-            size_hint_y: .9
-            viewclass: 'TwoLineProdImgListItem'
+        MDLabel:
+            text: ''
+            size_hint_y: None
+            height: root.top_bar_height + root.top_bar_height * .25
+            minimum_size: self.size
+
+        MDBoxLayout:
+            pos_hint: {'center_x': .5}
+            orientation: 'vertical'
+            spacing: dp(20)
+
+            MDTextField:
+                id: text_field
+                size_hint_x: .8
+                pos_hint: {'center_x': .5}
+                on_text: root.display_search_results(self)
+                MDTextFieldHintText:
+                    text: 'Search Product'
+
+            RV:
+                id: rv_prod_list
+                viewclass: 'TwoLineProdImgListItem'
+
+
+
+

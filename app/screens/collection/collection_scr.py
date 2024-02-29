@@ -1,4 +1,4 @@
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, NumericProperty
 from kivymd.app import MDApp
 from kivymd.uix.button import MDButton
 from kivymd.uix.screen import MDScreen
@@ -8,40 +8,28 @@ from app.utils import constants as const
 
 
 class CollectionScreen(MDScreen):
+    top_bar_height = NumericProperty()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.sm = None
-        self.my_lists_btn = None
-        self.all_lists_btn = None
         self.bind(on_pre_enter=self.set_definitions)
 
     def set_definitions(self, *args):
         self.sm = self.ids.collections_manager
         self.sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
-        self.my_lists_btn = self.ids.my_lists_btn
-        self.all_lists_btn = self.ids.all_lists_btn
-        self.my_lists_btn.disabled = True
-        self.all_lists_btn.disabled = False
-        self.my_lists_btn.bold = False
-        self.all_lists_btn.bold = True
 
     def switch_scr(self, *args):
-        if args[0].text == 'My Lists':
-            self.sm.transition.direction = 'right'
-            self.sm.current = const.USER_COLLECTION_SCR
-            self.sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
-            self.my_lists_btn.disabled = True
-            self.all_lists_btn.disabled = False
-            self.my_lists_btn.bold = False
-            self.all_lists_btn.bold = True
-        else:
-            self.sm.transition.direction = 'left'
-            self.sm.current = const.ALL_COLLECTION_SCR
-            self.sm.get_screen(const.ALL_COLLECTION_SCR).display_all_collections()
-            self.my_lists_btn.disabled = False
-            self.all_lists_btn.disabled = True
-            self.my_lists_btn.bold = True
-            self.all_lists_btn.bold = False
+        if self.sm.current != args[0]:
+            match args[0]:
+                case const.USER_COLLECTION_SCR:
+                    self.sm.transition.direction = 'right'
+                    self.sm.current = const.USER_COLLECTION_SCR
+                    self.sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
+                case const.ALL_COLLECTION_SCR:
+                    self.sm.transition.direction = 'left'
+                    self.sm.current = const.ALL_COLLECTION_SCR
+                    self.sm.get_screen(const.ALL_COLLECTION_SCR).display_all_collections()
 
 
 class BaseCollectionScr(MDScreen):

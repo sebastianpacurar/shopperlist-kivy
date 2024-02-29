@@ -1,5 +1,3 @@
-import os
-
 from kivymd.uix.snackbar import MDSnackbarButtonContainer, MDSnackbarActionButtonText, MDSnackbarSupportingText
 from kivy.metrics import sp, dp
 from kivy.properties import StringProperty, ColorProperty, NumericProperty, ObjectProperty
@@ -24,14 +22,12 @@ class RV(MDRecycleView):
     pass
 
 
-# TwoLineRightIconListItem
 class EditableTwoLineItemList(MDListItem):
     itm_icon = StringProperty()
     headline = StringProperty()
     supporting = StringProperty()
 
 
-# ThreeLineRightIconListItem
 class EditableThreeLineItemList(MDListItem):
     itm_icon = StringProperty()
     headline = StringProperty()
@@ -39,13 +35,11 @@ class EditableThreeLineItemList(MDListItem):
     tertiary = StringProperty()
 
 
-# OneLineAvatarListItem
 class ProdItemWithImg(MDListItem):
     img_path = StringProperty()
     headline = StringProperty()
 
 
-# TwoLineAvatarIconListItem
 class TwoLineProdImgListItem(MDListItem):
     headline = StringProperty()
     supporting = StringProperty()

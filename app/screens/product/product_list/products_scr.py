@@ -1,9 +1,12 @@
+from kivy.properties import NumericProperty
 from kivymd.uix.screen import MDScreen
 
 from app.components.components import db, DropdownHandler
 
 
 class ProdsScreen(MDScreen):
+    top_bar_height = NumericProperty()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.drop = DropdownHandler()
