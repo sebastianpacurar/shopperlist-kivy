@@ -1,4 +1,6 @@
+from kivy.properties import StringProperty
 from kivymd.app import MDApp
+from kivymd.uix.button import MDButton
 from kivymd.uix.screen import MDScreen
 
 from app.components.components import db
@@ -55,17 +57,17 @@ class BaseCollectionScr(MDScreen):
         if len(entry) == 5:
             item_data = {
                 'id': entry[0],
-                'text': entry[2],
-                'secondary_text': f'created by {entry[4]}',
-                'tertiary_text': stamp,
+                'headline': entry[2],
+                'supporting': f'created by {entry[4]}',
+                'tertiary': stamp,
                 'itm_icon': 'dots-vertical',
                 'on_release': lambda list_id=entry[0]: self.main_app.change_screen_to_list_scr(list_id),
             }
         else:
             item_data = {
                 'id': entry[0],
-                'text': entry[2],
-                'secondary_text': stamp,
+                'headline': entry[2],
+                'supporting': stamp,
                 'itm_icon': 'dots-vertical',
                 'on_release': lambda list_id=entry[0]: self.main_app.change_screen_to_list_scr(list_id),
             }
@@ -98,3 +100,7 @@ class AllCollectionScr(BaseCollectionScr):
             rv_data.append(item_data)
 
         self.ids.rv_collection.data = rv_data
+
+
+class SelectListScreenButton(MDButton):
+    text = StringProperty()

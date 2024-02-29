@@ -1,6 +1,19 @@
 #: import UserManagerScreen screens.user_management.user_management_scr.UserManagerScreen
 #: include screens/user_management/UserManagerScreen.kv
 
+#: import CollectionScreen screens.collection.collection_scr.CollectionScreen
+#: include screens/collection/CollectionScreen.kv
+
+#: import ProdsScreen screens.product.product_list.products_scr.ProdsScreen
+#: include screens/product/product_list/ProdsScreen.kv
+
+#: import ProdScreen screens.product.single_product.product_scr.ProdScreen
+#: include screens/product/single_product/ProdScreen.kv
+
+#: import ListScreen screens.list.list_scr.ListScreen
+#: include screens/list/ListScreen.kv
+
+
 MainScreen:
 
 <MainScreen>:
@@ -16,19 +29,19 @@ MainScreen:
 
             UserManagerScreen:
                 top_bar: top_bar
-#
-#            ProdsScreen:
-#
-#            CollectionScreen:
-#
-#            ListScreen:
+
+            ProdsScreen:
+
+            CollectionScreen:
+
+            ListScreen:
 #
 #            AddDataScreen:
 #
 #            AddProdScreen:
 #
-#            ProdScreen:
-#                top_bar: top_bar
+            ProdScreen:
+                top_bar: top_bar
 
 
         MDNavigationDrawer:

@@ -1,7 +1,6 @@
 import os
 
-from kivymd.uix.snackbar import MDSnackbar, MDSnackbarButtonContainer, MDSnackbarActionButton, \
-    MDSnackbarActionButtonText, MDSnackbarSupportingText
+from kivymd.uix.snackbar import MDSnackbarButtonContainer, MDSnackbarActionButtonText, MDSnackbarSupportingText
 from kivy.metrics import sp, dp
 from kivy.properties import StringProperty, ColorProperty, NumericProperty, ObjectProperty
 from kivymd.app import MDApp
@@ -9,7 +8,7 @@ from kivymd.uix.button import MDButton
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
 from kivymd.uix.snackbar import MDSnackbar, MDSnackbarActionButton
-from kivymd.uix.list import MDListItem, MDListItemTrailingIcon
+from kivymd.uix.list import MDListItem
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
 from kivymd.uix.navigationbar import MDNavigationItemIcon
@@ -20,8 +19,6 @@ from app.utils import constants as const
 # This is where the DB gets instantiated
 db = Database(SQLITE)
 
-kv_file = os.path.join(os.path.dirname(__file__), 'components.kv')
-
 
 class RV(MDRecycleView):
     pass
@@ -30,20 +27,28 @@ class RV(MDRecycleView):
 # TwoLineRightIconListItem
 class EditableTwoLineItemList(MDListItem):
     itm_icon = StringProperty()
+    headline = StringProperty()
+    supporting = StringProperty()
 
 
 # ThreeLineRightIconListItem
 class EditableThreeLineItemList(MDListItem):
     itm_icon = StringProperty()
+    headline = StringProperty()
+    supporting = StringProperty()
+    tertiary = StringProperty()
 
 
 # OneLineAvatarListItem
 class ProdItemWithImg(MDListItem):
     img_path = StringProperty()
+    headline = StringProperty()
 
 
 # TwoLineAvatarIconListItem
 class TwoLineProdImgListItem(MDListItem):
+    headline = StringProperty()
+    supporting = StringProperty()
     prod_id = NumericProperty()
     img_path = StringProperty()
     itm_icon = StringProperty()
@@ -83,7 +88,8 @@ class SimpleSnackbar(MDSnackbar):
     text = StringProperty()
     color = ColorProperty()
 
-    def show(self):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         MDSnackbar(
             MDSnackbarSupportingText(text=self.text),
             y=dp(24),
@@ -177,8 +183,9 @@ class DropdownHandler(MDDropdownMenu):
 
     def on_dismiss(self):
         super().on_dismiss()
-        if isinstance(self.caller, MDListItemTrailingIcon):
-            self.parent_caller.bg_color = self.theme_cls.bg_darkest
+        # TODO
+        # if isinstance(self.caller, MDListItemTrailingIcon):
+        #     self.parent_caller.bg_color = self.theme_cls.bg_darkest
 
     def toggle(self, widget):
         data = None
@@ -227,7 +234,8 @@ class DropdownHandler(MDDropdownMenu):
             ]
 
         elif isinstance(widget, TwoLineProdImgListItem):
-            widget.bg_color = self.theme_cls.primary_light
+            # TODO
+            # widget.bg_color = self.theme_cls.primary_light
             self.parent_caller = widget
             self.caller = widget.children[0].children[0]
             prod_id = self.parent_caller.prod_id

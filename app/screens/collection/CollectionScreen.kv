@@ -40,16 +40,25 @@
                 size_hint_y: .25
 
 
-<SelectListScreenButton@MDRectangleFlatButton>:
+<SelectListScreenButton>:
+    style: 'filled'
     radius: [0, 0, 0, 0]
-    line_color: app.theme_cls.primary_dark
     size_hint_x: None
     width: self.parent.width * 0.49
-    md_bg_color_disabled: app.theme_cls.primary_light
-    font_style: 'Body2'
-    disabled_color: 'black'
-    theme_text_color: 'Custom'
-    text_color: app.theme_cls.primary_color
+
+    MDButtonText:
+        text: root.text
+        pos_hint: {'center_x': .5, 'center_y': .5}
+
+
+#    radius: [0, 0, 0, 0]
+#    line_color: app.theme_cls.primary_dark
+
+#    md_bg_color_disabled: app.theme_cls.primary_light
+#    font_style: 'Body2'
+#    disabled_color: 'black'
+#    theme_text_color: 'Custom'
+#    text_color: app.theme_cls.primary_color
 
 
 <AllCollectionScr>:

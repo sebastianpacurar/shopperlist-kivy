@@ -12,8 +12,9 @@
             id: text_field
             size_hint_x: .8
             pos_hint: {'center_x': .5, 'top': 1}
-            hint_text: 'Search Product'
             on_text: root.display_search_results(self)
+            MDTextFieldHintText:
+                text: 'Search Product'
 
         RV:
             id: rv_prod_list

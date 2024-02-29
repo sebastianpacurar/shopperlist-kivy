@@ -62,14 +62,11 @@
 
         MDTextField:
             id: enter_user
-            mode: 'outlined'
+            mode: 'filled'
             multiline: False
             write_tab: False
-
-
             MDTextFieldLeadingIcon:
                 icon: 'account-outline'
-
             MDTextFieldHintText:
                 text: 'Username'
 
@@ -102,9 +99,37 @@
 <RegisterScr>
     name: 'register_scr'
     MDBoxLayout:
+        md_bg_color: app.theme_cls.backgroundColor
         orientation: 'vertical'
         padding: dp(20)
         spacing: dp(15)
+
+        MDTextField:
+            id: create_email
+            pos_hint: {'center_x': .5}
+            mode: 'filled'
+            multiline: False
+            write_tab: False
+            MDTextFieldLeadingIcon:
+                icon: 'email-outline'
+            MDTextFieldHintText:
+                text: 'Email'
+            MDTextFieldHelperText:
+                text: 'Not a valid email'
+                mode: 'on_error'
+
+
+        MDTextField:
+            id: create_user
+            pos_hint: {'center_x': .5}
+            mode: 'filled'
+            multiline: False
+            write_tab: False
+            MDTextFieldLeadingIcon:
+                icon: 'account-outline'
+            MDTextFieldHintText:
+                text: 'Username'
+
 
         PasswordField:
             id: create_pass
@@ -114,14 +139,22 @@
             orientation: 'vertical'
             value: dp(10)
 
+        MDButton:
+            type: 'tonal'
+            pos_hint: {'center_x': .5}
+            size_hint_x: .75
+            on_release: root.perform_register()
+
+            MDButtonText:
+                text: 'Register'
+
         MDLabel:
             text: ''
 
 
 
 <PasswordField>:
-    id: text_field
-    mode: 'outlined'
+    mode: 'filled'
     multiline: False
     write_tab: False
 

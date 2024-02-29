@@ -9,32 +9,45 @@
 
 
 <EditableTwoLineItemList>:
-    font_style: 'Subtitle1'
-    secondary_font_style: 'Subtitle2'
-    IconRightWidget:
+    MDListItemTrailingIcon:
         icon: root.itm_icon
+        pos_hint: {'center_y': .5}
+    MDListItemHeadlineText:
+        text: root.headline
+    MDListItemSupportingText:
+        text: root.supporting
 
 
 <EditableThreeLineItemList>:
-    font_style: 'Subtitle1'
-    secondary_font_style: 'Subtitle2'
-    tertiary_font_style: 'Subtitle2'
-    IconRightWidget:
+    MDListItemTrailingIcon:
         icon: root.itm_icon
+        pos_hint: {'center_y': .5}
+    MDListItemHeadlineText:
+        text: root.headline
+    MDListItemSupportingText:
+        text: root.supporting
+    MDListItemTertiaryText:
+        text: root.tertiary
 
 
 <ProdItemWithImg>:
-    ImageLeftWidget:
+    MDListItemLeadingAvatar:
         source: root.img_path
+    MDListItemHeadlineText:
+        text: root.headline
+
 
 <TwoLineProdImgListItem>:
-    font_style: 'Subtitle1'
-    secondary_font_style: 'Subtitle2'
-    MDListItemLeadingIcon:
+    on_release: root.icon_func(root)
+    MDListItemLeadingAvatar:
         source: root.img_path
+    MDListItemHeadlineText:
+        text: root.headline
+    MDListItemSupportingText:
+        text: root.supporting
     MDListItemTrailingIcon:
         icon: root.itm_icon
-        on_release: root.icon_func(root)
+        pos_hint: {'center_y': .5}
 
 
 <AddShoppingListContent>:
