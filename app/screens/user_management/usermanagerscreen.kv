@@ -9,10 +9,10 @@
     name: 'usr_manager_scr'
     MDFloatLayout:
         orientation: 'vertical'
-        md_bg_color: app.theme_cls.secondaryContainerColor
+        md_bg_color: 'lightseagreen'
 
         MDBoxLayout:
-            md_bg_color: app.theme_cls.secondaryContainerColor
+            md_bg_color: app.theme_cls.primaryContainerColor
             orientation: 'vertical'
             pos_hint: {'center_x': .5, 'center_y': .5}
             size_hint: .85, .70
@@ -40,14 +40,14 @@
 <LoginScr>:
     name: 'log_in_scr'
     MDBoxLayout:
-        md_bg_color: app.theme_cls.tertiaryContainerColor
+        md_bg_color: app.theme_cls.primaryContainerColor
         orientation: 'vertical'
         padding: dp(20)
         spacing: dp(15)
 
         MDTextField:
             id: enter_user
-            mode: 'filled'
+            mode: 'outlined'
             multiline: False
             write_tab: False
             MDTextFieldLeadingIcon:
@@ -84,7 +84,7 @@
 <RegisterScr>
     name: 'register_scr'
     MDBoxLayout:
-        md_bg_color: app.theme_cls.tertiaryContainerColor
+        md_bg_color: app.theme_cls.primaryContainerColor
         orientation: 'vertical'
         padding: dp(20)
         spacing: dp(15)
@@ -92,7 +92,7 @@
         MDTextField:
             id: create_email
             pos_hint: {'center_x': .5}
-            mode: 'filled'
+            mode: 'outlined'
             multiline: False
             write_tab: False
             MDTextFieldLeadingIcon:
@@ -107,7 +107,7 @@
         MDTextField:
             id: create_user
             pos_hint: {'center_x': .5}
-            mode: 'filled'
+            mode: 'outlined'
             multiline: False
             write_tab: False
             MDTextFieldLeadingIcon:
@@ -138,7 +138,7 @@
 
 
 <PasswordField>:
-    mode: 'filled'
+    mode: 'outlined'
     multiline: False
     write_tab: False
 

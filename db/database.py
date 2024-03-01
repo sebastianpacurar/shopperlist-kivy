@@ -154,6 +154,22 @@ class Database:
             cursor.close()
             conn.close()
 
+    def update_shop_list_name(self, value, list_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res = False
+        try:
+            cursor.execute(self.queries.set_list_name(), (value, list_id))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return res
+
     def user_logout(self, name):
         conn = self.set_conn()
         cursor = conn.cursor()

@@ -9,7 +9,6 @@ class ProdsScreen(MDScreen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.drop = DropdownHandler()
         self.bind(on_enter=self.display_products)
         self.bind(on_pre_leave=self.clean_up)
 
@@ -22,7 +21,7 @@ class ProdsScreen(MDScreen):
                 'supporting': entry[2],
                 'itm_icon': 'dots-vertical',
                 'img_path': entry[3],
-                'icon_func': lambda x: self.drop.toggle(x)
+                'icon_func': lambda x: DropdownHandler().toggle(x)
             }
 
             rv_data.append(item_data)
@@ -37,7 +36,7 @@ class ProdsScreen(MDScreen):
                 'supporting': entry[2],
                 'itm_icon': 'dots-vertical',
                 'img_path': entry[3],
-                'icon_func': lambda x: self.drop.toggle(x)
+                'icon_func': lambda x: DropdownHandler().toggle(x)
             }
 
             rv_data.append(item_data)

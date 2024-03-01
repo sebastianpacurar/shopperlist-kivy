@@ -1,4 +1,8 @@
-from kivymd.uix.snackbar import MDSnackbarButtonContainer, MDSnackbarActionButtonText, MDSnackbarSupportingText
+from kivymd.uix.appbar import MDActionTopAppBarButton
+from kivymd.uix.bottomsheet import MDBottomSheetDragHandle
+from kivymd.uix.dialog import MDDialog, MDDialogContentContainer
+from kivymd.uix.snackbar import MDSnackbarButtonContainer, MDSnackbarActionButtonText, MDSnackbarSupportingText, \
+    MDSnackbarCloseButton
 from kivy.metrics import sp, dp
 from kivy.properties import StringProperty, ColorProperty, NumericProperty, ObjectProperty
 from kivymd.app import MDApp
@@ -6,10 +10,9 @@ from kivymd.uix.button import MDButton
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
 from kivymd.uix.snackbar import MDSnackbar, MDSnackbarActionButton
-from kivymd.uix.list import MDListItem
+from kivymd.uix.list import MDListItem, MDList
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
-from kivymd.uix.navigationbar import MDNavigationItemIcon
 
 from db.database import Database, SQLITE
 from app.utils import constants as const
@@ -22,7 +25,13 @@ class RV(MDRecycleView):
     pass
 
 
+class OneLineItem(MDListItem):
+    supporting = StringProperty()
+
+
 class EditableTwoLineItemList(MDListItem):
+    itm_id = StringProperty()
+    icon_func = ObjectProperty()
     itm_icon = StringProperty()
     headline = StringProperty()
     supporting = StringProperty()
@@ -58,8 +67,27 @@ class PasswordField(MDTextField):
     hint_txt = StringProperty()
 
 
-class AddShoppingListContent(MDBoxLayout):
+class BottomSheetHandleContainer(MDBottomSheetDragHandle):
+    title = StringProperty()
+
+
+class BottomSheetContent(MDList):
     pass
+
+
+class MyDialog(MDDialog):
+    confirm = ObjectProperty()
+    headline = StringProperty()
+    supporting = StringProperty()
+    accept_txt = StringProperty()
+
+
+class AddShoppingListContent(MDDialogContentContainer):
+    pass
+
+
+class RenameShoppingListContent(MDDialogContentContainer):
+    list_id = StringProperty()
 
 
 class Spacer(MDBoxLayout):
@@ -84,83 +112,75 @@ class SimpleSnackbar(MDSnackbar):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        MDSnackbar(
-            MDSnackbarSupportingText(text=self.text),
-            y=dp(24),
-            orientation='horizontal',
-            pos_hint={'center_x': 0.5, 'y': 0},
-            background_color=self.color,
-        ).open()
+        self.add_widget(MDSnackbarSupportingText(text=self.text))
+        self.y = dp(24)
+        self.orientation = 'horizontal'
+        self.pos_hint = {'center_x': 0.5, 'y': 0}
+        self.background_color = self.color
+        self.open()
 
 
 class MySnackbar(MDSnackbar):
-    text = StringProperty('')
-
-    # def show(self):
-    #     MDSnackbar(
-    #         MDSnackbarSupportingText(text=self.text),
-    #         MDSnackbarButtonContainer(
-    #             MDSnackbarActionButton(
-    #                 MDSnackbarActionButtonText(
-    #                     text='Action button'
-    #                 ),
-    #             ),
-    #             pos_hint={'center_y': 0.5}
-    #         ),
-    #         y=dp(24),
-    #         orientation='horizontal',
-    #         pos_hint={'center_x': .5, 'y':0},
-    #         background_color=self.color,
-    #     ).open()
+    text = StringProperty()
 
     def __init__(self, message, db_res, **kwargs):
         super().__init__(**kwargs)
         self.main_app = MDApp.get_running_app()
         self.text = message
-        self.md_bg_color = const.RGB_SUCCESS if db_res else const.RGB_ERROR
-        self.show()
+        self.background_color = const.RGB_SUCCESS if db_res else const.RGB_ERROR
 
-        if db_res:
+        self.y = dp(24)
+        self.orientation = 'horizontal'
+        self.pos_hint = {'center_x': 0.5, 'y': 0}
+
+        self.add_widget(MDSnackbarSupportingText(
+            text=self.text,
+            theme_text_color='Custom',
+            theme_font_size='Custom',
+            text_color='white',
+            font_size=sp(15.5),
+            bold=True
+        ))
+
+        bar_buttons = MDSnackbarButtonContainer(pos_hint={'center_y': .5})
+
+        if isinstance(db_res, tuple):
             response, val_id, screen_name = db_res
             if response and screen_name:
                 func = None
                 match screen_name:
                     case const.LIST_SCR:
-                        func = lambda _: (self.main_app.change_screen_to_list_scr(val_id), self.dismiss_sb())
+                        func = lambda _: (self.main_app.change_screen_to_list_scr(val_id), self.dismiss())
                     case const.PROD_SCR:
-                        func = lambda _: (self.main_app.change_screen_to_prod_scr(val_id), self.dismiss_sb())
+                        func = lambda _: (self.main_app.change_screen_to_prod_scr(val_id), self.dismiss())
 
-                item = MDSnackbarActionButton(
-                    text='View',
-                    theme_text_color='Custom',
-                    text_color='white',
-                    font_size=sp(17.5),
-                    on_release=func
+                bar_buttons.add_widget(
+                    MDSnackbarActionButton(
+                        MDSnackbarActionButtonText(
+                            text='View',
+                            theme_text_color='Custom',
+                            theme_font_size='Custom',
+                            text_color='white',
+                            font_size=sp(15.5),
+                            bold=True,
+                        ),
+                        style='outlined',
+                        theme_line_color='Custom',
+                        line_color='white',
+                        radius=(dp(5), dp(5), dp(5), dp(5)),
+                        on_release=func
+                    )
                 )
 
-            self.add_widget(item)
+        bar_buttons.add_widget(
+            MDSnackbarCloseButton(
+                icon='close',
+                on_release=self.dismiss
+            )
+        )
 
-    def show(self):
-        MDSnackbar(
-            MDSnackbarSupportingText(
-                text='Single-line snackbar with action',
-            ),
-            MDSnackbarButtonContainer(
-                MDSnackbarActionButton(
-                    MDSnackbarActionButtonText(
-                        text='Action button'
-                    ),
-                ),
-                pos_hint={'center_y': 0.5}
-            ),
-            y=dp(24),
-            orientation='horizontal',
-            pos_hint={'center_x': .5},
-            background_color=self.color,
-        ).open()
-
-    def dismiss_sb(self):
-        self.dismiss()
+        self.add_widget(bar_buttons)
+        self.open()
 
 
 class DropdownHandler(MDDropdownMenu):
@@ -200,17 +220,15 @@ class DropdownHandler(MDDropdownMenu):
             for entry in data:
                 menu_items.append(
                     {
-                        'viewclass': 'OneLineListItem',
                         'text': entry[1],
                         'on_release': lambda item=entry: self.on_dropdown_item_select(widget, item)
                     }
                 )
         # trigger items which trigger options from the ActionTopAppBarButton
-        elif isinstance(widget, MDNavigationItemIcon):
+        elif isinstance(widget, MDActionTopAppBarButton):
 
             menu_items = [
                 {
-                    'viewclass': 'OneLineListItem',
                     'text': 'Add product',
                     'on_release': lambda screen=const.ADD_PROD_SCR: (
                         self.main_app.change_screen_and_update_bar(screen),
@@ -218,7 +236,6 @@ class DropdownHandler(MDDropdownMenu):
                     )
                 },
                 {
-                    'viewclass': 'OneLineListItem',
                     'text': 'Add Data',
                     'on_release': lambda screen=const.ADD_DATA_SCR: (
                         self.main_app.change_screen_and_update_bar(screen),
@@ -231,7 +248,7 @@ class DropdownHandler(MDDropdownMenu):
             # TODO
             # widget.bg_color = self.theme_cls.primary_light
             self.parent_caller = widget
-            self.caller = widget.children[0].children[0]
+            self.caller = widget.children[0]
             prod_id = self.parent_caller.prod_id
 
             menu_items = [

@@ -44,7 +44,7 @@ class BaseCollectionScr(MDScreen):
             stamp = entry[2].strftime("%Y-%m-%d %I:%M %p")
         if len(entry) == 5:
             item_data = {
-                'id': entry[0],
+                'itm_id': entry[0],
                 'headline': entry[2],
                 'supporting': f'created by {entry[4]}',
                 'tertiary': stamp,
@@ -53,7 +53,7 @@ class BaseCollectionScr(MDScreen):
             }
         else:
             item_data = {
-                'id': entry[0],
+                'itm_id': entry[0],
                 'headline': entry[2],
                 'supporting': stamp,
                 'itm_icon': 'dots-vertical',

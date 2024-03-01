@@ -10,8 +10,14 @@
 #: import ProdScreen screens.product.single_product.product_scr.ProdScreen
 #: include screens/product/single_product/ProdScreen.kv
 
+#: import AddProdScreen screens.product.add_product.add_product_scr.AddProdScreen
+#: include screens/product/add_product/AddProdScreen.kv
+
 #: import ListScreen screens.list.list_scr.ListScreen
 #: include screens/list/ListScreen.kv
+
+#: import ListScreen screens.product.add_data.add_data_scr.AddDataScreen
+#: include screens/product/add_data/AddData.kv
 
 
 MainScreen:
@@ -20,25 +26,28 @@ MainScreen:
     md_bg_color: app.theme_cls.secondaryContainerColor
     MDTopAppBar:
         id: top_bar
-        type: 'small'
+        type: 'medium'
         pos_hint: {'top': 1}
+        size_hint_y: .12
         theme_bg_color: 'Custom'
         md_bg_color: app.theme_cls.primaryColor
 
         MDTopAppBarLeadingButtonContainer:
+            padding: dp(10), dp(20), 0, dp(10)
             MDActionTopAppBarButton:
                 id: top_bar_left_btn
-                on_press: app.open_navbar() if self.icon=='menu' else app.navigate_back()
                 theme_icon_color: 'Custom'
                 icon_color: 'white'
 
         MDTopAppBarTitle:
             id: top_bar_name
-            text: "AppBar small"
+            text: ''
+            padding: dp(25), dp(5), 0, 0
             theme_text_color: 'Custom'
             text_color: 'white'
 
         MDTopAppBarTrailingButtonContainer:
+            padding: 0, dp(20), dp(10), dp(10)
             MDActionTopAppBarButton:
                 id: top_bar_right_btn
                 theme_icon_color: 'Custom'
@@ -55,24 +64,29 @@ MainScreen:
             CollectionScreen:
                 top_bar_height: top_bar.height
             ListScreen:
-#            AddDataScreen:
-#            AddProdScreen:
+                top_bar_height: top_bar.height
+            AddDataScreen:
+                top_bar_height: top_bar.height
+            AddProdScreen:
+                top_bar_height: top_bar.height
             ProdScreen:
                 top_bar: top_bar
+                top_bar_height: top_bar.height
 
         MDNavigationDrawer:
             id: nav_drawer
             radius: (0, 16, 16, 0)
+            enable_swiping: False
 
             MDNavigationDrawerMenu:
                 MDNavigationDrawerHeader:
-                    id: nav_drawer_header
                     orientation: "vertical"
                     padding: 0, 0, 0, "12dp"
                     adaptive_height: True
 
                     MDLabel:
-                        text: "Header title"
+                        id: nav_user_name
+                        text: ""
                         theme_text_color: "Custom"
                         theme_line_height: "Custom"
                         text_color: "#4a4939"
@@ -82,7 +96,8 @@ MainScreen:
                         role: "small"
 
                     MDLabel:
-                        text: "Header text"
+                        id: nav_email
+                        text: ""
                         padding_x: "18dp"
                         adaptive_height: True
                         font_style: "Title"
@@ -129,3 +144,15 @@ MainScreen:
                         text: 'Shopping Lists'
                         theme_text_color: "Custom"
                         text_color: "#4a4939"
+
+        MDBottomSheet:
+            id: bottom_sheet
+            size_hint: 1, None
+            height: content_list.height + handle.height * 1.5
+            on_close: app.clean_sheet()
+
+            BottomSheetHandleContainer:
+                id: handle
+
+            BottomSheetContent:
+                id: content_list

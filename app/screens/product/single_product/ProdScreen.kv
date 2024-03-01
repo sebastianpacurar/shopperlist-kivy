@@ -4,9 +4,14 @@ ProdScreen:
     name: 'prod_scr'
 
     MDBoxLayout:
-        size_hint_y: .9
-        pos_hint: {'top': .9}
         orientation: 'vertical'
+        padding: dp(20), 0, dp(20), 0
+
+        MDLabel:
+            text: ''
+            size_hint_y: None
+            height: root.top_bar_height + root.top_bar_height * .25
+            minimum_size: self.size
 
         MDList:
             MDListItem:

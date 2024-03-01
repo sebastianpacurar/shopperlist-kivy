@@ -3,15 +3,16 @@
 
 <ListScreen>:
     name: 'list_content_scr'
-    MDFloatLayout:
-        size_hint_y: .85
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: dp(20), 0, dp(20), 0
 
-        MDBoxLayout:
-            orientation: 'vertical'
+        MDLabel:
+            text: ''
+            size_hint_y: None
+            height: root.top_bar_height + root.top_bar_height * .25
+            minimum_size: self.size
 
-            MDLabel:
-                md_bg_color: 'blue'
-
-            RV:
-                viewclass: 'ProdItemWithImg'
-                id: rv_list_content
+        RV:
+            viewclass: 'ProdItemWithImg'
+            id: rv_list_content

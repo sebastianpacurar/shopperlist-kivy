@@ -7,15 +7,19 @@
         size_hint_y: None
         height: self.minimum_height
 
+<OneLineItem>:
+    MDListItemSupportingText:
+        text: root.supporting
 
 <EditableTwoLineItemList>:
-    MDListItemTrailingIcon:
-        icon: root.itm_icon
-        pos_hint: {'center_y': .5}
     MDListItemHeadlineText:
         text: root.headline
     MDListItemSupportingText:
         text: root.supporting
+    MDIconButton:
+        icon: root.itm_icon
+        pos_hint: {'center_y': .5}
+        on_release: app.toggle_bottom(root.headline, root.itm_id)
 
 
 <EditableThreeLineItemList>:
@@ -38,53 +42,62 @@
 
 
 <TwoLineProdImgListItem>:
-    on_release: root.icon_func(root)
     MDListItemLeadingAvatar:
         source: root.img_path
     MDListItemHeadlineText:
         text: root.headline
     MDListItemSupportingText:
         text: root.supporting
-    MDListItemTrailingIcon:
+    MDIconButton:
         icon: root.itm_icon
         pos_hint: {'center_y': .5}
+        on_release: root.icon_func(root)
 
+<BottomSheetHandleContainer>:
+    drag_handle_color: app.theme_cls.primaryColor
+    MDBottomSheetDragHandleTitle
+        text: root.title
+        theme_font_size: 'Custom'
+        font_size: sp(20)
+        pos_hint: {'center_x': .5, 'center_y': .75}
+
+    MDBottomSheetDragHandleButton:
+        icon: "close"
+        on_release: app.toggle_bottom(self)
+
+<BottomSheetContent>:
+
+
+<MyDialog>:
+    MDDialogHeadlineText:
+        text: root.headline
+    MDDialogSupportingText:
+        text: root.supporting
+    MDDialogButtonContainer:
+        MDButton:
+            style: 'text'
+            on_release: root.dismiss()
+            MDButtonText:
+                text: 'Cancel'
+        MDButton:
+            style: 'text'
+            on_release: root.confirm()
+            MDButtonText:
+                text: root.accept_txt
 
 <AddShoppingListContent>:
-    orientation: 'vertical'
-    size_hint_y: None
-    height: dp(120)
-    MDLabel:
-        theme_text_color: 'Custom'
-        text_color: app.theme_cls.primary_dark
-        text: 'Add Shopping List'
-        pos_hint: {'top': 1, 'left': 1}
-    Spacer:
-        orientation: 'vertical'
-        value: dp(35)
     MDTextField:
-        id: shop_list_name_text
-        pos_hint: {'left': 1, 'y': 0}
-        mode: 'rectangle'
-        hint_text: 'Shop List Name'
-        helper_text_mode: 'on_error'
-        required: True
-        multiline: False
-        on_text: app.validate_text_field(self)
+        id: text_field
+        MDTextFieldHintText:
+            text: 'List Name'
+        MDLabel:
+            text: ''
 
-
-<MySnackbar>:
-    pos_hint: {'center_x': .5}
-    MDLabel:
-        size_hint_y: None
-        height: self.texture_size[1]
-        text: root.text
-        font_size: sp(15)
-        bold: True
-        shorten: True
-        shorten_from: 'right'
-        pos_hint: {'center_y': .5}
-    MDSnackbarCloseButton:
-        icon: 'close-thick'
-        on_release: root.dismiss_sb()
+<RenameShoppingListContent>:
+    MDTextField:
+        id: text_field
+        MDTextFieldHintText:
+            text: 'List New Name'
+        MDLabel:
+            text: ''
 
