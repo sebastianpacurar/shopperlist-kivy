@@ -170,6 +170,22 @@ class Database:
             conn.close()
         return res
 
+    def delete_shop_list(self, list_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res = False
+        try:
+            cursor.execute(self.queries.delete_list(), (list_id,))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return res
+
     def user_logout(self, name):
         conn = self.set_conn()
         cursor = conn.cursor()

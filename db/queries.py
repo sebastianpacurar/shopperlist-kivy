@@ -40,6 +40,9 @@ class Queries:
     def set_list_name(self):
         pass
 
+    def delete_list(self):
+        pass
+
     def get_category_id(self):
         pass
 
@@ -118,6 +121,9 @@ class QueriesSqlite(Queries):
 
     def set_list_name(self):
         return 'UPDATE shop_list SET name = ? WHERE shop_list_id= ?'
+
+    def delete_list(self):
+        return 'DELETE FROM shop_list WHERE shop_list_id = ?'
 
     def get_category_id(self):
         return 'SELECT category_id FROM category WHERE name = ?'
@@ -225,6 +231,9 @@ class QueriesMysql(Queries):
 
     def set_list_name(self):
         return 'UPDATE shop_list SET name = %s WHERE shop_list_id= %s'
+
+    def delete_list(self):
+        return 'DELETE FROM shop_list WHERE shop_list_id = %s'
 
     def get_category_id(self):
         return 'SELECT category_id FROM category WHERE name = %s'

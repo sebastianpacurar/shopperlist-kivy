@@ -7,9 +7,11 @@
         size_hint_y: None
         height: self.minimum_height
 
+
 <OneLineItem>:
     MDListItemSupportingText:
         text: root.supporting
+
 
 <EditableTwoLineItemList>:
     MDListItemHeadlineText:
@@ -19,7 +21,7 @@
     MDIconButton:
         icon: root.itm_icon
         pos_hint: {'center_y': .5}
-        on_release: app.toggle_bottom(root.headline, root.itm_id)
+        on_release: root.sheet_func(root.headline, root.itm_id)
 
 
 <EditableThreeLineItemList>:
@@ -53,37 +55,46 @@
         pos_hint: {'center_y': .5}
         on_release: root.icon_func(root)
 
+
 <BottomSheetHandleContainer>:
     drag_handle_color: app.theme_cls.primaryColor
     MDBottomSheetDragHandleTitle
         text: root.title
         theme_font_size: 'Custom'
         font_size: sp(20)
-        pos_hint: {'center_x': .5, 'center_y': .75}
-
+        pos_hint: {'center_x': .5, 'center_y': 0}
     MDBottomSheetDragHandleButton:
+        pos_hint: {'center_x': .5, 'center_y': 0}
         icon: "close"
-        on_release: app.toggle_bottom(self)
-
-<BottomSheetContent>:
+        on_release: app.close_bottom()
 
 
-<MyDialog>:
+<BottomSheetSelectionLineItem>:
+    theme_bg_color: 'Custom'
+    md_bg_color: 'gainsboro'
+    MDListItemHeadlineText:
+        text: root.text
+
+
+<DynamicDialog>:
+    size_hint_x: .95
     MDDialogHeadlineText:
         text: root.headline
     MDDialogSupportingText:
         text: root.supporting
     MDDialogButtonContainer:
+        Widget:
         MDButton:
             style: 'text'
             on_release: root.dismiss()
             MDButtonText:
-                text: 'Cancel'
+                text: root.cancel_txt
         MDButton:
             style: 'text'
             on_release: root.confirm()
             MDButtonText:
                 text: root.accept_txt
+
 
 <AddShoppingListContent>:
     MDTextField:
@@ -93,6 +104,7 @@
         MDLabel:
             text: ''
 
+
 <RenameShoppingListContent>:
     MDTextField:
         id: text_field
@@ -100,4 +112,3 @@
             text: 'List New Name'
         MDLabel:
             text: ''
-

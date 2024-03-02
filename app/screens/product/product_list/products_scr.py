@@ -1,7 +1,7 @@
 from kivy.properties import NumericProperty
 from kivymd.uix.screen import MDScreen
 
-from app.components.components import db, DropdownHandler
+from app.components.components import db, DropdownMenu
 
 
 class ProdsScreen(MDScreen):
@@ -21,7 +21,7 @@ class ProdsScreen(MDScreen):
                 'supporting': entry[2],
                 'itm_icon': 'dots-vertical',
                 'img_path': entry[3],
-                'icon_func': lambda x: DropdownHandler().toggle(x)
+                'icon_func': lambda x: DropdownMenu().drop(x)
             }
 
             rv_data.append(item_data)
@@ -36,7 +36,7 @@ class ProdsScreen(MDScreen):
                 'supporting': entry[2],
                 'itm_icon': 'dots-vertical',
                 'img_path': entry[3],
-                'icon_func': lambda x: DropdownHandler().toggle(x)
+                'icon_func': lambda x: DropdownMenu().drop(x)
             }
 
             rv_data.append(item_data)

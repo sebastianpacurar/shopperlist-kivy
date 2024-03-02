@@ -148,11 +148,18 @@ MainScreen:
         MDBottomSheet:
             id: bottom_sheet
             size_hint: 1, None
+            md_bg_color: app.theme_cls.secondaryContainerColor
             height: content_list.height + handle.height * 1.5
-            on_close: app.clean_sheet()
+            on_close: app.clean_bottom_sheet()
 
             BottomSheetHandleContainer:
                 id: handle
 
-            BottomSheetContent:
-                id: content_list
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: dp(5)
+                MDList:
+                    spacing: dp(10)
+                    id: content_list
+
+

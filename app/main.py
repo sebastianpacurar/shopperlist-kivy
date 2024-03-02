@@ -2,7 +2,6 @@ import re
 
 from kivy.core.window import Window
 from kivy.uix.screenmanager import SlideTransition, SwapTransition
-from kivymd.uix.list import MDListItemHeadlineText
 from kivymd.uix.screen import MDScreen
 
 import app.components.components
@@ -23,6 +22,7 @@ class MyKivyApp(MDApp):
         self.sm = None
         self.top_bar = None
         self.nav_drawer = None
+        self.bottom = None
         self.user = {}
 
     def build(self):
@@ -33,6 +33,7 @@ class MyKivyApp(MDApp):
         self.nav_drawer = self.root.ids.nav_drawer
         self.sm = self.root.ids.scr_manager
         self.top_bar = self.root.ids.top_bar
+        self.bottom = self.root.ids.bottom_sheet
         self.auto_login()
         super().on_start()
 
@@ -47,68 +48,95 @@ class MyKivyApp(MDApp):
 
     def show_dialog(self, *args):
         content = args[0]
-        dialog = MyDialog(MDDialogContentContainer(content), size_hint_x=.95)
-
+        dialog = DynamicDialog(MDDialogContentContainer(content))
         match type(content):
             case app.components.components.AddShoppingListContent:
-                dialog.confirm = lambda x=content.ids.text_field: self.perform_shop_list_add(dialog, x)
+                field = content.ids.text_field
+                dialog.confirm = lambda f=field: self.perform_list_add(dialog, f)
                 dialog.headline = 'New List'
-                dialog.accept_txt = 'Add List'
+                dialog.accept_txt = 'Add'
+                dialog.cancel_txt = 'Cancel'
             case app.components.components.RenameShoppingListContent:
-                dialog.confirm = lambda x=content.ids.text_field: self.update_list_name(dialog, x, content.list_id)
+                field = content.ids.text_field
+                dialog.confirm = lambda f=field: self.perform_update_list_name(dialog, f, content.list_id)
                 dialog.headline = 'Rename List'
-                dialog.accept_txt = 'Update List'
+                dialog.accept_txt = 'Update'
+                dialog.cancel_txt = 'Cancel'
+            case app.components.components.DeleteShoppingListContent:
+                dialog.confirm = lambda: self.perform_delete_list(dialog, content.list_name, content.list_id)
+                dialog.headline = 'Delete List'
+                dialog.supporting = 'Are you sure you want to delete list?'
+                dialog.accept_txt = 'Yes'
+                dialog.cancel_txt = 'No'
         dialog.open()
 
-    def update_list_name(self, *args):
-        dialog = args[0]
-        shop_list_name = args[1].text
-        list_id = args[2]
-        db_result = db.update_shop_list_name(shop_list_name, list_id)
-        msg = 'List name cannot be empty'
-        if len(shop_list_name) > 0:
-            if db_result:
-                msg = f'{shop_list_name} updated!'
-                dialog.dismiss()
-        MySnackbar(msg, db_result)
+    # TODO: dynamic list_content!
+    def toggle_bottom(self, *args):
+        if self.bottom.state == 'close':
+            self.bottom.set_state('toggle')
+            handle = self.root.ids.handle
+            list_content = self.root.ids.content_list
+            handle.title = args[0]
+            list_content.add_widget(BottomSheetSelectionLineItem(
+                text='Rename',
+                on_release=lambda _: (
+                    self.show_dialog(RenameShoppingListContent(list_id=args[1])),
+                    self.bottom.set_state('toggle')),
+            ))
+            list_content.add_widget(BottomSheetSelectionLineItem(
+                text='Delete',
+                on_release=lambda _: (
+                    self.show_dialog(DeleteShoppingListContent(list_name=args[0], list_id=args[1])),
+                    self.bottom.set_state('toggle')
+                )
+            ))
 
-    def perform_shop_list_add(self, *args):
+    def clean_bottom_sheet(self):
+        self.root.ids.handle.text = ''
+        self.root.ids.content_list.clear_widgets()
+
+    # TODO: improve
+    def perform_list_add(self, *args):
         dialog = args[0]
         shop_list_name = args[1].text
         db_result, msg = 0, "List can't be empty!"
         if len(shop_list_name) > 0:
             db_result = db.add_shopping_list(shop_list_name, self.user['id'])
+            dialog.should_refresh = db_result
             msg = f'{shop_list_name} created'
             dialog.dismiss()
         MySnackbar(msg, db_result)
 
-    # TODO: debug this some more
-    def toggle_bottom(self, *args):
-        sheet = self.root.ids.bottom_sheet
-        sheet.set_state('toggle')
-        if sheet.state == 'close':
-            handle = self.root.ids.handle
-            list_content = self.root.ids.content_list
-            handle.title = args[0]
-            list_content.add_widget(MDListItem(
-                MDListItemHeadlineText(text='Rename'),
-                on_release=lambda _: (
-                    self.show_dialog(RenameShoppingListContent(list_id=args[1])),
-                    sheet.set_state('close')),
-            ))
-            list_content.add_widget(MDListItem(
-                MDListItemHeadlineText(text='Delete'),
-                on_release=lambda x: print(x),
-            ))
+    # TODO: improve
+    def perform_update_list_name(self, *args):
+        dialog, field, list_id = args
+        name = field.text
+        db_result = db.update_shop_list_name(name, list_id)
+        msg = 'List name cannot be empty'
+        if len(name) > 0:
+            if db_result:
+                dialog.should_refresh = db_result
+                msg = f'{name} updated!'
+                dialog.dismiss()
+        MySnackbar(msg, db_result)
 
-    def clean_sheet(self):
-        handle = self.root.ids.handle
-        list_content = self.root.ids.content_list
-        handle.text = ''
-        list_content.clear_widgets()
+    # TODO: improve
+    def perform_delete_list(self, *args):
+        dialog, name, list_id = args
+        db_result = db.delete_shop_list(list_id)
+        msg = f'Failed to {name}'
+        dialog.should_refresh = db_result
+        if db_result:
+            dialog.should_refresh = db_result
+            msg = f'{name} deleted successfully'
+            dialog.dismiss()
+        MySnackbar(msg, db_result)
 
     def open_navbar(self, *args):
         self.nav_drawer.set_state('open')
+
+    def close_bottom(self, *args):
+        self.bottom.set_state('close')
 
     def update_top_bar(self):
         nav_user_txt = self.root.ids.nav_user_name
@@ -126,7 +154,7 @@ class MyKivyApp(MDApp):
                 left_btn.icon = 'menu'
                 right_btn.icon = 'dots-horizontal-circle-outline'
                 left_btn.on_release = lambda btn=left_btn: self.open_navbar(btn)
-                right_btn.on_release = lambda btn=right_btn: DropdownHandler().toggle(btn)
+                right_btn.on_release = lambda btn=right_btn: DropdownMenu().drop(btn)
                 right_btn.disabled = False
             case const.COLLECTION_SCR:
                 top_bar_title.text = 'Collections'
@@ -181,14 +209,12 @@ class MyKivyApp(MDApp):
         self.update_top_bar()
 
     def change_screen_to_prod_scr(self, product_id):
-        prod_screen = self.sm.get_screen(const.PROD_SCR)
-        prod_screen.incoming_prod_id = product_id
+        self.sm.get_screen(const.PROD_SCR).incoming_prod_id = product_id
         self.change_screen(const.PROD_SCR)
         self.update_top_bar()
 
     def change_screen_to_list_scr(self, list_id):
-        list_screen = self.sm.get_screen(const.LIST_SCR)
-        list_screen.list_id = list_id
+        self.sm.get_screen(const.LIST_SCR).list_id = list_id
         self.change_screen(const.LIST_SCR)
         self.update_top_bar()
 

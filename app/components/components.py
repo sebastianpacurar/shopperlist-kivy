@@ -4,13 +4,13 @@ from kivymd.uix.dialog import MDDialog, MDDialogContentContainer
 from kivymd.uix.snackbar import MDSnackbarButtonContainer, MDSnackbarActionButtonText, MDSnackbarSupportingText, \
     MDSnackbarCloseButton
 from kivy.metrics import sp, dp
-from kivy.properties import StringProperty, ColorProperty, NumericProperty, ObjectProperty
+from kivy.properties import StringProperty, ColorProperty, NumericProperty, ObjectProperty, BooleanProperty
 from kivymd.app import MDApp
 from kivymd.uix.button import MDButton
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
 from kivymd.uix.snackbar import MDSnackbar, MDSnackbarActionButton
-from kivymd.uix.list import MDListItem, MDList
+from kivymd.uix.list import MDListItem
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
 
@@ -31,10 +31,10 @@ class OneLineItem(MDListItem):
 
 class EditableTwoLineItemList(MDListItem):
     itm_id = StringProperty()
-    icon_func = ObjectProperty()
-    itm_icon = StringProperty()
     headline = StringProperty()
     supporting = StringProperty()
+    itm_icon = StringProperty()
+    sheet_func = ObjectProperty()
 
 
 class EditableThreeLineItemList(MDListItem):
@@ -67,19 +67,28 @@ class PasswordField(MDTextField):
     hint_txt = StringProperty()
 
 
+class BottomSheetSelectionLineItem(MDListItem):
+    text = StringProperty()
+
+
 class BottomSheetHandleContainer(MDBottomSheetDragHandle):
     title = StringProperty()
 
 
-class BottomSheetContent(MDList):
-    pass
-
-
-class MyDialog(MDDialog):
+class DynamicDialog(MDDialog):
     confirm = ObjectProperty()
     headline = StringProperty()
     supporting = StringProperty()
     accept_txt = StringProperty()
+    cancel_txt = StringProperty()
+    should_refresh = BooleanProperty(False)
+
+    def on_dismiss(self):
+        super().on_dismiss()
+        if self.should_refresh:
+            main_sm = MDApp.get_running_app().sm
+            if main_sm.current == const.COLLECTION_SCR:
+                main_sm.get_screen(const.COLLECTION_SCR).refresh_data()
 
 
 class AddShoppingListContent(MDDialogContentContainer):
@@ -87,6 +96,11 @@ class AddShoppingListContent(MDDialogContentContainer):
 
 
 class RenameShoppingListContent(MDDialogContentContainer):
+    list_id = StringProperty()
+
+
+class DeleteShoppingListContent(MDDialogContentContainer):
+    list_name = StringProperty()
     list_id = StringProperty()
 
 
@@ -183,7 +197,7 @@ class MySnackbar(MDSnackbar):
         self.open()
 
 
-class DropdownHandler(MDDropdownMenu):
+class DropdownMenu(MDDropdownMenu):
     change_screen_func = ObjectProperty
 
     def __init__(self):
@@ -197,11 +211,8 @@ class DropdownHandler(MDDropdownMenu):
 
     def on_dismiss(self):
         super().on_dismiss()
-        # TODO
-        # if isinstance(self.caller, MDListItemTrailingIcon):
-        #     self.parent_caller.bg_color = self.theme_cls.bg_darkest
 
-    def toggle(self, widget):
+    def drop(self, widget):
         data = None
         menu_items = []
         self.caller = widget
@@ -226,7 +237,6 @@ class DropdownHandler(MDDropdownMenu):
                 )
         # trigger items which trigger options from the ActionTopAppBarButton
         elif isinstance(widget, MDActionTopAppBarButton):
-
             menu_items = [
                 {
                     'text': 'Add product',

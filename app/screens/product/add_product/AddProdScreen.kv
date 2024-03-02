@@ -1,3 +1,5 @@
+#: import DropdownMenu components.components.DropdownMenu
+
 <AddProdScreen>:
     name: 'add_prod_scr'
     MDFloatLayout:
@@ -19,13 +21,13 @@
             id: product_unit_text
             pos_hint: {'center_x': .5, 'y': .30}
             hint_text: 'Unit'
-            on_focus: if self.focus: app.drop.toggle(self)
+            on_focus: if self.focus: DropdownMenu().drop(self)
 
         CustomTextField:
             id: product_category_text
             pos_hint: {'center_x': .5, 'y': .45}
             hint_text: 'Category'
-            on_focus: if self.focus: app.drop.toggle(self)
+            on_focus: if self.focus: DropdownMenu().drop(self)
 
 
 <CustomTextField@MDTextField>:

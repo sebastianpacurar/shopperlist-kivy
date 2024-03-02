@@ -31,6 +31,10 @@ class CollectionScreen(MDScreen):
                     self.sm.current = const.ALL_COLLECTION_SCR
                     self.sm.get_screen(const.ALL_COLLECTION_SCR).display_all_collections()
 
+    def refresh_data(self, *args):
+        self.sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
+        self.sm.get_screen(const.ALL_COLLECTION_SCR).display_all_collections()
+
 
 class BaseCollectionScr(MDScreen):
     def __init__(self, **kwargs):
@@ -49,6 +53,7 @@ class BaseCollectionScr(MDScreen):
                 'supporting': f'created by {entry[4]}',
                 'tertiary': stamp,
                 'itm_icon': 'dots-vertical',
+                'sheet_func': lambda name=entry[2], list_id=entry[0]: self.main_app.toggle_bottom(name, list_id),
                 'on_release': lambda list_id=entry[0]: self.main_app.change_screen_to_list_scr(list_id),
             }
         else:
@@ -57,6 +62,7 @@ class BaseCollectionScr(MDScreen):
                 'headline': entry[2],
                 'supporting': stamp,
                 'itm_icon': 'dots-vertical',
+                'sheet_func': lambda name=entry[2], list_id=entry[0]: self.main_app.toggle_bottom(name, list_id),
                 'on_release': lambda list_id=entry[0]: self.main_app.change_screen_to_list_scr(list_id),
             }
         return item_data
