@@ -8,6 +8,36 @@
         height: self.minimum_height
 
 
+<SimpleTextField>:
+    multiline: False
+    write_tab: False
+    MDTextFieldHintText:
+        text: root.hint_txt
+    MDTextFieldHelperText:
+        text: root.helper_txt
+        mode: 'on_error'
+
+
+<PasswordField>:
+    size_hint_y: None
+    size: text_field.size
+    MDTextField:
+        id: text_field
+        mode: root.field_mode
+        multiline: False
+        write_tab: False
+        on_text: root.save_text_value(self)
+        MDTextFieldHintText:
+            text: root.hint_txt
+        MDTextFieldLeadingIcon:
+            icon: "key-variant"
+    MDIconButton:
+        icon: 'eye'
+        pos_hint: {'right': 1, 'center_y': .5}
+        on_release: root.toggle_visibility(self, text_field)
+
+
+
 <OneLineItem>:
     MDListItemSupportingText:
         text: root.supporting
@@ -101,8 +131,6 @@
         id: text_field
         MDTextFieldHintText:
             text: 'List Name'
-        MDLabel:
-            text: ''
 
 
 <RenameShoppingListContent>:
@@ -110,5 +138,3 @@
         id: text_field
         MDTextFieldHintText:
             text: 'List New Name'
-        MDLabel:
-            text: ''

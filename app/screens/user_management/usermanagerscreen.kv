@@ -1,4 +1,3 @@
-#: import Spacer components.components.Spacer
 #: import SelectSignInSignUpButton components.components.SelectSignInSignUpButton
 
 #: import LOGIN_SCR utils.constants.LOGIN_SCR
@@ -18,7 +17,8 @@
             size_hint: .85, .70
 
             MDSegmentedButton:
-                type:'large'
+                padding: dp(20), dp(20), dp(20), 0
+                type: 'large'
                 MDSegmentedButtonItem:
                     on_release: root.switch_scr(LOGIN_SCR)
                     active: True
@@ -42,43 +42,29 @@
     MDBoxLayout:
         md_bg_color: app.theme_cls.primaryContainerColor
         orientation: 'vertical'
-        padding: dp(20)
-        spacing: dp(15)
+        padding: dp(20), dp(45), dp(20), dp(45)
+        spacing: dp(20)
 
-        MDTextField:
+        SimpleTextField:
             id: enter_user
-            mode: 'outlined'
-            multiline: False
-            write_tab: False
+            mode: 'filled'
+            hint_txt: 'Username'
             MDTextFieldLeadingIcon:
                 icon: 'account-outline'
-            MDTextFieldHintText:
-                text: 'Username'
 
         PasswordField:
             id: enter_pass
+            field_mode: 'filled'
             hint_txt: 'Password'
 
-        Spacer:
-            orientation: 'vertical'
-            value: dp(20)
+        Widget:
 
         MDButton:
             type: 'tonal'
             pos_hint: {'center_x': .5}
-            size_hint_x: .75
             on_release: root.perform_login()
-
             MDButtonText:
                 text: 'Log in'
-
-        Spacer:
-            orientation: 'vertical'
-            value: dp(10)
-
-
-        MDLabel:
-            text: ''
 
 
 <RegisterScr>
@@ -86,43 +72,31 @@
     MDBoxLayout:
         md_bg_color: app.theme_cls.primaryContainerColor
         orientation: 'vertical'
-        padding: dp(20)
-        spacing: dp(15)
+        padding: dp(20), dp(45), dp(20), dp(45)
+        spacing: dp(20)
 
-        MDTextField:
+        SimpleTextField:
             id: create_email
-            pos_hint: {'center_x': .5}
-            mode: 'outlined'
-            multiline: False
-            write_tab: False
+            mode: 'filled'
+            hint_txt: 'Email'
+            helper_txt: 'Not a valid email'
             MDTextFieldLeadingIcon:
                 icon: 'email-outline'
-            MDTextFieldHintText:
-                text: 'Email'
-            MDTextFieldHelperText:
-                text: 'Not a valid email'
-                mode: 'on_error'
 
-
-        MDTextField:
+        SimpleTextField:
             id: create_user
-            pos_hint: {'center_x': .5}
-            mode: 'outlined'
-            multiline: False
-            write_tab: False
+            mode: 'filled'
+            hint_txt: 'Username'
+            helper_txt: ''
             MDTextFieldLeadingIcon:
                 icon: 'account-outline'
-            MDTextFieldHintText:
-                text: 'Username'
-
 
         PasswordField:
             id: create_pass
+            field_mode: 'filled'
             hint_txt: 'Password'
 
-        Spacer:
-            orientation: 'vertical'
-            value: dp(10)
+        Widget:
 
         MDButton:
             type: 'tonal'
@@ -132,24 +106,3 @@
 
             MDButtonText:
                 text: 'Register'
-
-        MDLabel:
-            text: ''
-
-
-<PasswordField>:
-    mode: 'outlined'
-    multiline: False
-    write_tab: False
-
-    MDTextFieldHintText:
-        text: root.hint_txt
-
-    MDTextFieldLeadingIcon:
-        icon: "key-variant"
-
-    MDIconButton:
-        icon: "eye-off"
-        pos_hint: {"center_y": .5}
-#        on_release:
-#            self.icon = "eye" if self.icon == "eye-off" else "eye-off"

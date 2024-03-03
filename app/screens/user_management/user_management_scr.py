@@ -54,13 +54,13 @@ class LoginScr(MDScreen):
         self.enter_pass = self.ids.enter_pass
 
     def perform_login(self):
-        if self.validate_sign_in(self.enter_user, self.enter_pass):
+        if self.validate_sign_in(self.enter_user, self.enter_pass.text_value):
             self.main_app.set_app_user(self.user_data)
             self.main_app.change_login_app_screen(const.COLLECTION_SCR)
 
     def validate_sign_in(self, user, password):
-        entry = [user.text.strip(), password.text.strip()]
-        if any([user.error, password.error]) or any([len(x) == 0 for x in entry]):
+        entry = [user.text.strip(), password]
+        if any([len(x) == 0 for x in entry]):
             SimpleSnackbar(text='There are errors in the fields', color=const.RGB_ERROR)
             return False
         else:
@@ -88,13 +88,13 @@ class RegisterScr(MDScreen):
         self.created_pass = self.ids.create_pass
 
     def perform_register(self):
-        if self.validate_sign_up(self.created_user, self.created_email, self.created_pass):
+        if self.validate_sign_up(self.created_user, self.created_email, self.created_pass.text_value):
             self.main_app.set_app_user(self.user_data)
             self.main_app.change_login_app_screen(const.COLLECTION_SCR)
 
     def validate_sign_up(self, user, email, password):
-        entry = [user.text.strip(), email.text.strip(), password.text.strip()]
-        if any([email.error, user.error, password.error]) or any([len(x) == 0 for x in entry]):
+        entry = [user.text.strip(), email.text.strip(), password]
+        if any([len(x) == 0 for x in entry]):
             SimpleSnackbar(text='There are errors in the fields', color=const.RGB_ERROR)
             return False
         else:

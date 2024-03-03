@@ -2,37 +2,48 @@
 
 <AddProdScreen>:
     name: 'add_prod_scr'
-    MDFloatLayout:
-        CustomTextField:
-            id: product_name_text
-            pos_hint: {'center_x': .5, 'y': .75}
-            hint_text: 'Name'
-            on_text: app.validate_text_field(self)
+    MDBoxLayout:
+        orientation: 'vertical'
+        padding: dp(20), 0, dp(20), 0
 
-        CustomTextField:
-            id: product_price_text
-            pos_hint: {'center_x': .5, 'y': .60}
-            hint_text: 'Price'
-            input_type: 'number'
-            input_filter: 'float'
-            on_text: app.validate_text_field(self)
+        Widget:
+            size_hint_y: None
+            height: root.top_bar_height + root.top_bar_height * .25
+            minimum_size: self.size
 
-        CustomTextField:
-            id: product_unit_text
-            pos_hint: {'center_x': .5, 'y': .30}
-            hint_text: 'Unit'
-            on_focus: if self.focus: DropdownMenu().drop(self)
+        MDBoxLayout:
+            orientation: 'vertical'
+            spacing: dp(30)
 
-        CustomTextField:
-            id: product_category_text
-            pos_hint: {'center_x': .5, 'y': .45}
-            hint_text: 'Category'
-            on_focus: if self.focus: DropdownMenu().drop(self)
+            SimpleTextField:
+                id: product_name_text
+                hint_txt: 'Name'
+                on_text: app.validate_text_field(self)
+
+            SimpleTextField:
+                id: product_price_text
+                hint_txt: 'Price'
+                input_type: 'number'
+                input_filter: 'float'
+                on_text: app.validate_text_field(self)
+
+            SimpleTextField:
+                id: product_unit_text
+                hint_txt: 'Unit'
+                on_focus: if self.focus: DropdownMenu().drop(self)
+
+            SimpleTextField:
+                id: product_category_text
+                hint_txt: 'Category'
+                on_focus: if self.focus: DropdownMenu().drop(self)
+
+            MDIconButton:
+                pos_hint: {'center_x': .5}
+                icon: 'plus-thick'
+                style: 'filled'
+                on_release: root.perform_product_add()
+
+            Widget:
 
 
-<CustomTextField@MDTextField>:
-    size_hint: .5, None
-    height: dp(20)
-    helper_text: 'Cannot be empty'
-    multiline: False
-    write_tab: False
+

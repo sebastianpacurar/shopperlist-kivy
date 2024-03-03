@@ -1,6 +1,7 @@
 from kivymd.uix.appbar import MDActionTopAppBarButton
 from kivymd.uix.bottomsheet import MDBottomSheetDragHandle
 from kivymd.uix.dialog import MDDialog, MDDialogContentContainer
+from kivymd.uix.relativelayout import MDRelativeLayout
 from kivymd.uix.snackbar import MDSnackbarButtonContainer, MDSnackbarActionButtonText, MDSnackbarSupportingText, \
     MDSnackbarCloseButton
 from kivy.metrics import sp, dp
@@ -23,6 +24,53 @@ db = Database(SQLITE)
 
 class RV(MDRecycleView):
     pass
+
+
+class SimpleTextField(MDTextField):
+    hint_txt = StringProperty()
+    helper_txt = StringProperty()
+
+
+class PasswordField(MDRelativeLayout):
+    field_mode = StringProperty('outlined')
+    hint_txt = StringProperty()
+    is_hidden = BooleanProperty(False)  # used in toggle_visibility when clicking eye icon
+    skip = BooleanProperty(False)  # used to cancel save_text_value during on_text after setting/unsetting text to symbols
+    text_value = StringProperty()  # the actual literal value
+    masked_text = StringProperty()  # the literal value masked
+
+    # set text_value and masked_text vars. triggered on set_text
+    def save_text_value(self, *args):
+        args[0].text = args[0].text.replace(' ', '')  # prevent whitespaces
+        if len(args[0].text) > 0:
+            if not self.skip or (len(args[0].text) == 1 and self.is_hidden):  # update vars only if not marked as skip and if is first element while is_hidden is True
+                if len(args[0].text) < len(self.text_value):  # trigger if erase/delete event occurs
+                    diff = len(self.text_value) - len(args[0].text)  # TODO: handle multi-select delete
+                    self.text_value = self.text_value[:-diff]
+                elif args[0].text[-1] != '*':  # if last typed element is not a star, add it to text_value var
+                    self.text_value += args[0].text[-1]
+                self.masked_text = '*' * len(self.text_value)
+
+            if self.is_hidden:  # if is_hidden is on, change the text, and mark as Skipped, to prevent re-trigger of save_text_value func
+                args[0].text = self.masked_text
+                self.skip = True
+            if self.skip:  # skip happens only once, after eye icon is toggled
+                self.skip = False
+        else:  # if field is empty, then reset vars
+            self.masked_text = ''
+            self.text_value = ''
+
+    # enable/disable masked pass. set skip to prevent re-trigger of save_text_value, when resetting text_field text value
+    def toggle_visibility(self, *args):
+        icon_btn = args[0]
+        self.is_hidden = not self.is_hidden
+        self.skip = not self.skip
+        if self.is_hidden:
+            icon_btn.icon = 'eye-off'
+            args[1].text = self.masked_text
+        else:
+            icon_btn.icon = 'eye'
+            args[1].text = self.text_value
 
 
 class OneLineItem(MDListItem):
@@ -61,10 +109,6 @@ class TwoLineProdImgListItem(MDListItem):
 
 class SelectSignInSignUpButton(MDButton):
     text = StringProperty()
-
-
-class PasswordField(MDTextField):
-    hint_txt = StringProperty()
 
 
 class BottomSheetSelectionLineItem(MDListItem):
@@ -209,9 +253,6 @@ class DropdownMenu(MDDropdownMenu):
         self.parent_caller = None
         self.main_app = MDApp.get_running_app()
 
-    def on_dismiss(self):
-        super().on_dismiss()
-
     def drop(self, widget):
         data = None
         menu_items = []
@@ -223,9 +264,9 @@ class DropdownMenu(MDDropdownMenu):
             self.ver_growth = 'down'
             self.position = 'center'
 
-            if widget.hint_text == 'Category':
+            if widget.hint_txt == 'Category':
                 data = db.get_product_categories()
-            elif widget.hint_text == 'Unit':
+            elif widget.hint_txt == 'Unit':
                 data = db.get_product_units()
 
             for entry in data:
