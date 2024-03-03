@@ -107,6 +107,32 @@ class Database:
             cursor.close()
             conn.close()
 
+    def filter_categories(self, search_param):
+        like_query = search_param + '%'
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.filter_category(), (like_query,))
+            return cursor.fetchall()
+        except Exception as e:
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+
+    def filter_units(self, search_param):
+        like_query = search_param + '%'
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.filter_unit(), (like_query,))
+            return cursor.fetchall()
+        except Exception as e:
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+
     def get_active_user(self):
         conn = self.set_conn()
         cursor = conn.cursor()
@@ -285,3 +311,35 @@ class Database:
             cursor.close()
             conn.close()
         return res, row_id, const.PROD_SCR
+
+    def add_category(self, name):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res, row_id = False, None
+        try:
+            cursor.execute(self.queries.insert_into_category(), (name,))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return res
+
+    def add_unit(self, name):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res, row_id = False, None
+        try:
+            cursor.execute(self.queries.insert_into_unit(), (name,))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return res

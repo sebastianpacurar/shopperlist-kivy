@@ -20,7 +20,7 @@
             spacing: dp(20)
 
             MDSegmentedButton:
-                type:'large'
+                type:'small'
                 MDSegmentedButtonItem:
                     on_release: root.switch_scr(PROD_CATEGORY_SCR)
                     active: True
@@ -38,14 +38,26 @@
                 spacing: dp(20)
 
                 MDTextField:
+                    id: text_field
                     mode: 'outlined'
                     MDTextFieldHintText:
-                        text: 'Add Data'
+                        text: 'Add item'
 
                 MDIconButton:
+                    id: add_btn
                     icon: 'plus-thick'
                     style: 'filled'
                     pos_hint: {'center_x': .5, 'center_y': .5}
+                    on_release: root.add_entity()
+
+            MDTextField:
+                id: search_field
+                on_text: root.filter_displayed_list(self)
+                mode: 'outlined'
+                MDTextFieldHintText:
+                    text: 'Search item'
+                MDTextFieldTrailingIcon:
+                    icon: 'text-search'
 
             MDScreenManager:
                 id: data_manager
@@ -55,14 +67,14 @@
 
 <CategoryScr>:
     name: 'category_scr'
-    MDFloatLayout:
+    MDBoxLayout:
         RV:
-            viewclass: 'OneLineItem'
+            viewclass: 'EditableOneLineItemList'
             id: rv_category
 
 <UnitScr>:
     name: 'unit_scr'
-    MDFloatLayout:
+    MDBoxLayout:
         RV:
-            viewclass: 'OneLineItem'
+            viewclass: 'EditableOneLineItemList'
             id: rv_unit

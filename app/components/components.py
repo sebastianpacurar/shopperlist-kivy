@@ -73,8 +73,11 @@ class PasswordField(MDRelativeLayout):
             args[1].text = self.text_value
 
 
-class OneLineItem(MDListItem):
-    supporting = StringProperty()
+# TODO: update names for Editable list items below
+class EditableOneLineItemList(MDListItem):
+    itm_id = StringProperty()
+    text = StringProperty()
+    itm_icon = StringProperty()
 
 
 class EditableTwoLineItemList(MDListItem):

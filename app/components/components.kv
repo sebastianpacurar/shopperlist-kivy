@@ -37,10 +37,13 @@
         on_release: root.toggle_visibility(self, text_field)
 
 
-
-<OneLineItem>:
-    MDListItemSupportingText:
-        text: root.supporting
+<EditableOneLineItemList>:
+    MDListItemHeadlineText:
+        text: root.text
+    MDIconButton:
+        icon: root.itm_icon
+        pos_hint: {'center_y': .5}
+        on_release: root.sheet_func(root.text, root.itm_id)
 
 
 <EditableTwoLineItemList>:

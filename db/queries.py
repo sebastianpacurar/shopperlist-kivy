@@ -46,7 +46,13 @@ class Queries:
     def get_category_id(self):
         pass
 
+    def insert_into_category(self):
+        pass
+
     def get_unit_id(self):
+        pass
+
+    def insert_into_unit(self):
         pass
 
     def insert_into_product(self):
@@ -74,6 +80,12 @@ class Queries:
         pass
 
     def filter_product_based_on_name(self):
+        pass
+
+    def filter_category(self):
+        pass
+
+    def filter_unit(self):
         pass
 
 
@@ -128,8 +140,14 @@ class QueriesSqlite(Queries):
     def get_category_id(self):
         return 'SELECT category_id FROM category WHERE name = ?'
 
+    def insert_into_category(self):
+        return 'INSERT INTO category (name) VALUES (?)'
+
     def get_unit_id(self):
         return 'SELECT unit_id FROM product_unit WHERE name = ?'
+
+    def insert_into_unit(self):
+        return 'INSERT INTO product_unit (name) VALUES (?)'
 
     def insert_into_product(self):
         return 'INSERT INTO product (name, price, unit_id, category_id, product_image) VALUES (?, ?, ?, ?, ?)'
@@ -166,6 +184,12 @@ class QueriesSqlite(Queries):
                 JOIN category ON product.category_id = category.category_id
                 WHERE product.name LIKE ?;
         '''.split())
+
+    def filter_category(self):
+        return 'SELECT * FROM category WHERE name LIKE ?'
+
+    def filter_unit(self):
+        return 'SELECT * FROM product_unit WHERE name LIKE ?'
 
     def get_product_details(self):
         return ' '.join('''
@@ -238,8 +262,14 @@ class QueriesMysql(Queries):
     def get_category_id(self):
         return 'SELECT category_id FROM category WHERE name = %s'
 
+    def insert_into_category(self):
+        return 'INSERT INTO category (name) VALUES (%s)'
+
     def get_unit_id(self):
         return 'SELECT unit_id FROM product_unit WHERE name = %s'
+
+    def insert_into_unit(self):
+        return 'INSERT INTO product_unit (name) VALUES (%s)'
 
     def insert_into_product(self):
         return 'INSERT INTO product (name, price, unit_id, category_id, product_image) VALUES (%s, %s, %s, %s, %s)'
@@ -276,6 +306,12 @@ class QueriesMysql(Queries):
                 JOIN category ON product.category_id = category.category_id
                 WHERE product.name LIKE %s;
         '''.split())
+
+    def filter_category(self):
+        return 'SELECT * FROM category WHERE name LIKE %s'
+
+    def filter_unit(self):
+        return 'SELECT * FROM product_unit WHERE name LIKE %s'
 
     def get_product_details(self):
         return ' '.join('''
