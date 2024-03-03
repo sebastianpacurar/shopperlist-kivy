@@ -4,7 +4,7 @@
 #: import CollectionScreen screens.collection.collection_scr.CollectionScreen
 #: include screens/collection/CollectionScreen.kv
 
-#: import ProdScreen screens.product.product_list.products_scr.ProdsScreen
+#: import ProdsScreen screens.product.product_list.products_scr.ProdsScreen
 #: include screens/product/product_list/ProdsScreen.kv
 
 #: import ProdScreen screens.product.single_product.product_scr.ProdScreen
@@ -19,67 +19,147 @@
 #: import ListScreen screens.product.add_data.add_data_scr.AddDataScreen
 #: include screens/product/add_data/AddData.kv
 
+
 MainScreen:
 
 <MainScreen>:
-    md_bg_color: app.theme_cls.bg_darkest
+    md_bg_color: app.theme_cls.secondaryContainerColor
     MDTopAppBar:
         id: top_bar
+        type: 'medium'
         pos_hint: {'top': 1}
-        elevation: 2
+        size_hint_y: .12
+        theme_bg_color: 'Custom'
+        md_bg_color: app.theme_cls.primaryColor
+
+        MDTopAppBarLeadingButtonContainer:
+            padding: dp(10), dp(20), 0, dp(10)
+            MDActionTopAppBarButton:
+                id: top_bar_left_btn
+                theme_icon_color: 'Custom'
+                icon_color: 'white'
+
+        MDTopAppBarTitle:
+            id: top_bar_name
+            text: ''
+            padding: dp(25), dp(5), 0, 0
+            theme_text_color: 'Custom'
+            text_color: 'white'
+
+        MDTopAppBarTrailingButtonContainer:
+            padding: 0, dp(20), dp(10), dp(10)
+            MDActionTopAppBarButton:
+                id: top_bar_right_btn
+                theme_icon_color: 'Custom'
+                icon_color: 'white'
+
 
     MDNavigationLayout:
         MDScreenManager:
             id: scr_manager
-
             UserManagerScreen:
                 top_bar: top_bar
-
             ProdsScreen:
-
+                top_bar_height: top_bar.height
             CollectionScreen:
-
+                top_bar_height: top_bar.height
             ListScreen:
-
+                top_bar_height: top_bar.height
             AddDataScreen:
-
+                top_bar_height: top_bar.height
             AddProdScreen:
-
+                top_bar_height: top_bar.height
             ProdScreen:
                 top_bar: top_bar
-
+                top_bar_height: top_bar.height
 
         MDNavigationDrawer:
             id: nav_drawer
             radius: (0, 16, 16, 0)
+            enable_swiping: False
 
             MDNavigationDrawerMenu:
                 MDNavigationDrawerHeader:
-                    id: nav_drawer_header
-                    spacing: dp(10)
-                    padding: dp(12), 0, 0, dp(50)
+                    orientation: "vertical"
+                    padding: 0, 0, 0, "12dp"
+                    adaptive_height: True
 
-                MDNavigationDrawerLabel:
-                    text: 'User'
+                    MDLabel:
+                        id: nav_user_name
+                        text: ""
+                        theme_text_color: "Custom"
+                        theme_line_height: "Custom"
+                        text_color: "#4a4939"
+                        adaptive_height: True
+                        padding_x: "16dp"
+                        font_style: "Display"
+                        role: "small"
 
+                    MDLabel:
+                        id: nav_email
+                        text: ""
+                        padding_x: "18dp"
+                        adaptive_height: True
+                        font_style: "Title"
+                        role: "medium"
+
+                MDNavigationDrawerDivider:
                 MDNavigationDrawerItem:
-                    text: 'Logout'
-                    icon: 'logout-variant'
-                    on_press: app.unset_app_user()
+                    on_press:
+                        nav_drawer.set_state('close')
+                        app.unset_app_user()
+                    MDNavigationDrawerItemLeadingIcon:
+                        icon: 'logout-variant'
+                        theme_icon_color: "Custom"
+                        icon_color: "#4a4939"
+                    MDNavigationDrawerItemText:
+                        text: 'Logout'
+                        theme_text_color: "Custom"
+                        text_color: "#4a4939"
 
-                MDNavigationDrawerLabel:
-                    text: 'Shopping'
-
+                MDNavigationDrawerDivider:
                 MDNavigationDrawerItem:
-                    text: 'Products'
-                    icon: 'food-drumstick-outline'
                     on_press:
                         nav_drawer.set_state('close')
                         app.change_screen_and_update_bar('products_list_scr')
+                    MDNavigationDrawerItemLeadingIcon:
+                        icon: 'food-drumstick-outline'
+                        theme_icon_color: "Custom"
+                        icon_color: "#4a4939"
+                    MDNavigationDrawerItemText:
+                        text: 'Products'
+                        theme_text_color: "Custom"
+                        text_color: "#4a4939"
 
+                MDNavigationDrawerDivider:
                 MDNavigationDrawerItem:
-                    text: 'Shopping Lists'
-                    icon: 'list-box-outline'
                     on_press:
                         nav_drawer.set_state('close')
                         app.change_screen_and_update_bar('collection_scr')
+                    MDNavigationDrawerItemLeadingIcon:
+                        icon: 'list-box-outline'
+                        theme_icon_color: "Custom"
+                        icon_color: "#4a4939"
+                    MDNavigationDrawerItemText:
+                        text: 'Shopping Lists'
+                        theme_text_color: "Custom"
+                        text_color: "#4a4939"
+
+        MDBottomSheet:
+            id: bottom_sheet
+            size_hint: 1, None
+            md_bg_color: app.theme_cls.secondaryContainerColor
+            height: content_list.height + handle.height * 1.5
+            on_close: app.clean_bottom_sheet()
+
+            BottomSheetHandleContainer:
+                id: handle
+
+            MDBoxLayout:
+                orientation: 'vertical'
+                padding: dp(5)
+                MDList:
+                    spacing: dp(10)
+                    id: content_list
+
+

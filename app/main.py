@@ -2,10 +2,9 @@ import re
 
 from kivy.core.window import Window
 from kivy.uix.screenmanager import SlideTransition, SwapTransition
-from kivymd.uix.button import MDFlatButton
-from kivymd.uix.dialog import MDDialog
 from kivymd.uix.screen import MDScreen
 
+import app.components.components
 from app.components.components import *
 from app.utils import constants as const
 
@@ -23,20 +22,20 @@ class MyKivyApp(MDApp):
         self.sm = None
         self.top_bar = None
         self.nav_drawer = None
-        self.dialog = None
+        self.bottom = None
         self.user = {}
-        self.drop = DropdownHandler()
 
     def build(self):
-        self.theme_cls.primary_palette = 'Blue'
-        self.theme_cls.accent_palette = 'Orange'
+        self.theme_cls.primary_palette = 'Lightblue'
         self.theme_cls.theme_style = 'Light'
 
     def on_start(self):
         self.nav_drawer = self.root.ids.nav_drawer
         self.sm = self.root.ids.scr_manager
         self.top_bar = self.root.ids.top_bar
+        self.bottom = self.root.ids.bottom_sheet
         self.auto_login()
+        super().on_start()
 
     def auto_login(self):
         data = db.user_auto_login()
@@ -47,85 +46,153 @@ class MyKivyApp(MDApp):
         else:
             self.change_screen(const.USER_MANAGER_SCREEN)
 
-    def show_dialog(self):
-        content = AddShoppingListContent()
+    def show_dialog(self, *args):
+        content = args[0]
+        dialog = DynamicDialog(MDDialogContentContainer(content))
+        match type(content):
+            case app.components.components.AddShoppingListContent:
+                field = content.ids.text_field
+                dialog.confirm = lambda f=field: self.perform_list_add(dialog, f)
+                dialog.headline = 'New List'
+                dialog.accept_txt = 'Add'
+                dialog.cancel_txt = 'Cancel'
+            case app.components.components.RenameShoppingListContent:
+                field = content.ids.text_field
+                dialog.confirm = lambda f=field: self.perform_update_list_name(dialog, f, content.list_id)
+                dialog.headline = 'Rename List'
+                dialog.accept_txt = 'Update'
+                dialog.cancel_txt = 'Cancel'
+            case app.components.components.DeleteShoppingListContent:
+                dialog.confirm = lambda: self.perform_delete_list(dialog, content.list_name, content.list_id)
+                dialog.headline = 'Delete List'
+                dialog.supporting = 'Are you sure you want to delete list?'
+                dialog.accept_txt = 'Yes'
+                dialog.cancel_txt = 'No'
+        dialog.open()
 
-        if not self.dialog:
-            self.dialog = MDDialog(
-                type='custom',
-                content_cls=content,
-                on_dismiss=lambda _: self.clearDialog(),
-                buttons=[
-                    MDFlatButton(
-                        text='Add',
-                        theme_text_color='Custom',
-                        text_color=self.theme_cls.primary_color,
-                        on_release=lambda _: self.perform_shop_list_add(),
-                    ),
-                    MDFlatButton(
-                        text='Cancel',
-                        theme_text_color='Custom',
-                        text_color=self.theme_cls.error_color,
-                        on_release=lambda _: self.dialog.dismiss()
-                    )
-                ]
-            )
-            self.dialog.open()
+    # TODO: dynamic list_content!
+    def toggle_bottom(self, *args):
+        if self.bottom.state == 'close':
+            self.bottom.set_state('toggle')
+            handle = self.root.ids.handle
+            list_content = self.root.ids.content_list
+            handle.title = args[0]
+            list_content.add_widget(BottomSheetSelectionLineItem(
+                text='Rename',
+                on_release=lambda _: (
+                    self.show_dialog(RenameShoppingListContent(list_id=args[1])),
+                    self.bottom.set_state('toggle')),
+            ))
+            list_content.add_widget(BottomSheetSelectionLineItem(
+                text='Delete',
+                on_release=lambda _: (
+                    self.show_dialog(DeleteShoppingListContent(list_name=args[0], list_id=args[1])),
+                    self.bottom.set_state('toggle')
+                )
+            ))
 
-    def clearDialog(self):
-        self.dialog = None
+    def clean_bottom_sheet(self):
+        self.root.ids.handle.text = ''
+        self.root.ids.content_list.clear_widgets()
 
-    def perform_shop_list_add(self):
-        shop_list_name = self.dialog.content_cls.ids.shop_list_name_text.text
+    # TODO: improve
+    def perform_list_add(self, *args):
+        dialog = args[0]
+        shop_list_name = args[1].text
         db_result, msg = 0, "List can't be empty!"
         if len(shop_list_name) > 0:
             db_result = db.add_shopping_list(shop_list_name, self.user['id'])
+            dialog.should_refresh = db_result
             msg = f'{shop_list_name} created'
-            self.dialog.dismiss()
+            dialog.dismiss()
         MySnackbar(msg, db_result)
 
-    def update_top_bar(self):
-        nav_drawer_header = self.root.ids.nav_drawer_header
+    # TODO: improve
+    def perform_update_list_name(self, *args):
+        dialog, field, list_id = args
+        name = field.text
+        db_result = db.update_shop_list_name(name, list_id)
+        msg = 'List name cannot be empty'
+        if len(name) > 0:
+            if db_result:
+                dialog.should_refresh = db_result
+                msg = f'{name} updated!'
+                dialog.dismiss()
+        MySnackbar(msg, db_result)
 
-        # hack to prevent header from crashing
-        nav_drawer_header.title = self.get_user_name()
-        nav_drawer_header.text = self.get_user_email()
+    # TODO: improve
+    def perform_delete_list(self, *args):
+        dialog, name, list_id = args
+        db_result = db.delete_shop_list(list_id)
+        msg = f'Failed to {name}'
+        dialog.should_refresh = db_result
+        if db_result:
+            dialog.should_refresh = db_result
+            msg = f'{name} deleted successfully'
+            dialog.dismiss()
+        MySnackbar(msg, db_result)
+
+    def open_navbar(self, *args):
+        self.nav_drawer.set_state('open')
+
+    def close_bottom(self, *args):
+        self.bottom.set_state('close')
+
+    def update_top_bar(self):
+        nav_user_txt = self.root.ids.nav_user_name
+        nav_email_txt = self.root.ids.nav_email
+        nav_user_txt.text = self.get_user_name()
+        nav_email_txt.text = self.get_user_email()
+
+        left_btn = self.root.ids.top_bar_left_btn
+        right_btn = self.root.ids.top_bar_right_btn
+        top_bar_title = self.root.ids.top_bar_name
 
         match self.sm.current:
             case const.MULTI_PROD_SCR:
-                self.top_bar.title = 'Products'
-                self.top_bar.left_action_items = [['menu', lambda _: self.nav_drawer.set_state('open')]]
-                self.top_bar.right_action_items = [
-                    ['dots-horizontal-circle-outline', lambda x: self.drop.toggle(x)]]
+                top_bar_title.text = 'Products'
+                left_btn.icon = 'menu'
+                right_btn.icon = 'dots-horizontal-circle-outline'
+                left_btn.on_release = lambda btn=left_btn: self.open_navbar(btn)
+                right_btn.on_release = lambda btn=right_btn: DropdownMenu().drop(btn)
+                right_btn.disabled = False
             case const.COLLECTION_SCR:
-                self.top_bar.title = 'Collections'
-                self.top_bar.left_action_items = [['menu', lambda _: self.nav_drawer.set_state('open')]]
-                self.top_bar.right_action_items = [['plus-thick', lambda _: self.show_dialog()]]
+                top_bar_title.text = 'Collections'
+                left_btn.icon = 'menu'
+                right_btn.icon = 'plus-thick'
+                left_btn.on_release = lambda btn=left_btn: self.open_navbar(btn)
+                right_btn.on_release = lambda btn=right_btn: self.show_dialog(AddShoppingListContent())
+                right_btn.disabled = False
             case const.LIST_SCR:
-                self.top_bar.title = 'Shopping List'
-                self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                self.top_bar.right_action_items = [['plus-thick', lambda _: print('show dialog for add item in list')]]
+                top_bar_title.text = 'Shopping List'
+                left_btn.icon = 'arrow-left'
+                left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
+                right_btn.on_release = lambda: self.show_dialog()
+                right_btn.disabled = False
             case const.ADD_PROD_SCR:
-                self.top_bar.title = 'Add product'
-                self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                self.top_bar.right_action_items = []
+                top_bar_title.text = 'Add product'
+                left_btn.icon = 'arrow-left'
+                right_btn.icon = ''
+                left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
+                right_btn.disabled = True
             case const.ADD_DATA_SCR:
-                self.top_bar.title = 'Add data'
-                self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                self.top_bar.right_action_items = []
+                top_bar_title.text = 'Add data'
+                left_btn.icon = 'arrow-left'
+                right_btn.icon = ''
+                left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
+                right_btn.disabled = True
             case const.PROD_SCR:
-                self.top_bar.left_action_items = [['arrow-left', lambda _: self.navigate_back()]]
-                self.top_bar.right_action_items = []
-            case const.USER_MANAGER_SCREEN:
-                self.top_bar.left_action_items = []
-                self.top_bar.right_action_items = []
+                left_btn.icon = 'arrow-left'
+                left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
+                right_btn.icon = ''
+                right_btn.disabled = True
 
     def change_screen(self, screen_name):
         self.screen_stack.append(screen_name)
         self.sm.transition.direction = 'left'
         self.sm.current = self.screen_stack[-1]
 
-    def navigate_back(self):
+    def navigate_back(self, *args):
         self.screen_stack = self.screen_stack[:-1]
         self.sm.transition.direction = 'right'
         self.sm.current = self.screen_stack[-1]
@@ -142,14 +209,12 @@ class MyKivyApp(MDApp):
         self.update_top_bar()
 
     def change_screen_to_prod_scr(self, product_id):
-        prod_screen = self.sm.get_screen(const.PROD_SCR)
-        prod_screen.incoming_prod_id = product_id
+        self.sm.get_screen(const.PROD_SCR).incoming_prod_id = product_id
         self.change_screen(const.PROD_SCR)
         self.update_top_bar()
 
     def change_screen_to_list_scr(self, list_id):
-        list_screen = self.sm.get_screen(const.LIST_SCR)
-        list_screen.list_id = list_id
+        self.sm.get_screen(const.LIST_SCR).list_id = list_id
         self.change_screen(const.LIST_SCR)
         self.update_top_bar()
 

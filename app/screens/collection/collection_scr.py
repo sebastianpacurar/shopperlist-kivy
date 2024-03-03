@@ -1,4 +1,6 @@
+from kivy.properties import StringProperty, NumericProperty
 from kivymd.app import MDApp
+from kivymd.uix.button import MDButton
 from kivymd.uix.screen import MDScreen
 
 from app.components.components import db
@@ -6,40 +8,32 @@ from app.utils import constants as const
 
 
 class CollectionScreen(MDScreen):
+    top_bar_height = NumericProperty()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.sm = None
-        self.my_lists_btn = None
-        self.all_lists_btn = None
         self.bind(on_pre_enter=self.set_definitions)
 
     def set_definitions(self, *args):
         self.sm = self.ids.collections_manager
         self.sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
-        self.my_lists_btn = self.ids.my_lists_btn
-        self.all_lists_btn = self.ids.all_lists_btn
-        self.my_lists_btn.disabled = True
-        self.all_lists_btn.disabled = False
-        self.my_lists_btn.bold = False
-        self.all_lists_btn.bold = True
 
     def switch_scr(self, *args):
-        if args[0].text == 'My Lists':
-            self.sm.transition.direction = 'right'
-            self.sm.current = const.USER_COLLECTION_SCR
-            self.sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
-            self.my_lists_btn.disabled = True
-            self.all_lists_btn.disabled = False
-            self.my_lists_btn.bold = False
-            self.all_lists_btn.bold = True
-        else:
-            self.sm.transition.direction = 'left'
-            self.sm.current = const.ALL_COLLECTION_SCR
-            self.sm.get_screen(const.ALL_COLLECTION_SCR).display_all_collections()
-            self.my_lists_btn.disabled = False
-            self.all_lists_btn.disabled = True
-            self.my_lists_btn.bold = True
-            self.all_lists_btn.bold = False
+        if self.sm.current != args[0]:
+            match args[0]:
+                case const.USER_COLLECTION_SCR:
+                    self.sm.transition.direction = 'right'
+                    self.sm.current = const.USER_COLLECTION_SCR
+                    self.sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
+                case const.ALL_COLLECTION_SCR:
+                    self.sm.transition.direction = 'left'
+                    self.sm.current = const.ALL_COLLECTION_SCR
+                    self.sm.get_screen(const.ALL_COLLECTION_SCR).display_all_collections()
+
+    def refresh_data(self, *args):
+        self.sm.get_screen(const.USER_COLLECTION_SCR).display_user_collections()
+        self.sm.get_screen(const.ALL_COLLECTION_SCR).display_all_collections()
 
 
 class BaseCollectionScr(MDScreen):
@@ -54,19 +48,21 @@ class BaseCollectionScr(MDScreen):
             stamp = entry[2].strftime("%Y-%m-%d %I:%M %p")
         if len(entry) == 5:
             item_data = {
-                'id': entry[0],
-                'text': entry[2],
-                'secondary_text': f'created by {entry[4]}',
-                'tertiary_text': stamp,
+                'itm_id': entry[0],
+                'headline': entry[2],
+                'supporting': f'created by {entry[4]}',
+                'tertiary': stamp,
                 'itm_icon': 'dots-vertical',
+                'sheet_func': lambda name=entry[2], list_id=entry[0]: self.main_app.toggle_bottom(name, list_id),
                 'on_release': lambda list_id=entry[0]: self.main_app.change_screen_to_list_scr(list_id),
             }
         else:
             item_data = {
-                'id': entry[0],
-                'text': entry[2],
-                'secondary_text': stamp,
+                'itm_id': entry[0],
+                'headline': entry[2],
+                'supporting': stamp,
                 'itm_icon': 'dots-vertical',
+                'sheet_func': lambda name=entry[2], list_id=entry[0]: self.main_app.toggle_bottom(name, list_id),
                 'on_release': lambda list_id=entry[0]: self.main_app.change_screen_to_list_scr(list_id),
             }
         return item_data
@@ -98,3 +94,7 @@ class AllCollectionScr(BaseCollectionScr):
             rv_data.append(item_data)
 
         self.ids.rv_collection.data = rv_data
+
+
+class SelectListScreenButton(MDButton):
+    text = StringProperty()

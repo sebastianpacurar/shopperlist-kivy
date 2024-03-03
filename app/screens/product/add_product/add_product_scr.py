@@ -1,5 +1,6 @@
 import os
 
+from kivy.properties import NumericProperty
 from kivymd.uix.screen import MDScreen
 
 from app.components.components import MySnackbar, db
@@ -8,6 +9,8 @@ placeholder_img = os.path.join(os.getcwd(), '..', 'images', 'placeholder_image.p
 
 
 class AddProdScreen(MDScreen):
+    top_bar_height = NumericProperty()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.db_result = None

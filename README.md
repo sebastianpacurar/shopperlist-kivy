@@ -6,36 +6,52 @@
 ## Table of Contents
 
 - [Setup](#Setup)
-- [DB Setup](#DB-Setup)
-- [Run](#Run)
-- [Additional Info](#Additional-Info)
+- [How To Run](#How-To-Run)
+- [DB Setup (optional)](#DB-Setup-optional) 
 
 
 ### Setup
 
 To get started with this project, follow these steps:
 
-1. Clone or download and change directory to app's location, sing a terminal/shell.
-2. Create a virtual environment:
+1. Install **_Python 3.11_** if required. May not work on earlier versions!
+2. Clone or download repo, then change directory to app's location using terminal/shell.
+3. Create a virtual environment:
     ```
     python3 -m venv my_venv
     ```
    
-3. Activate the virtual environment by executing the following command:
+4. Activate the virtual environment by executing the following command:
    - Windows users: `my_venv\Scripts\activate`
    - Linux/Mac users: `source my_venv/bin/activate`
    
-4. Install dependencies using pip from active venv:
+5. Install dependencies using pip from active venv:
     ```
     pip install -r requirements.txt
     ```
 
-### DB Setup
+
+### How To Run
+1. From root folder change directory to `app/` and run `main.py`:
+    ```
+    cd app
+    python main.py
+    ```
+   
+2. Log in using the following users:
+   <br>`user1` with password: `1234`<br>
+   `user2` with password: `1234`
+3. Alternatively, users can be created using fake emails, from the Register Screen
+
+
+
+### DB Setup (optional)
 - The app supports both **Sqlite3** and **MySql**.
 - **Sqlite3** is enabled by default.
 
-1. Sqlite3 setup:
-   - To recreate the Sqlite3 db go to `setup/` folder and run `setup_sqlite.py`.
+1. Sqlite3 DB Generator:
+   - To recreate the sqlite3 db, go to `db/` folder and delete `shopping_list_db.db` 
+   - Navigate to `setup/` folder and run `setup_sqlite.py`.
 
 2. MySql setup:
    1. Create a db named `shopping_list_db` on your MySql server.
@@ -54,22 +70,3 @@ To get started with this project, follow these steps:
       ```
       db = Database(MYSQL)
       ```
-
-### Run
-1. From root folder change directory to `app/` and run `main.py`:
-    ```
-    cd app
-    python main.py
-    ```
-   
-2. Log in using the following users:
-   <br>`user1` with password: `1234`<br>
-   `user2` with password: `1234`
-3. Alternatively, users can be created using fake emails, from the Register Screen
-
-### Additional Info
-- Login with Google does not work
-- Currently, the **main branch** runs under **kivymd 1.2.0** which is pretty deprecated.
-- Migration to **kivymd 2.0.1dev0** is in progress
-
-

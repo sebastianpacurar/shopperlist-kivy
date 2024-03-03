@@ -8,83 +8,133 @@
         height: self.minimum_height
 
 
+<SimpleTextField>:
+    multiline: False
+    write_tab: False
+    MDTextFieldHintText:
+        text: root.hint_txt
+    MDTextFieldHelperText:
+        text: root.helper_txt
+        mode: 'on_error'
+
+
+<PasswordField>:
+    size_hint_y: None
+    size: text_field.size
+    MDTextField:
+        id: text_field
+        mode: root.field_mode
+        multiline: False
+        write_tab: False
+        on_text: root.save_text_value(self)
+        MDTextFieldHintText:
+            text: root.hint_txt
+        MDTextFieldLeadingIcon:
+            icon: "key-variant"
+    MDIconButton:
+        icon: 'eye'
+        pos_hint: {'right': 1, 'center_y': .5}
+        on_release: root.toggle_visibility(self, text_field)
+
+
+
+<OneLineItem>:
+    MDListItemSupportingText:
+        text: root.supporting
+
+
 <EditableTwoLineItemList>:
-    font_style: 'Subtitle1'
-    secondary_font_style: 'Subtitle2'
-    IconRightWidget:
+    MDListItemHeadlineText:
+        text: root.headline
+    MDListItemSupportingText:
+        text: root.supporting
+    MDIconButton:
         icon: root.itm_icon
+        pos_hint: {'center_y': .5}
+        on_release: root.sheet_func(root.headline, root.itm_id)
 
 
 <EditableThreeLineItemList>:
-    font_style: 'Subtitle1'
-    secondary_font_style: 'Subtitle2'
-    tertiary_font_style: 'Subtitle2'
-    IconRightWidget:
+    MDListItemTrailingIcon:
         icon: root.itm_icon
+        pos_hint: {'center_y': .5}
+    MDListItemHeadlineText:
+        text: root.headline
+    MDListItemSupportingText:
+        text: root.supporting
+    MDListItemTertiaryText:
+        text: root.tertiary
 
 
 <ProdItemWithImg>:
-    ImageLeftWidget:
+    MDListItemLeadingAvatar:
         source: root.img_path
+    MDListItemHeadlineText:
+        text: root.headline
+
 
 <TwoLineProdImgListItem>:
-    font_style: 'Subtitle1'
-    secondary_font_style: 'Subtitle2'
-    ImageLeftWidget:
+    MDListItemLeadingAvatar:
         source: root.img_path
-    IconRightWidget:
+    MDListItemHeadlineText:
+        text: root.headline
+    MDListItemSupportingText:
+        text: root.supporting
+    MDIconButton:
         icon: root.itm_icon
+        pos_hint: {'center_y': .5}
         on_release: root.icon_func(root)
 
 
+<BottomSheetHandleContainer>:
+    drag_handle_color: app.theme_cls.primaryColor
+    MDBottomSheetDragHandleTitle
+        text: root.title
+        theme_font_size: 'Custom'
+        font_size: sp(20)
+        pos_hint: {'center_x': .5, 'center_y': 0}
+    MDBottomSheetDragHandleButton:
+        pos_hint: {'center_x': .5, 'center_y': 0}
+        icon: "close"
+        on_release: app.close_bottom()
+
+
+<BottomSheetSelectionLineItem>:
+    theme_bg_color: 'Custom'
+    md_bg_color: 'gainsboro'
+    MDListItemHeadlineText:
+        text: root.text
+
+
+<DynamicDialog>:
+    size_hint_x: .95
+    MDDialogHeadlineText:
+        text: root.headline
+    MDDialogSupportingText:
+        text: root.supporting
+    MDDialogButtonContainer:
+        Widget:
+        MDButton:
+            style: 'text'
+            on_release: root.dismiss()
+            MDButtonText:
+                text: root.cancel_txt
+        MDButton:
+            style: 'text'
+            on_release: root.confirm()
+            MDButtonText:
+                text: root.accept_txt
+
+
 <AddShoppingListContent>:
-    orientation: 'vertical'
-    size_hint_y: None
-    height: dp(120)
-    MDLabel:
-        theme_text_color: 'Custom'
-        text_color: app.theme_cls.primary_dark
-        text: 'Add Shopping List'
-        pos_hint: {'top': 1, 'left': 1}
-    Spacer:
-        orientation: 'vertical'
-        value: dp(35)
     MDTextField:
-        id: shop_list_name_text
-        pos_hint: {'left': 1, 'y': 0}
-        mode: 'rectangle'
-        hint_text: 'Shop List Name'
-        helper_text_mode: 'on_error'
-        required: True
-        multiline: False
-        on_text: app.validate_text_field(self)
+        id: text_field
+        MDTextFieldHintText:
+            text: 'List Name'
 
 
-<SimpleSnackbar>
-    md_bg_color: root.color
-    MDLabel:
-        size_hint_y: None
-        height: self.texture_size[1]
-        text: root.text
-        font_size: sp(15)
-        bold: True
-        shorten: True
-        shorten_from: 'right'
-        pos_hint: {'center_y': .5}
-
-
-<MySnackbar>:
-    pos_hint: {'center_x': .5}
-    MDLabel:
-        size_hint_y: None
-        height: self.texture_size[1]
-        text: root.text
-        font_size: sp(15)
-        bold: True
-        shorten: True
-        shorten_from: 'right'
-        pos_hint: {'center_y': .5}
-    MDSnackbarCloseButton:
-        icon: 'close-thick'
-        on_release: root.dismiss_sb()
-
+<RenameShoppingListContent>:
+    MDTextField:
+        id: text_field
+        MDTextFieldHintText:
+            text: 'List New Name'

@@ -37,6 +37,12 @@ class Queries:
     def get_single_list(self):
         pass
 
+    def set_list_name(self):
+        pass
+
+    def delete_list(self):
+        pass
+
     def get_category_id(self):
         pass
 
@@ -112,6 +118,12 @@ class QueriesSqlite(Queries):
                 LEFT JOIN category AS c ON p.category_id = c.category_id
                 WHERE slp.shop_list_id = ?
                 '''.split())
+
+    def set_list_name(self):
+        return 'UPDATE shop_list SET name = ? WHERE shop_list_id= ?'
+
+    def delete_list(self):
+        return 'DELETE FROM shop_list WHERE shop_list_id = ?'
 
     def get_category_id(self):
         return 'SELECT category_id FROM category WHERE name = ?'
@@ -216,6 +228,12 @@ class QueriesMysql(Queries):
                 LEFT JOIN category AS c ON p.category_id = c.category_id
                 WHERE slp.shop_list_id = %s
                 '''.split())
+
+    def set_list_name(self):
+        return 'UPDATE shop_list SET name = %s WHERE shop_list_id= %s'
+
+    def delete_list(self):
+        return 'DELETE FROM shop_list WHERE shop_list_id = %s'
 
     def get_category_id(self):
         return 'SELECT category_id FROM category WHERE name = %s'

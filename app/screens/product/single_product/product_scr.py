@@ -1,4 +1,4 @@
-from kivy.properties import ObjectProperty, DictProperty, StringProperty
+from kivy.properties import ObjectProperty, DictProperty, StringProperty, NumericProperty
 from kivymd.uix.screen import MDScreen
 
 from app.components.components import db
@@ -6,6 +6,7 @@ from app.components.components import db
 
 class ProdScreen(MDScreen):
     top_bar = ObjectProperty()
+    top_bar_height = NumericProperty()
     img_path = StringProperty()
     data = DictProperty()
 

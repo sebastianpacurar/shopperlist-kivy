@@ -1,9 +1,12 @@
+from kivy.properties import NumericProperty
 from kivymd.uix.screen import MDScreen
 
 from app.components.components import db
 
 
 class ListScreen(MDScreen):
+    top_bar_height = NumericProperty()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.list_id = None

@@ -1,0 +1,108 @@
+#: import SelectSignInSignUpButton components.components.SelectSignInSignUpButton
+
+#: import LOGIN_SCR utils.constants.LOGIN_SCR
+#: import REGISTER_SCR utils.constants.REGISTER_SCR
+
+
+<UserManagerScreen>:
+    name: 'usr_manager_scr'
+    MDFloatLayout:
+        orientation: 'vertical'
+        md_bg_color: 'lightseagreen'
+
+        MDBoxLayout:
+            md_bg_color: app.theme_cls.primaryContainerColor
+            orientation: 'vertical'
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: .85, .70
+
+            MDSegmentedButton:
+                padding: dp(20), dp(20), dp(20), 0
+                type: 'large'
+                MDSegmentedButtonItem:
+                    on_release: root.switch_scr(LOGIN_SCR)
+                    active: True
+                    MDSegmentButtonLabel:
+                        text: 'Log in'
+                MDSegmentedButtonItem:
+                    on_release: root.switch_scr(REGISTER_SCR)
+                    MDSegmentButtonLabel:
+                        text: 'Register'
+
+            MDScreenManager:
+                id: signin_signup_manager
+                LoginScr:
+                    top_bar: root.top_bar
+                RegisterScr:
+                    top_bar: root.top_bar
+
+
+<LoginScr>:
+    name: 'log_in_scr'
+    MDBoxLayout:
+        md_bg_color: app.theme_cls.primaryContainerColor
+        orientation: 'vertical'
+        padding: dp(20), dp(45), dp(20), dp(45)
+        spacing: dp(20)
+
+        SimpleTextField:
+            id: enter_user
+            mode: 'filled'
+            hint_txt: 'Username'
+            MDTextFieldLeadingIcon:
+                icon: 'account-outline'
+
+        PasswordField:
+            id: enter_pass
+            field_mode: 'filled'
+            hint_txt: 'Password'
+
+        Widget:
+
+        MDButton:
+            type: 'tonal'
+            pos_hint: {'center_x': .5}
+            on_release: root.perform_login()
+            MDButtonText:
+                text: 'Log in'
+
+
+<RegisterScr>
+    name: 'register_scr'
+    MDBoxLayout:
+        md_bg_color: app.theme_cls.primaryContainerColor
+        orientation: 'vertical'
+        padding: dp(20), dp(45), dp(20), dp(45)
+        spacing: dp(20)
+
+        SimpleTextField:
+            id: create_email
+            mode: 'filled'
+            hint_txt: 'Email'
+            helper_txt: 'Not a valid email'
+            MDTextFieldLeadingIcon:
+                icon: 'email-outline'
+
+        SimpleTextField:
+            id: create_user
+            mode: 'filled'
+            hint_txt: 'Username'
+            helper_txt: ''
+            MDTextFieldLeadingIcon:
+                icon: 'account-outline'
+
+        PasswordField:
+            id: create_pass
+            field_mode: 'filled'
+            hint_txt: 'Password'
+
+        Widget:
+
+        MDButton:
+            type: 'tonal'
+            pos_hint: {'center_x': .5}
+            size_hint_x: .75
+            on_release: root.perform_register()
+
+            MDButtonText:
+                text: 'Register'

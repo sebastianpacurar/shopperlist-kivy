@@ -1,57 +1,42 @@
 #: import EditableThreeLineItemList components.components.EditableThreeLineItemList
 #: import RV components.components.RV
-#: include components/components.kv
+
+#: import USER_COLLECTION_SCR utils.constants.USER_COLLECTION_SCR
+#: import ALL_COLLECTION_SCR utils.constants.ALL_COLLECTION_SCR
 
 
 <CollectionScreen>:
     name: 'collection_scr'
-    MDFloatLayout:
+    MDBoxLayout:
         orientation: 'vertical'
+        padding: dp(20), 0, dp(20), 0
+
+        Widget:
+            size_hint_y: None
+            height: root.top_bar_height + root.top_bar_height * .25
+            minimum_size: self.size
 
         MDBoxLayout:
             orientation: 'vertical'
-            pos_hint: {'center_x': .5, 'center_y': .375}
-            size_hint: .85, .90
+            spacing: dp(20)
 
-            MDBoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: None
-                height: self.children[0].height
-
-                SelectListScreenButton:
-                    id: my_lists_btn
-                    text: 'My Lists'
-                    on_release: root.switch_scr(self)
-
-                Spacer:
-                    orientation: 'horizontal'
-                    value: self.parent.width * 0.01
-
-                SelectListScreenButton:
-                    id: all_lists_btn
-                    text: 'All Lists'
-                    on_release: root.switch_scr(self)
+            MDSegmentedButton:
+                type:'large'
+                MDSegmentedButtonItem:
+                    on_release: root.switch_scr(USER_COLLECTION_SCR)
+                    active: True
+                    MDSegmentButtonLabel:
+                        text: 'My Lists'
+                MDSegmentedButtonItem:
+                    on_release: root.switch_scr(ALL_COLLECTION_SCR)
+                    MDSegmentButtonLabel:
+                        text: 'All Lists'
 
             MDScreenManager:
                 id: collections_manager
                 UserCollectionScr:
                 AllCollectionScr:
 
-            MDLabel:
-                text: ''
-                size_hint_y: .25
-
-
-<SelectListScreenButton@MDRectangleFlatButton>:
-    radius: [0, 0, 0, 0]
-    line_color: app.theme_cls.primary_dark
-    size_hint_x: None
-    width: self.parent.width * 0.49
-    md_bg_color_disabled: app.theme_cls.primary_light
-    font_style: 'Body2'
-    disabled_color: 'black'
-    theme_text_color: 'Custom'
-    text_color: app.theme_cls.primary_color
 
 
 <AllCollectionScr>:
@@ -59,7 +44,7 @@
     MDFloatLayout:
         size_hint_y: .85
         RV:
-            viewclass: 'EditableThreeLineItemList'
+            viewclass: 'EditableTwoLineItemList'
             id: rv_collection
 
 <UserCollectionScr>:
