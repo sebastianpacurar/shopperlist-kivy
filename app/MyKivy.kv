@@ -1,3 +1,5 @@
+#: include components/components.kv
+
 #: import UserManagerScreen screens.user_management.user_management_scr.UserManagerScreen
 #: include screens/user_management/UserManagerScreen.kv
 
@@ -16,9 +18,14 @@
 #: import ListScreen screens.list.list_scr.ListScreen
 #: include screens/list/ListScreen.kv
 
-#: import ListScreen screens.product.add_data.add_data_scr.AddDataScreen
-#: include screens/product/add_data/AddData.kv
+#: import ManageDataScreen screens.product.manage_data.manage_data_scr.ManageDataScreen
+#: include screens/product/manage_data/ManageDataScreen.kv
 
+#: import ManageDataScreen screens.product.manage_data.category.category_scr.CategoryScreen
+#: include screens/product/manage_data/category/CategoryScreen.kv
+
+#: import ManageDataScreen screens.product.manage_data.unit.unit_scr.UnitScreen
+#: include screens/product/manage_data/unit/UnitScreen.kv
 
 MainScreen:
 
@@ -65,7 +72,11 @@ MainScreen:
                 top_bar_height: top_bar.height
             ListScreen:
                 top_bar_height: top_bar.height
-            AddDataScreen:
+            ManageDataScreen:
+                top_bar_height: top_bar.height
+            CategoryScreen:
+                top_bar_height: top_bar.height
+            UnitScreen:
                 top_bar_height: top_bar.height
             AddProdScreen:
                 top_bar_height: top_bar.height
@@ -91,14 +102,14 @@ MainScreen:
                         theme_line_height: "Custom"
                         text_color: "#4a4939"
                         adaptive_height: True
-                        padding_x: "16dp"
+                        padding: dp(16), 0, dp(16), 0
                         font_style: "Display"
                         role: "small"
 
                     MDLabel:
                         id: nav_email
                         text: ""
-                        padding_x: "18dp"
+                        padding: dp(16), 0, dp(16), 0
                         adaptive_height: True
                         font_style: "Title"
                         role: "medium"

@@ -37,6 +37,18 @@
         on_release: root.toggle_visibility(self, text_field)
 
 
+<TopGap>:
+    size_hint_y: None
+    height: root.top_bar_height + root.top_bar_height * .25
+    minimum_size: self.size
+
+<BottomGap>
+    size_hint_y: None
+    height: dp(24 * 2)
+    minimum_size: self.size
+
+
+
 <EditableOneLineItemList>:
     MDListItemHeadlineText:
         text: root.text

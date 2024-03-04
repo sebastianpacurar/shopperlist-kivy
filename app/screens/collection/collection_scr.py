@@ -35,6 +35,7 @@ class CollectionScreen(MDScreen):
         self.sm.get_screen(const.ALL_COLLECTION_SCR).display_all_collections()
 
 
+# TODO: continue here
 class BaseCollectionScr(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -328,6 +328,16 @@ class Database:
             conn.close()
         return res
 
+    def get_category_products(self, category_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.get_all_products_of_category_type(), (category_id,))
+            return cursor.fetchall()
+        finally:
+            cursor.close()
+            conn.close()
+
     def update_category_name(self, value, category_id):
         conn = self.set_conn()
         cursor = conn.cursor()
@@ -375,6 +385,16 @@ class Database:
             cursor.close()
             conn.close()
         return res
+
+    def get_unit_products(self, unit_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.get_all_products_of_unit_type(), (unit_id,))
+            return cursor.fetchall()
+        finally:
+            cursor.close()
+            conn.close()
 
     def update_unit_name(self, value, unit_id):
         conn = self.set_conn()

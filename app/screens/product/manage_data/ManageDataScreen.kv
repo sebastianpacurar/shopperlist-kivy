@@ -1,19 +1,14 @@
-#: import RV components.components.RV
-#: include components/components.kv
+#: import PROD_CATEGORIES_SCR utils.constants.PROD_CATEGORIES_SCR
+#: import PROD_UNITS_SCR utils.constants.PROD_UNITS_SCR
 
-#: import PROD_CATEGORY_SCR utils.constants.PROD_CATEGORY_SCR
-#: import PROD_UNIT_SCR utils.constants.PROD_UNIT_SCR
-
-<AddDataScreen>:
+<ManageDataScreen>:
     name: 'add_data_scr'
     MDBoxLayout:
         orientation: 'vertical'
         padding: dp(20), 0, dp(20), 0
 
-        Widget:
-            size_hint_y: None
-            height: root.top_bar_height + root.top_bar_height * .25
-            minimum_size: self.size
+        TopGap:
+            top_bar_height: root.top_bar_height
 
         MDBoxLayout:
             orientation: 'vertical'
@@ -22,12 +17,12 @@
             MDSegmentedButton:
                 type:'small'
                 MDSegmentedButtonItem:
-                    on_release: root.switch_scr(PROD_CATEGORY_SCR)
+                    on_release: root.switch_scr(PROD_CATEGORIES_SCR)
                     active: True
                     MDSegmentButtonLabel:
                         text: 'Category'
                 MDSegmentedButtonItem:
-                    on_release: root.switch_scr(PROD_UNIT_SCR)
+                    on_release: root.switch_scr(PROD_UNITS_SCR)
                     MDSegmentButtonLabel:
                         text: 'Unit'
 
@@ -50,31 +45,31 @@
                     pos_hint: {'center_x': .5, 'center_y': .5}
                     on_release: root.add_entity()
 
-            MDTextField:
+            SimpleTextField:
                 id: search_field
-                on_text: root.filter_displayed_list(self.text)
-                mode: 'outlined'
-                MDTextFieldHintText:
-                    text: 'Search item'
+                on_text: root.filter_displayed_list(self)
+                hint_txt: 'Search Item'
                 MDTextFieldTrailingIcon:
                     icon: 'text-search'
 
             MDScreenManager:
                 id: data_manager
-                CategoryScr:
-                UnitScr:
+                CategoriesScreen:
+                UnitsScreen:
+
+        BottomGap:
 
 
-<CategoryScr>:
-    name: 'category_scr'
+<CategoriesScreen>:
+    name: 'categories_scr'
     MDBoxLayout:
         RV:
             viewclass: 'EditableOneLineItemList'
-            id: rv_category
+            id: rv_categories
 
-<UnitScr>:
-    name: 'unit_scr'
+<UnitsScreen>:
+    name: 'units_scr'
     MDBoxLayout:
         RV:
             viewclass: 'EditableOneLineItemList'
-            id: rv_unit
+            id: rv_units

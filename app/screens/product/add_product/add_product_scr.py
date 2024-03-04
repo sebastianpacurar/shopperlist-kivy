@@ -13,7 +13,6 @@ class AddProdScreen(MDScreen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.db_result = None
         self.prod_name = None
         self.prod_price = None
         self.prod_category = None
@@ -29,14 +28,14 @@ class AddProdScreen(MDScreen):
         self.prod_unit = self.ids.product_unit_text
 
     def perform_product_add(self):
-        msg = 'Errors in fields'
+        msg, db_result = 'Errors in fields', 0
         if not any([len(t) == 0 for t in
                     [self.prod_name.text, self.prod_price.text, self.prod_category.text, self.prod_unit.text]]):
-            self.db_result = db.add_product(self.prod_name.text, self.prod_price.text, self.prod_category.text,
-                                            self.prod_unit.text,
-                                            placeholder_img)
+            db_result = db.add_product(self.prod_name.text, self.prod_price.text, self.prod_category.text,
+                                       self.prod_unit.text,
+                                       placeholder_img)
             msg = f'{self.prod_name.text} added to {self.prod_category.text}'
-        MySnackbar(msg, self.db_result)
+        MySnackbar(msg, db_result)
 
     def init_data(self, *args):
         self.prod_name.error = False

@@ -1,5 +1,3 @@
-ProdScreen:
-
 <ProdScreen>:
     name: 'prod_scr'
 
@@ -7,10 +5,8 @@ ProdScreen:
         orientation: 'vertical'
         padding: dp(20), 0, dp(20), 0
 
-        Widget:
-            size_hint_y: None
-            height: root.top_bar_height + root.top_bar_height * .25
-            minimum_size: self.size
+        TopGap:
+            top_bar_height: root.top_bar_height
 
         MDList:
             MDListItem:
@@ -64,5 +60,4 @@ ProdScreen:
                 MDListItemTrailingIcon:
                     icon: 'pencil-outline'
 
-        MDLabel:
-            text: ''
+        BottomGap:

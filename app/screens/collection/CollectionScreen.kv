@@ -1,6 +1,3 @@
-#: import EditableThreeLineItemList components.components.EditableThreeLineItemList
-#: import RV components.components.RV
-
 #: import USER_COLLECTION_SCR utils.constants.USER_COLLECTION_SCR
 #: import ALL_COLLECTION_SCR utils.constants.ALL_COLLECTION_SCR
 
@@ -11,17 +8,15 @@
         orientation: 'vertical'
         padding: dp(20), 0, dp(20), 0
 
-        Widget:
-            size_hint_y: None
-            height: root.top_bar_height + root.top_bar_height * .25
-            minimum_size: self.size
+        TopGap:
+            top_bar_height: root.top_bar_height
 
         MDBoxLayout:
             orientation: 'vertical'
             spacing: dp(20)
 
             MDSegmentedButton:
-                type:'large'
+                type: 'small'
                 MDSegmentedButtonItem:
                     on_release: root.switch_scr(USER_COLLECTION_SCR)
                     active: True
@@ -32,17 +27,26 @@
                     MDSegmentButtonLabel:
                         text: 'All Lists'
 
+            #TODO: continue here
+
+            SimpleTextField:
+                id: text_field
+                hint_txt: 'Search List'
+                size_hint_x: .8
+                pos_hint: {'center_x': .5}
+#                on_text: root.display_search_results(self.text)
+
             MDScreenManager:
                 id: collections_manager
                 UserCollectionScr:
                 AllCollectionScr:
 
+            BottomGap:
 
 
 <AllCollectionScr>:
     name: 'all_collection_scr'
     MDFloatLayout:
-        size_hint_y: .85
         RV:
             viewclass: 'EditableTwoLineItemList'
             id: rv_collection
@@ -50,7 +54,6 @@
 <UserCollectionScr>:
     name: 'usr_collection_scr'
     MDFloatLayout:
-        size_hint_y: .85
         RV:
             viewclass: 'EditableTwoLineItemList'
             id: rv_usr_collection

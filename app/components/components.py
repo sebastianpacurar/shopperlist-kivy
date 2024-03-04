@@ -1,3 +1,4 @@
+from kivy.uix.widget import Widget
 from kivymd.uix.appbar import MDActionTopAppBarButton
 from kivymd.uix.bottomsheet import MDBottomSheetDragHandle
 from kivymd.uix.dialog import MDDialog, MDDialogContentContainer
@@ -23,6 +24,14 @@ db = Database(SQLITE)
 
 
 class RV(MDRecycleView):
+    pass
+
+
+class TopGap(Widget):
+    top_bar_height = NumericProperty()
+
+
+class BottomGap(Widget):
     pass
 
 
@@ -267,7 +276,7 @@ class DropdownMenu(MDDropdownMenu):
 
     def __init__(self):
         super().__init__(
-            width_mult=4,
+            padding=[dp(12), 0, dp(12), 0],
             radius=[12, 12, 12, 12],
             elevation=4,
         )
@@ -308,7 +317,7 @@ class DropdownMenu(MDDropdownMenu):
                     )
                 },
                 {
-                    'text': 'Add Data',
+                    'text': 'Manage Data',
                     'on_release': lambda screen=const.ADD_DATA_SCR: (
                         self.main_app.change_screen_and_update_bar(screen),
                         self.dismiss()
@@ -345,6 +354,5 @@ class DropdownMenu(MDDropdownMenu):
         self.open()
 
     def on_dropdown_item_select(self, text_input, content):
-        ''' perform menu_item selection and update the caller text value '''
         text_input.text = str(content[1])
         self.dismiss()

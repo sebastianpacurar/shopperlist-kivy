@@ -152,12 +152,24 @@ class MyKivyApp(MDApp):
                 left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
                 right_btn.disabled = True
             case const.ADD_DATA_SCR:
-                top_bar_title.text = 'Add data'
+                top_bar_title.text = 'Manage Data'
                 left_btn.icon = 'arrow-left'
                 right_btn.icon = ''
                 left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
                 right_btn.disabled = True
             case const.PROD_SCR:
+                left_btn.icon = 'arrow-left'
+                left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
+                right_btn.icon = ''
+                right_btn.disabled = True
+            case const.SINGLE_CATEGORY_SCR:
+                top_bar_title.text = 'Category'
+                left_btn.icon = 'arrow-left'
+                left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
+                right_btn.icon = ''
+                right_btn.disabled = True
+            case const.SINGLE_UNIT_SCR:
+                top_bar_title.text = 'Unit'
                 left_btn.icon = 'arrow-left'
                 left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
                 right_btn.icon = ''
@@ -176,6 +188,16 @@ class MyKivyApp(MDApp):
 
     def change_screen_and_update_bar(self, screen_name):
         self.change_screen(screen_name)
+        self.update_top_bar()
+
+    def change_screen_to_category_scr(self, category_id):
+        self.sm.get_screen(const.SINGLE_CATEGORY_SCR).incoming_category_id = category_id
+        self.change_screen(const.SINGLE_CATEGORY_SCR)
+        self.update_top_bar()
+
+    def change_screen_to_unit_scr(self, unit_id):
+        self.sm.get_screen(const.SINGLE_UNIT_SCR).incoming_unit_id = unit_id
+        self.change_screen(const.SINGLE_UNIT_SCR)
         self.update_top_bar()
 
     def change_login_app_screen(self, screen_name):

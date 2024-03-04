@@ -10,9 +10,6 @@ class Queries:
                 JOIN category ON product.category_id = category.category_id
         '''.split())
 
-    def get_product_details(self):
-        pass
-
     def get_all_lists(self):
         return ' '.join('''
                 SELECT
@@ -46,6 +43,9 @@ class Queries:
     def get_category_id(self):
         pass
 
+    def get_all_products_of_category_type(self):
+        pass
+
     def insert_into_category(self):
         pass
 
@@ -56,6 +56,9 @@ class Queries:
         pass
 
     def get_unit_id(self):
+        pass
+
+    def get_all_products_of_unit_type(self):
         pass
 
     def insert_into_unit(self):
@@ -98,6 +101,9 @@ class Queries:
         pass
 
     def filter_unit(self):
+        pass
+
+    def get_product_details(self):
         pass
 
 
@@ -152,6 +158,19 @@ class QueriesSqlite(Queries):
     def get_category_id(self):
         return 'SELECT category_id FROM category WHERE name = ?'
 
+    def get_all_products_of_category_type(self):
+        return ' '.join('''
+                SELECT 
+                    product.product_id,
+                    product.name,
+                    category.category_id,
+                    category.name,
+                    product.product_image
+                FROM product 
+                JOIN category ON product.category_id = category.category_id
+                WHERE category.category_id = ?
+        '''.split())
+
     def insert_into_category(self):
         return 'INSERT INTO category (name) VALUES (?)'
 
@@ -163,6 +182,19 @@ class QueriesSqlite(Queries):
 
     def get_unit_id(self):
         return 'SELECT unit_id FROM product_unit WHERE name = ?'
+
+    def get_all_products_of_unit_type(self):
+        return ' '.join('''
+                SELECT 
+                    product.product_id,
+                    product.name,
+                    product_unit.unit_id,
+                    product_unit.name,
+                    product.product_image
+                FROM product 
+                JOIN product_unit ON product.unit_id = product_unit.unit_id
+                WHERE product_unit.unit_id = ?
+        '''.split())
 
     def insert_into_unit(self):
         return 'INSERT INTO product_unit (name) VALUES (?)'
@@ -286,6 +318,19 @@ class QueriesMysql(Queries):
     def get_category_id(self):
         return 'SELECT category_id FROM category WHERE name = %s'
 
+    def get_all_products_of_category_type(self):
+        return ' '.join('''
+                SELECT 
+                    product.product_id,
+                    product.name,
+                    category.category_id,
+                    category.name,
+                    product.product_image
+                FROM product 
+                JOIN category ON product.category_id = category.category_id
+                WHERE category.category_id = %s
+        '''.split())
+
     def insert_into_category(self):
         return 'INSERT INTO category (name) VALUES (%s)'
 
@@ -297,6 +342,19 @@ class QueriesMysql(Queries):
 
     def get_unit_id(self):
         return 'SELECT unit_id FROM product_unit WHERE name = %s'
+
+    def get_all_products_of_unit_type(self):
+        return ' '.join('''
+                SELECT 
+                    product.product_id,
+                    product.name,
+                    product_unit.unit_id,
+                    product_unit.name,
+                    product.product_image
+                FROM product 
+                JOIN product_unit ON product.unit_id = product_unit.unit_id
+                WHERE product_unit.unit_id = %s
+        '''.split())
 
     def insert_into_unit(self):
         return 'INSERT INTO product_unit (name) VALUES (%s)'

@@ -1,15 +1,14 @@
 #: import DropdownMenu components.components.DropdownMenu
 
+
 <AddProdScreen>:
     name: 'add_prod_scr'
     MDBoxLayout:
         orientation: 'vertical'
         padding: dp(20), 0, dp(20), 0
 
-        Widget:
-            size_hint_y: None
-            height: root.top_bar_height + root.top_bar_height * .25
-            minimum_size: self.size
+        TopGap:
+            top_bar_height: root.top_bar_height
 
         MDBoxLayout:
             orientation: 'vertical'
@@ -44,6 +43,8 @@
                 on_release: root.perform_product_add()
 
             Widget:
+
+        BottomGap:
 
 
 

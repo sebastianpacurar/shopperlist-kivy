@@ -16,7 +16,7 @@ class ListScreen(MDScreen):
         rv_data = []
         for entry in db.get_shop_list(self.list_id):
             item_data = {
-                'text': entry[1],
+                'headline': entry[1],
                 'img_path': entry[4],
                 '_no_ripple_effect': True,
             }
