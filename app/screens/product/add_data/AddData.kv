@@ -52,7 +52,7 @@
 
             MDTextField:
                 id: search_field
-                on_text: root.filter_displayed_list(self)
+                on_text: root.filter_displayed_list(self.text)
                 mode: 'outlined'
                 MDTextFieldHintText:
                     text: 'Search item'

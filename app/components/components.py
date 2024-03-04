@@ -136,6 +136,9 @@ class DynamicDialog(MDDialog):
             main_sm = MDApp.get_running_app().sm
             if main_sm.current == const.COLLECTION_SCR:
                 main_sm.get_screen(const.COLLECTION_SCR).refresh_data()
+            if main_sm.current == const.ADD_DATA_SCR:
+                inner_scr = main_sm.get_screen(const.ADD_DATA_SCR).sm
+                inner_scr.get_screen(inner_scr.current).display_search_results()
 
 
 class AddShoppingListContent(MDDialogContentContainer):
@@ -143,12 +146,27 @@ class AddShoppingListContent(MDDialogContentContainer):
 
 
 class RenameShoppingListContent(MDDialogContentContainer):
-    list_id = StringProperty()
+    pass
 
 
 class DeleteShoppingListContent(MDDialogContentContainer):
-    list_name = StringProperty()
-    list_id = StringProperty()
+    pass
+
+
+class RenameCategoryContent(MDDialogContentContainer):
+    pass
+
+
+class DeleteCategoryContent(MDDialogContentContainer):
+    pass
+
+
+class RenameUnitContent(MDDialogContentContainer):
+    pass
+
+
+class DeleteUnitContent(MDDialogContentContainer):
+    pass
 
 
 class Spacer(MDBoxLayout):

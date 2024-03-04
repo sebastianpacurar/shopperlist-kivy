@@ -1,9 +1,8 @@
-from kivy.properties import StringProperty, NumericProperty
+from kivy.properties import NumericProperty
 from kivymd.app import MDApp
-from kivymd.uix.button import MDButton
 from kivymd.uix.screen import MDScreen
 
-from app.components.components import db
+from app.components.components import db, BottomSheetSelectionLineItem, RenameShoppingListContent, DeleteShoppingListContent
 from app.utils import constants as const
 
 
@@ -44,6 +43,7 @@ class BaseCollectionScr(MDScreen):
     def create_item_data(self, entry):
         entry = [str(x) for x in entry]
         stamp = entry[3]
+        sheet_content = set_bottom_sheet_content(entry[0], entry[2])
         if not isinstance(stamp, str):
             stamp = entry[2].strftime("%Y-%m-%d %I:%M %p")
         if len(entry) == 5:
@@ -53,7 +53,7 @@ class BaseCollectionScr(MDScreen):
                 'supporting': f'created by {entry[4]}',
                 'tertiary': stamp,
                 'itm_icon': 'dots-vertical',
-                'sheet_func': lambda name=entry[2], list_id=entry[0]: self.main_app.toggle_bottom(name, list_id),
+                'sheet_func': lambda name=entry[2], list_id=entry[0]: self.main_app.toggle_bottom(name, list_id, sheet_content),
                 'on_release': lambda list_id=entry[0]: self.main_app.change_screen_to_list_scr(list_id),
             }
         else:
@@ -62,7 +62,7 @@ class BaseCollectionScr(MDScreen):
                 'headline': entry[2],
                 'supporting': stamp,
                 'itm_icon': 'dots-vertical',
-                'sheet_func': lambda name=entry[2], list_id=entry[0]: self.main_app.toggle_bottom(name, list_id),
+                'sheet_func': lambda name=entry[2], list_id=entry[0]: self.main_app.toggle_bottom(name, list_id, sheet_content),
                 'on_release': lambda list_id=entry[0]: self.main_app.change_screen_to_list_scr(list_id),
             }
         return item_data
@@ -96,5 +96,18 @@ class AllCollectionScr(BaseCollectionScr):
         self.ids.rv_collection.data = rv_data
 
 
-class SelectListScreenButton(MDButton):
-    text = StringProperty()
+def set_bottom_sheet_content(list_id, list_name):
+    return [
+        BottomSheetSelectionLineItem(
+            text='Rename',
+            on_release=lambda _: (
+                MDApp.get_running_app().show_dialog(RenameShoppingListContent(), list_id),
+                MDApp.get_running_app().bottom.set_state('toggle')),
+        ),
+        BottomSheetSelectionLineItem(
+            text='Delete',
+            on_release=lambda _: (
+                MDApp.get_running_app().show_dialog(DeleteShoppingListContent(), list_name, list_id),
+                MDApp.get_running_app().bottom.set_state('toggle')),
+        )
+    ]

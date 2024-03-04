@@ -49,10 +49,22 @@ class Queries:
     def insert_into_category(self):
         pass
 
+    def set_category_name(self):
+        pass
+
+    def delete_category(self):
+        pass
+
     def get_unit_id(self):
         pass
 
     def insert_into_unit(self):
+        pass
+
+    def set_unit_name(self):
+        pass
+
+    def delete_unit(self):
         pass
 
     def insert_into_product(self):
@@ -143,11 +155,23 @@ class QueriesSqlite(Queries):
     def insert_into_category(self):
         return 'INSERT INTO category (name) VALUES (?)'
 
+    def set_category_name(self):
+        return 'UPDATE category SET name = ? WHERE category_id = ?'
+
+    def delete_category(self):
+        return 'DELETE FROM category WHERE category_id = ?'
+
     def get_unit_id(self):
         return 'SELECT unit_id FROM product_unit WHERE name = ?'
 
     def insert_into_unit(self):
         return 'INSERT INTO product_unit (name) VALUES (?)'
+
+    def set_unit_name(self):
+        return 'UPDATE product_unit SET name = ? WHERE unit_id = ?'
+
+    def delete_unit(self):
+        return 'DELETE FROM product_unit WHERE unit_id = ?'
 
     def insert_into_product(self):
         return 'INSERT INTO product (name, price, unit_id, category_id, product_image) VALUES (?, ?, ?, ?, ?)'
@@ -265,11 +289,23 @@ class QueriesMysql(Queries):
     def insert_into_category(self):
         return 'INSERT INTO category (name) VALUES (%s)'
 
+    def set_category_name(self):
+        return 'UPDATE category SET name = %s WHERE category_id = %s'
+
+    def delete_category(self):
+        return 'DELETE FROM category WHERE category_id = %s'
+
     def get_unit_id(self):
         return 'SELECT unit_id FROM product_unit WHERE name = %s'
 
     def insert_into_unit(self):
         return 'INSERT INTO product_unit (name) VALUES (%s)'
+
+    def set_unit_name(self):
+        return 'UPDATE product_unit SET name = %s WHERE unit_id = %s'
+
+    def delete_unit(self):
+        return 'DELETE FROM product_unit WHERE unit_id = %s'
 
     def insert_into_product(self):
         return 'INSERT INTO product (name, price, unit_id, category_id, product_image) VALUES (%s, %s, %s, %s, %s)'

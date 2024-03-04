@@ -7,6 +7,7 @@ from kivymd.uix.screen import MDScreen
 import app.components.components
 from app.components.components import *
 from app.utils import constants as const
+from db import operations as ops
 
 email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
@@ -52,85 +53,60 @@ class MyKivyApp(MDApp):
         match type(content):
             case app.components.components.AddShoppingListContent:
                 field = content.ids.text_field
-                dialog.confirm = lambda f=field: self.perform_list_add(dialog, f)
+                dialog.confirm = lambda f=field: ops.perform_list_add(dialog, f, self.user['id'])
                 dialog.headline = 'New List'
                 dialog.accept_txt = 'Add'
                 dialog.cancel_txt = 'Cancel'
             case app.components.components.RenameShoppingListContent:
                 field = content.ids.text_field
-                dialog.confirm = lambda f=field: self.perform_update_list_name(dialog, f, content.list_id)
+                dialog.confirm = lambda f=field: ops.perform_update_list_name(dialog, f, args[1])
                 dialog.headline = 'Rename List'
                 dialog.accept_txt = 'Update'
                 dialog.cancel_txt = 'Cancel'
             case app.components.components.DeleteShoppingListContent:
-                dialog.confirm = lambda: self.perform_delete_list(dialog, content.list_name, content.list_id)
+                dialog.confirm = lambda: ops.perform_delete_list(dialog, args[1], args[2])
                 dialog.headline = 'Delete List'
                 dialog.supporting = 'Are you sure you want to delete list?'
                 dialog.accept_txt = 'Yes'
                 dialog.cancel_txt = 'No'
+            case app.components.components.RenameCategoryContent:
+                field = content.ids.text_field
+                dialog.confirm = lambda f=field: ops.perform_update_category_name(dialog, f, args[1])
+                dialog.headline = 'Rename Category'
+                dialog.accept_txt = 'Update'
+                dialog.cancel_txt = 'Cancel'
+            case app.components.components.DeleteCategoryContent:
+                dialog.confirm = lambda: ops.perform_delete_category(dialog, args[1], args[2])
+                dialog.headline = 'Delete Category'
+                dialog.supporting = 'Are you sure you want to delete Category?'
+                dialog.accept_txt = 'Yes'
+                dialog.cancel_txt = 'No'
+            case app.components.components.RenameUnitContent:
+                field = content.ids.text_field
+                dialog.confirm = lambda f=field: ops.perform_update_unit_name(dialog, f, args[1])
+                dialog.headline = 'Rename Unit'
+                dialog.accept_txt = 'Update'
+                dialog.cancel_txt = 'Cancel'
+            case app.components.components.DeleteUnitContent:
+                dialog.confirm = lambda: ops.perform_delete_unit(dialog, args[1], args[2])
+                dialog.headline = 'Delete Unit'
+                dialog.supporting = 'Are you sure you want to delete Unit?'
+                dialog.accept_txt = 'Yes'
+                dialog.cancel_txt = 'No'
         dialog.open()
 
-    # TODO: dynamic list_content!
     def toggle_bottom(self, *args):
         if self.bottom.state == 'close':
             self.bottom.set_state('toggle')
             handle = self.root.ids.handle
             list_content = self.root.ids.content_list
             handle.title = args[0]
-            list_content.add_widget(BottomSheetSelectionLineItem(
-                text='Rename',
-                on_release=lambda _: (
-                    self.show_dialog(RenameShoppingListContent(list_id=args[1])),
-                    self.bottom.set_state('toggle')),
-            ))
-            list_content.add_widget(BottomSheetSelectionLineItem(
-                text='Delete',
-                on_release=lambda _: (
-                    self.show_dialog(DeleteShoppingListContent(list_name=args[0], list_id=args[1])),
-                    self.bottom.set_state('toggle')
-                )
-            ))
+            for widget in args[2]:
+                list_content.add_widget(widget)
 
     def clean_bottom_sheet(self):
         self.root.ids.handle.text = ''
         self.root.ids.content_list.clear_widgets()
-
-    # TODO: improve
-    def perform_list_add(self, *args):
-        dialog = args[0]
-        shop_list_name = args[1].text
-        db_result, msg = 0, "List can't be empty!"
-        if len(shop_list_name) > 0:
-            db_result = db.add_shopping_list(shop_list_name, self.user['id'])
-            dialog.should_refresh = db_result
-            msg = f'{shop_list_name} created'
-            dialog.dismiss()
-        MySnackbar(msg, db_result)
-
-    # TODO: improve
-    def perform_update_list_name(self, *args):
-        dialog, field, list_id = args
-        name = field.text
-        db_result = db.update_shop_list_name(name, list_id)
-        msg = 'List name cannot be empty'
-        if len(name) > 0:
-            if db_result:
-                dialog.should_refresh = db_result
-                msg = f'{name} updated!'
-                dialog.dismiss()
-        MySnackbar(msg, db_result)
-
-    # TODO: improve
-    def perform_delete_list(self, *args):
-        dialog, name, list_id = args
-        db_result = db.delete_shop_list(list_id)
-        msg = f'Failed to {name}'
-        dialog.should_refresh = db_result
-        if db_result:
-            dialog.should_refresh = db_result
-            msg = f'{name} deleted successfully'
-            dialog.dismiss()
-        MySnackbar(msg, db_result)
 
     def open_navbar(self, *args):
         self.nav_drawer.set_state('open')

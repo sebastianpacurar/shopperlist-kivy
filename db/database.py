@@ -328,12 +328,76 @@ class Database:
             conn.close()
         return res
 
+    def update_category_name(self, value, category_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res = False
+        try:
+            cursor.execute(self.queries.set_category_name(), (value, category_id))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return res
+
+    def delete_category(self, category_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res = False
+        try:
+            cursor.execute(self.queries.delete_category(), (category_id,))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return res
+
     def add_unit(self, name):
         conn = self.set_conn()
         cursor = conn.cursor()
         res, row_id = False, None
         try:
             cursor.execute(self.queries.insert_into_unit(), (name,))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return res
+
+    def update_unit_name(self, value, unit_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res = False
+        try:
+            cursor.execute(self.queries.set_unit_name(), (value, unit_id))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return res
+
+    def delete_unit(self, unit_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res = False
+        try:
+            cursor.execute(self.queries.delete_unit(), (unit_id,))
             conn.commit()
             res = True
         except Exception as e:
