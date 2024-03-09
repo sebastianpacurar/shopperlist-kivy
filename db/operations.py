@@ -29,7 +29,7 @@ def perform_update_list_name(*args):
 def perform_delete_list(*args):
     dialog, name, list_id = args
     db_result = db.delete_shop_list(list_id)
-    msg = f'Failed to {name}'
+    msg = f'Failed to remove {name}'
     dialog.should_refresh = db_result
     if db_result:
         dialog.should_refresh = db_result
@@ -48,6 +48,34 @@ def perform_update_category_name(*args):
             dialog.should_refresh = db_result
             msg = f'{name} updated!'
             dialog.dismiss()
+    MySnackbar(msg, db_result)
+
+
+def perform_list_item_toggle(*args):
+    list_id, product_id, value = args
+    db_res = db.toggle_product_bought(list_id, product_id.itm_id, value.active)
+    if not db_res:
+        print('error toggling product item')
+
+
+def perform_quantity_update(*args):
+    value, list_id, product_id, = args
+    db_res = db.update_item_quantity(value, list_id, product_id)
+    msg = 'Quantity updated'
+    if not db_res:
+        msg = 'error updating product'
+    MySnackbar(msg, db_res)
+
+
+def perform_list_item_remove(*args):
+    dialog, list_id, product_id = args
+    db_result = db.remove_product_from_shop_list(list_id, product_id)
+    msg = f'Failed to remove item'
+    dialog.should_refresh = db_result
+    if db_result:
+        dialog.should_refresh = db_result
+        msg = f'Item removed successfully'
+        dialog.dismiss()
     MySnackbar(msg, db_result)
 
 

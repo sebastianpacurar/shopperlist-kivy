@@ -82,19 +82,53 @@ class PasswordField(MDRelativeLayout):
             args[1].text = self.text_value
 
 
-# TODO: update names for Editable list items below
-class EditableOneLineItemList(MDListItem):
-    itm_id = StringProperty()
-    text = StringProperty()
-    itm_icon = StringProperty()
-
-
 class EditableTwoLineItemList(MDListItem):
     itm_id = StringProperty()
     headline = StringProperty()
     supporting = StringProperty()
     itm_icon = StringProperty()
     sheet_func = ObjectProperty()
+
+
+class SelectableProdItemWithImg(MDListItem):
+    headline = StringProperty()
+    supporting = StringProperty()
+    tertiary = StringProperty()
+    itm_id = StringProperty()
+    list_id = StringProperty()
+    img_path = StringProperty()
+    checkbox_func = ObjectProperty()
+    sheet_func = ObjectProperty()
+
+
+class BottomSheetQuantitySelector(MDBoxLayout):
+    quantity_val = NumericProperty()
+    initial_quantity = NumericProperty()
+    price_val = NumericProperty()
+    unit_price = NumericProperty()
+    apply_quantity_func = ObjectProperty()
+    decrease_btn_disabled = BooleanProperty()
+    apply_btn_disabled = BooleanProperty()
+
+    def increase_quantity_val(self):
+        self.quantity_val = self.quantity_val + 1
+        self.price_val = self.unit_price * self.quantity_val
+        if self.decrease_btn_disabled and self.price_val > 0:
+            self.decrease_btn_disabled = False
+        self.handle_apply_btn()
+
+    def decrease_quantity_val(self):
+        self.quantity_val = self.quantity_val - 1
+        self.price_val = self.unit_price * self.quantity_val
+        if self.quantity_val == 1:
+            self.decrease_btn_disabled = True
+        self.handle_apply_btn()
+
+    def handle_apply_btn(self):
+        if self.quantity_val == self.initial_quantity:
+            self.apply_btn_disabled = True
+        elif self.apply_btn_disabled:
+            self.apply_btn_disabled = False
 
 
 class EditableThreeLineItemList(MDListItem):
@@ -145,9 +179,12 @@ class DynamicDialog(MDDialog):
             main_sm = MDApp.get_running_app().sm
             if main_sm.current == const.COLLECTION_SCR:
                 main_sm.get_screen(const.COLLECTION_SCR).refresh_data()
-            if main_sm.current == const.ADD_DATA_SCR:
-                inner_scr = main_sm.get_screen(const.ADD_DATA_SCR).sm
+            if main_sm.current == const.MANAGE_DATA_SCR:
+                inner_scr = main_sm.get_screen(const.MANAGE_DATA_SCR).sm
                 inner_scr.get_screen(inner_scr.current).display_search_results()
+            if main_sm.current == const.LIST_SCR:
+                # TODO: to fix when implementing multiple inner_screens
+                main_sm.get_screen(const.LIST_SCR).init_data()
 
 
 class AddShoppingListContent(MDDialogContentContainer):
@@ -159,6 +196,10 @@ class RenameShoppingListContent(MDDialogContentContainer):
 
 
 class DeleteShoppingListContent(MDDialogContentContainer):
+    pass
+
+
+class RemoveProductFromListContent(MDDialogContentContainer):
     pass
 
 
@@ -318,7 +359,7 @@ class DropdownMenu(MDDropdownMenu):
                 },
                 {
                     'text': 'Manage Data',
-                    'on_release': lambda screen=const.ADD_DATA_SCR: (
+                    'on_release': lambda screen=const.MANAGE_DATA_SCR: (
                         self.main_app.change_screen_and_update_bar(screen),
                         self.dismiss()
                     )

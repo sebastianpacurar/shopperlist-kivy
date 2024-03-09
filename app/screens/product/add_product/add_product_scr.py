@@ -1,9 +1,11 @@
 import os
 
 from kivy.properties import NumericProperty
+from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 
 from app.components.components import MySnackbar, db
+from app.utils import constants as const
 
 placeholder_img = os.path.join(os.getcwd(), '..', 'images', 'placeholder_image.png')
 
@@ -28,6 +30,7 @@ class AddProdScreen(MDScreen):
         self.prod_unit = self.ids.product_unit_text
 
     def perform_product_add(self):
+        main_app = MDApp.get_running_app()
         msg, db_result = 'Errors in fields', 0
         if not any([len(t) == 0 for t in
                     [self.prod_name.text, self.prod_price.text, self.prod_category.text, self.prod_unit.text]]):
@@ -35,6 +38,7 @@ class AddProdScreen(MDScreen):
                                        self.prod_unit.text,
                                        placeholder_img)
             msg = f'{self.prod_name.text} added to {self.prod_category.text}'
+            main_app.sm.get_screen(const.MANAGE_DATA_SCR).refresh_data()
         MySnackbar(msg, db_result)
 
     def init_data(self, *args):

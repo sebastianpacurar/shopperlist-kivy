@@ -2,7 +2,7 @@
 #: import PROD_UNITS_SCR utils.constants.PROD_UNITS_SCR
 
 <ManageDataScreen>:
-    name: 'add_data_scr'
+    name: 'manage_data_scr'
     MDBoxLayout:
         orientation: 'vertical'
         padding: dp(20), 0, dp(20), 0
@@ -64,12 +64,12 @@
     name: 'categories_scr'
     MDBoxLayout:
         RV:
-            viewclass: 'EditableOneLineItemList'
+            viewclass: 'EditableTwoLineItemList'
             id: rv_categories
 
 <UnitsScreen>:
     name: 'units_scr'
     MDBoxLayout:
         RV:
-            viewclass: 'EditableOneLineItemList'
+            viewclass: 'EditableTwoLineItemList'
             id: rv_units

@@ -39,10 +39,12 @@ CREATE TABLE shop_list_product (
     shop_list_id INT,
     product_id INT,
     quantity INT NOT NULL,
+    unit_id INT,
     category_id INT,
     active BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY (shop_list_id, product_id),
     FOREIGN KEY (shop_list_id) REFERENCES shop_list(shop_list_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id),
-    FOREIGN KEY (category_id) REFERENCES category(category_id)
+    FOREIGN KEY (category_id) REFERENCES category(category_id),
+    FOREIGN KEY (unit_id) REFERENCES product_unit(unit_id)
 );

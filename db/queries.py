@@ -34,10 +34,19 @@ class Queries:
     def get_single_list(self):
         pass
 
+    def toggle_bought_status(self):
+        pass
+
+    def change_item_quantity(self):
+        pass
+
     def set_list_name(self):
         pass
 
     def delete_list(self):
+        pass
+
+    def remove_item_from_list(self):
         pass
 
     def get_category_id(self):
@@ -134,26 +143,39 @@ class QueriesSqlite(Queries):
     def get_all_lists_for_user(self):
         return 'SELECT * FROM shop_list WHERE user_id = ?'
 
+    # TODO: Set to work with active element
     def get_single_list(self):
         return ' '.join('''
                 SELECT
-                    p.product_id,
+                    slp.shop_list_id,
+                    slp.product_id,
                     p.name AS product_name,
+                    u.name,
                     p.price,
                     c.name AS category_name,
                     p.product_image,
                     slp.quantity AS quantity_in_list
                 FROM shop_list_product AS slp
                 JOIN product AS p ON slp.product_id = p.product_id
+                JOIN product_unit AS u on p.unit_id = u.unit_id 
                 LEFT JOIN category AS c ON p.category_id = c.category_id
                 WHERE slp.shop_list_id = ?
                 '''.split())
+
+    def toggle_bought_status(self):
+        return 'UPDATE shop_list_product SET active = ? WHERE shop_list_id = ? AND product_id = ?'
+
+    def change_item_quantity(self):
+        return 'UPDATE shop_list_product SET quantity = ? WHERE shop_list_id = ? AND product_id = ?'
 
     def set_list_name(self):
         return 'UPDATE shop_list SET name = ? WHERE shop_list_id= ?'
 
     def delete_list(self):
         return 'DELETE FROM shop_list WHERE shop_list_id = ?'
+
+    def remove_item_from_list(self):
+        return 'DELETE FROM shop_list_product WHERE shop_list_id = ? AND product_id = ?'
 
     def get_category_id(self):
         return 'SELECT category_id FROM category WHERE name = ?'
@@ -242,10 +264,26 @@ class QueriesSqlite(Queries):
         '''.split())
 
     def filter_category(self):
-        return 'SELECT * FROM category WHERE name LIKE ?'
+        return ' '.join('''
+                SELECT 
+                    category.*, 
+                    COUNT(product.product_id) AS product_count
+                FROM category
+                LEFT JOIN product ON category.category_id = product.category_id
+                WHERE category.name LIKE ?
+                GROUP BY category.category_id;
+        '''.split())
 
     def filter_unit(self):
-        return 'SELECT * FROM product_unit WHERE name LIKE ?'
+        return ' '.join('''
+                SELECT 
+                    unit.*, 
+                    COUNT(product.product_id) AS product_count
+                FROM product_unit AS unit
+                LEFT JOIN product ON unit.unit_id = product.unit_id
+                WHERE unit.name LIKE ?
+                GROUP BY unit.unit_id;
+        '''.split())
 
     def get_product_details(self):
         return ' '.join('''
@@ -297,7 +335,8 @@ class QueriesMysql(Queries):
     def get_single_list(self):
         return ' '.join('''
                 SELECT
-                    p.product_id,
+                    slp.shop_list_id,
+                    slp.product_id,
                     p.name AS product_name,
                     p.price,
                     c.name AS category_name,
@@ -309,11 +348,20 @@ class QueriesMysql(Queries):
                 WHERE slp.shop_list_id = %s
                 '''.split())
 
+    def toggle_bought_status(self):
+        return 'UPDATE shop_list_product SET active = %s WHERE shop_list_id = %s AND product_id = %s'
+
+    def change_item_quantity(self):
+        return 'UPDATE shop_list_product SET quantity = %s WHERE shop_list_id = %s AND product_id = %s'
+
     def set_list_name(self):
         return 'UPDATE shop_list SET name = %s WHERE shop_list_id= %s'
 
     def delete_list(self):
         return 'DELETE FROM shop_list WHERE shop_list_id = %s'
+
+    def remove_item_from_list(self):
+        return 'DELETE FROM shop_list_product WHERE shop_list_id = %s AND product_id = %s'
 
     def get_category_id(self):
         return 'SELECT category_id FROM category WHERE name = %s'
@@ -402,7 +450,15 @@ class QueriesMysql(Queries):
         '''.split())
 
     def filter_category(self):
-        return 'SELECT * FROM category WHERE name LIKE %s'
+        return ' '.join('''
+                SELECT 
+                    category.*, 
+                    COUNT(product.product_id) AS product_count
+                FROM category
+                LEFT JOIN product ON category.category_id = product.category_id
+                WHERE category.name LIKE %s
+                GROUP BY category.category_id;
+        '''.split())
 
     def filter_unit(self):
         return 'SELECT * FROM product_unit WHERE name LIKE %s'

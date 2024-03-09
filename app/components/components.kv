@@ -48,16 +48,6 @@
     minimum_size: self.size
 
 
-
-<EditableOneLineItemList>:
-    MDListItemHeadlineText:
-        text: root.text
-    MDIconButton:
-        icon: root.itm_icon
-        pos_hint: {'center_y': .5}
-        on_release: root.sheet_func(root.text, root.itm_id)
-
-
 <EditableTwoLineItemList>:
     MDListItemHeadlineText:
         text: root.headline
@@ -66,7 +56,7 @@
     MDIconButton:
         icon: root.itm_icon
         pos_hint: {'center_y': .5}
-        on_release: root.sheet_func(root.headline, root.itm_id)
+        on_release: root.sheet_func()
 
 
 <EditableThreeLineItemList>:
@@ -82,10 +72,26 @@
 
 
 <ProdItemWithImg>:
+    ripple_scale: 0
     MDListItemLeadingAvatar:
         source: root.img_path
     MDListItemHeadlineText:
         text: root.headline
+
+<SelectableProdItemWithImg>:
+    ripple_scale: 0
+    MDListItemLeadingAvatar:
+        source: root.img_path
+        on_release: root.sheet_func()
+    MDListItemHeadlineText:
+        text: root.headline
+    MDListItemSupportingText:
+        text: root.supporting
+    MDListItemTertiaryText:
+        text: root.tertiary
+    MDListItemTrailingCheckbox:
+        on_active: root.checkbox_func(root, self)
+        pos_hint: {'center_y': .5}
 
 
 <TwoLineProdImgListItem>:
@@ -119,6 +125,56 @@
     md_bg_color: 'gainsboro'
     MDListItemHeadlineText:
         text: root.text
+
+
+<BottomSheetQuantitySelector>:
+    orientation: 'horizontal'
+    spacing: dp(10)
+    padding: dp(10)
+    size_hint_y: None
+    height: dp(48)
+    MDBoxLayout:
+        orientation: 'horizontal'
+        spacing: dp(10)
+        MDIconButton:
+            id: decrease_btn
+            icon: 'minus'
+            style: 'filled'
+            disabled: root.decrease_btn_disabled
+            on_release: root.decrease_quantity_val()
+        MDLabel:
+            text: str(int(root.quantity_val))
+            size_hint: None, None
+            width: dp(48)
+            height: increase_btn.height
+            halign: 'center'
+            radius: [24, 24, 24, 24]
+            md_bg_color: 'white'
+        MDIconButton:
+            id: increase_btn
+            icon: 'plus'
+            style: 'filled'
+            on_release: root.increase_quantity_val()
+    MDBoxLayout:
+        orientation: 'vertical'
+        spacing: dp(20)
+        padding: 0, 0, 0, dp(5)
+        MDLabel:
+            halign: 'center'
+            text: 'Price'
+            theme_font_size: 'Custom'
+            font_size: sp(16)
+        MDLabel:
+            halign: 'center'
+            text: str(round(root.price_val, 2))
+            theme_font_size: 'Custom'
+            font_size: sp(18)
+    MDIconButton:
+        id: apply_btn
+        style: 'filled'
+        icon: 'check-bold'
+        disabled: root.apply_btn_disabled
+        on_release: root.apply_quantity_func(root.quantity_val)
 
 
 <DynamicDialog>:

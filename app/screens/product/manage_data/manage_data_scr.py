@@ -1,7 +1,6 @@
 from kivy.properties import NumericProperty
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
-from kivymd.uix.textfield import MDTextField
 
 from app.components.components import db, MySnackbar, BottomSheetSelectionLineItem, \
     RenameCategoryContent, DeleteCategoryContent, RenameUnitContent, DeleteUnitContent
@@ -68,6 +67,10 @@ class ManageDataScreen(MDScreen):
     def filter_displayed_list(self, *args):
         self.sm.get_screen(self.sm.current).display_search_results(args[0])
 
+    def refresh_data(self, *args):
+        self.sm.get_screen(const.PROD_CATEGORIES_SCR).display_search_results()
+        self.sm.get_screen(const.PROD_UNITS_SCR).display_search_results()
+
 
 class BaseAddScreen(MDScreen):
     def __init__(self, **kwargs):
@@ -78,8 +81,9 @@ class BaseAddScreen(MDScreen):
         entry = [str(x) for x in entry]
         sheet_content = set_bottom_sheet_content(self.main_app, self.name, entry[0], entry[1])
         return {
-            'itm_id': str(entry[0]),
-            'text': entry[1],
+            'itm_id': entry[0],
+            'headline': entry[1],
+            'supporting': f'({entry[2]})',
             'itm_icon': 'dots-vertical',
             'sheet_func': lambda name=entry[1], cat_id=entry[0]: self.main_app.toggle_bottom(name, cat_id, sheet_content),
         }

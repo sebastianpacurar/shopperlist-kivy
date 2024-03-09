@@ -180,6 +180,54 @@ class Database:
             cursor.close()
             conn.close()
 
+    def toggle_product_bought(self, shop_list_id, product_id, value):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res = False
+        try:
+            cursor.execute(self.queries.toggle_bought_status(), (value, shop_list_id, product_id))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return res
+
+    def update_item_quantity(self, value, list_id, product_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res = False
+        try:
+            cursor.execute(self.queries.change_item_quantity(), (value, list_id, product_id))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return res
+
+    def remove_product_from_shop_list(self, list_id, product_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res = False
+        try:
+            cursor.execute(self.queries.remove_item_from_list(), (list_id, product_id))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return res
+
     def update_shop_list_name(self, value, list_id):
         conn = self.set_conn()
         cursor = conn.cursor()

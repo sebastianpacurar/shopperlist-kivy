@@ -18,6 +18,9 @@
 #: import ListScreen screens.list.list_scr.ListScreen
 #: include screens/list/ListScreen.kv
 
+#: import ListScreen screens.list.add_product.add_to_list_scr.AddToListScreen
+#: include screens/list/add_product/AddToListScreen.kv
+
 #: import ManageDataScreen screens.product.manage_data.manage_data_scr.ManageDataScreen
 #: include screens/product/manage_data/ManageDataScreen.kv
 
@@ -71,6 +74,8 @@ MainScreen:
             CollectionScreen:
                 top_bar_height: top_bar.height
             ListScreen:
+                top_bar_height: top_bar.height
+            AddToListScreen:
                 top_bar_height: top_bar.height
             ManageDataScreen:
                 top_bar_height: top_bar.height
@@ -161,14 +166,20 @@ MainScreen:
             size_hint: 1, None
             md_bg_color: app.theme_cls.secondaryContainerColor
             height: content_list.height + handle.height * 1.5
+            enable_swiping: False
             on_close: app.clean_bottom_sheet()
 
             BottomSheetHandleContainer:
                 id: handle
 
+            Spacer:
+                orientation: 'vertical'
+                value: dp(60)
+
             MDBoxLayout:
                 orientation: 'vertical'
                 padding: dp(5)
+                id: sheet_content
                 MDList:
                     spacing: dp(10)
                     id: content_list

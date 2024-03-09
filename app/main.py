@@ -45,7 +45,7 @@ class MyKivyApp(MDApp):
             self.top_bar.disabled = False
             self.change_screen_and_update_bar(const.COLLECTION_SCR)
         else:
-            self.change_screen(const.USER_MANAGER_SCREEN)
+            self.change_screen(const.USER_MANAGER_SCR)
 
     def show_dialog(self, *args):
         content = args[0]
@@ -93,18 +93,28 @@ class MyKivyApp(MDApp):
                 dialog.supporting = 'Are you sure you want to delete Unit?'
                 dialog.accept_txt = 'Yes'
                 dialog.cancel_txt = 'No'
+            case app.components.components.RemoveProductFromListContent:
+                dialog.confirm = lambda: ops.perform_list_item_remove(dialog, args[1], args[2])
+                dialog.headline = 'Remove Item from List'
+                dialog.supporting = 'Are you sure you want to remove item?'
+                dialog.accept_txt = 'Yes'
+                dialog.cancel_txt = 'No'
         dialog.open()
 
     def toggle_bottom(self, *args):
         if self.bottom.state == 'close':
             self.bottom.set_state('toggle')
+            self.bottom.enable_swiping = True
             handle = self.root.ids.handle
             list_content = self.root.ids.content_list
             handle.title = args[0]
-            for widget in args[2]:
+            for widget in args[-1]:
                 list_content.add_widget(widget)
 
     def clean_bottom_sheet(self):
+        if self.sm.current == const.LIST_SCR:
+            self.sm.get_screen(const.LIST_SCR).init_data()
+        self.bottom.enable_swiping = False
         self.root.ids.handle.text = ''
         self.root.ids.content_list.clear_widgets()
 
@@ -143,7 +153,8 @@ class MyKivyApp(MDApp):
                 top_bar_title.text = 'Shopping List'
                 left_btn.icon = 'arrow-left'
                 left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
-                right_btn.on_release = lambda: self.show_dialog()
+                right_btn.on_release = lambda: self.change_screen_and_update_bar(const.ADD_TO_LIST_SCR)
+                right_btn.icon = 'plus-thick'
                 right_btn.disabled = False
             case const.ADD_PROD_SCR:
                 top_bar_title.text = 'Add product'
@@ -151,7 +162,7 @@ class MyKivyApp(MDApp):
                 right_btn.icon = ''
                 left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
                 right_btn.disabled = True
-            case const.ADD_DATA_SCR:
+            case const.MANAGE_DATA_SCR:
                 top_bar_title.text = 'Manage Data'
                 left_btn.icon = 'arrow-left'
                 right_btn.icon = ''
@@ -170,6 +181,12 @@ class MyKivyApp(MDApp):
                 right_btn.disabled = True
             case const.SINGLE_UNIT_SCR:
                 top_bar_title.text = 'Unit'
+                left_btn.icon = 'arrow-left'
+                left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
+                right_btn.icon = ''
+                right_btn.disabled = True
+            case const.ADD_TO_LIST_SCR:
+                top_bar_title.text = 'Add to List'
                 left_btn.icon = 'arrow-left'
                 left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
                 right_btn.icon = ''
@@ -231,21 +248,8 @@ class MyKivyApp(MDApp):
         self.nav_drawer.set_state('close')
         self.top_bar.disabled = True
         self.sm.transition = SwapTransition()
-        self.change_screen(const.USER_MANAGER_SCREEN)
+        self.change_screen(const.USER_MANAGER_SCR)
         self.sm.transition = SlideTransition()
-
-    def validate_text_field(self, widget):
-        is_email = widget.hint_text.lower() == 'email'
-
-        if len(widget.text) == 0:
-            widget.helper_text = 'Cannot be empty'
-            widget.error = True
-        elif is_email and not re.match(email_regex, widget.text):
-            widget.helper_text = 'Not a valid email'
-            widget.error = True
-        else:
-            widget.helper_text = ''
-            widget.error = False
 
 
 if __name__ == '__main__':

@@ -39,9 +39,9 @@ VALUES (1, 'Grocery List'),
        (1, 'Clothing Shopping');
 
 
-INSERT INTO shop_list_product (shop_list_id, product_id, quantity, category_id, active)
-VALUES (1, 1, 2, 1, 1),
-       (1, 2, 1, 1, 1),
-       (1, 3, 3, 2, 1),
-       (2, 4, 2, 2, 1),
-       (2, 5, 1, 3, 1);
+INSERT INTO shop_list_product (shop_list_id, product_id, quantity, unit_id, category_id, active)
+VALUES (1, 1, 2, 3, 1, 1),
+       (1, 2, 1, 3, 1, 1),
+       (1, 3, 3, 3, 2, 1),
+       (2, 4, 2, 3, 2, 1),
+       (2, 5, 1, 1, 3, 1);
