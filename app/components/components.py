@@ -95,9 +95,6 @@ class DropTextField(MDTextField):
         elif len(self.text) > 1:
             self.text = ''
 
-    def set_helper_text(self):
-        self.helper_txt = f'Filtering By Category: {self.text}'
-
     def on_focus_event(self):
         if self.focus:
             self.text = ''
@@ -108,6 +105,22 @@ class DropTextField(MDTextField):
                 db_op = db.get_product_units()
             self.data = [entry[1] for entry in db_op]
             DropdownMenu().drop(self)
+
+
+class FilterTextField(MDBoxLayout):
+    hint_txt = StringProperty()
+    filter_prefix = StringProperty()
+    filter_suffix = StringProperty()
+    prefix_width = NumericProperty()
+    clear_filter_func = ObjectProperty()
+    clear_btn_disabled = BooleanProperty(False)
+
+    def handle_clear_btn(self):
+        drop_text = self.ids.text_field
+        if drop_text.text in drop_text.data:
+            self.clear_btn_disabled = False
+        else:
+            self.clear_btn_disabled = True
 
 
 class DropdownMenu(MDDropdownMenu):
@@ -128,7 +141,7 @@ class DropdownMenu(MDDropdownMenu):
             if self.caller.text in self.caller.data:
                 list_scr.update_filtered_category(self.caller.text)
             else:
-                list_scr.update_filtered_category('All')
+                list_scr.update_filtered_category('All Categories')
             list_scr.refresh_data()
 
     def on_dropdown_item_select(self, text_input, content):

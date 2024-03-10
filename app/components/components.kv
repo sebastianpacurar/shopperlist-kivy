@@ -21,10 +21,49 @@
 <DropTextField>:
     multiline: False
     write_tab: True
-    on_text: (root.text_validate())
+    on_text: root.text_validate()
     on_focus: root.on_focus_event()
     MDTextFieldHintText:
         text: root.hint_txt
+
+
+<FilterTextField>:
+    orientation: 'vertical'
+    size_hint_y: None
+    height: text_field.height + label_container.height
+    MDRelativeLayout:
+        DropTextField:
+            id: text_field
+            hint_txt: 'Category'
+        MDIconButton:
+            id: clear_filters_btn
+            icon: 'close-circle'
+            pos_hint: {'right': .95, 'center_y': .5}
+            disabled: root.clear_btn_disabled
+            on_release: root.clear_filter_func()
+    MDBoxLayout:
+        id: label_container
+        size_hint_y: None
+        height: dp(25)
+        orientation: 'horizontal'
+        MDLabel:
+            padding: dp(12), dp(5), 0, 0
+            text: root.filter_prefix
+            theme_font_size: 'Custom'
+            font_size: sp(16)
+            text_color: 'black'
+            size_hint: None, None
+            height: self.texture_size[1]
+            width: root.prefix_width
+        MDLabel:
+            padding: 0, dp(5), 0, 0
+            text: root.filter_suffix
+            bold: True
+            theme_font_size: 'Custom'
+            font_size: sp(16)
+            text_color: 'green'
+            size_hint_y: None
+            height: self.texture_size[1]
 
 
 <PasswordField>:

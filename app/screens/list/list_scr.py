@@ -14,7 +14,7 @@ class ListScreen(MDScreen):
     count_all = NumericProperty()
     count_checked = NumericProperty()
     count_unchecked = NumericProperty()
-    filtered_category = StringProperty('All')
+    category_filter_message = StringProperty('All Categories')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -22,16 +22,23 @@ class ListScreen(MDScreen):
         self.sm = None
         self.tabs = None
         self.initial_setup = False
+        self.filtered_category = 'All Categories'
         self.main_app = MDApp.get_running_app()
         self.bind(on_pre_enter=self.init_data)
         self.bind(on_pre_leave=self.clean_up)
 
     def clean_up(self, *args):
-        self.ids.product_category_text.text = ''
-        self.filtered_category = 'All'
+        self.ids.filter_category_txt.ids.text_field.text = ''
+        self.ids.filter_category_txt.filter_suffix = 'All Categories'
+
+    def clear_filters(self):
+        self.clean_up()
+        self.update_filtered_category('All Categories')
+        self.refresh_data()
 
     def update_filtered_category(self, value):
         self.filtered_category = value
+        self.category_filter_message = value
 
     def switch_to_first_tab(self, dt):
         all_items_tab = self.tabs.get_tabs_list()[-1]
@@ -50,7 +57,7 @@ class ListScreen(MDScreen):
             self.initial_setup = True
 
     def set_prod_count(self):
-        if self.filtered_category == 'All':
+        if self.filtered_category == 'All Categories':
             self.count_all = db.get_shop_list_all_count(self.list_id)
             self.count_checked = db.get_shop_list_checked_unchecked_count(self.list_id, 1)
             self.count_unchecked = db.get_shop_list_checked_unchecked_count(self.list_id, 0)
@@ -84,6 +91,7 @@ class ListScreen(MDScreen):
                     self.sm.get_screen(const.OUT_PRODS_LIST_SCR).display_products(self.list_id, self.filtered_category)
 
     def refresh_data(self, *args):
+        self.ids.filter_category_txt.handle_clear_btn()
         self.sm.get_screen(const.ALL_PRODS_LIST_SCR).display_products(self.list_id, self.filtered_category)
         self.sm.get_screen(const.IN_PRODS_LIST_SCR).display_products(self.list_id, self.filtered_category)
         self.sm.get_screen(const.OUT_PRODS_LIST_SCR).display_products(self.list_id, self.filtered_category)
@@ -118,7 +126,7 @@ class AllProdsScreen(BaseListViewScreen):
 
     def display_products(self, *args):
         rv_data = []
-        if args[1] != 'All':
+        if args[1] != 'All Categories':
             entries = db.get_shop_list_filtered(list_id=args[0], category_name=args[1])
         else:
             entries = db.get_shop_list(list_id=args[0])
@@ -133,7 +141,7 @@ class AllProdsScreen(BaseListViewScreen):
 class InProdsScreen(BaseListViewScreen):
     def display_products(self, *args):
         rv_data = []
-        if args[1] != 'All':
+        if args[1] != 'All Categories':
             entries = db.get_shop_list_checked_unchecked_filtered(list_id=args[0], checked=1, category_name=args[1])
         else:
             entries = db.get_shop_list_checked_unchecked(list_id=args[0], checked=1)
@@ -148,7 +156,7 @@ class InProdsScreen(BaseListViewScreen):
 class OutProdsScreen(BaseListViewScreen):
     def display_products(self, *args):
         rv_data = []
-        if args[1] != 'All':
+        if args[1] != 'All Categories':
             entries = db.get_shop_list_checked_unchecked_filtered(list_id=args[0], checked=0, category_name=args[1])
         else:
             entries = db.get_shop_list_checked_unchecked(list_id=args[0], checked=0)

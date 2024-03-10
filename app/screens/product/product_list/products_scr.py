@@ -1,8 +1,9 @@
 from kivy.properties import NumericProperty
+from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
 from kivymd.uix.textfield import MDTextField
 
-from app.components.components import db, DropdownMenu
+from app.components.components import db, DropdownMenu, BottomSheetItemDescription, BottomSheetQuantitySelector, BottomSheetSelectionLineItem, RemoveProductFromListContent
 
 
 class ProdsScreen(MDScreen):
@@ -31,3 +32,21 @@ class ProdsScreen(MDScreen):
 
     def clean_up(self, *args):
         self.ids.text_field.text = ''
+
+# TODO: continue from here to switch to bottom sheet viewing
+def set_bottom_sheet_content(list_id, product_id, unit, price, category, img, quantity):
+    main_app = MDApp.get_running_app()
+    return [
+        BottomSheetItemDescription(
+            img_path=img,
+            price=f'{round(price, 2)}$ / {unit}',
+            category=category,
+        ),
+        BottomSheetSelectionLineItem(
+            text='Remove from list',
+            on_release=lambda _: (
+                main_app.show_dialog(RemoveProductFromListContent(), list_id, product_id),
+                main_app.bottom.set_state('toggle')
+            ),
+        ),
+    ]

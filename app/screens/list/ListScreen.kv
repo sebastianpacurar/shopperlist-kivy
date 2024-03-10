@@ -7,16 +7,13 @@
         TopGap:
             top_bar_height: root.top_bar_height
 
-        MDBoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: None
-            height: self.children[0].height
-            spacing: dp(10)
-
-            DropTextField:
-                id: product_category_text
-                size_hint_x: .7
-                hint_txt: 'Category'
+        FilterTextField:
+            id: filter_category_txt
+            hint_txt: 'Category'
+            prefix_width: dp(80)
+            filter_prefix: 'Filter by: '
+            filter_suffix: root.category_filter_message
+            clear_filter_func: root.clear_filters
 
         Spacer:
             orientation: 'vertical'
