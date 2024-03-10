@@ -245,6 +245,7 @@ class MyKivyApp(MDApp):
         self.top_bar.disabled = True
         self.sm.transition = SwapTransition()
         self.change_screen(const.USER_MANAGER_SCR)
+        self.sm.get_screen(const.USER_MANAGER_SCR).init_login_screen()
         self.sm.transition = SlideTransition()
 
 

@@ -82,6 +82,97 @@ class PasswordField(MDRelativeLayout):
             args[1].text = self.text_value
 
 
+class DropTextField(MDTextField):
+    hint_txt = StringProperty()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.data = []
+
+    def text_validate(self):
+        if self.text in self.data:
+            self.text = self.text.strip()
+        elif len(self.text) > 1:
+            self.text = ''
+
+    def set_helper_text(self):
+        self.helper_txt = f'Filtering By Category: {self.text}'
+
+    def on_focus_event(self):
+        if self.focus:
+            self.text = ''
+            db_op = None
+            if self.hint_txt == 'Category':
+                db_op = db.get_product_categories()
+            elif self.hint_txt == 'Unit':
+                db_op = db.get_product_units()
+            self.data = [entry[1] for entry in db_op]
+            DropdownMenu().drop(self)
+
+
+class DropdownMenu(MDDropdownMenu):
+    def __init__(self):
+        super().__init__(
+            padding=[dp(12), 0, dp(12), 0],
+            radius=[12, 12, 12, 12],
+            elevation=4,
+        )
+        self.main_app = MDApp.get_running_app()
+
+    def on_dismiss(self):
+        super().on_dismiss()
+        curr_scr = self.main_app.sm.current
+
+        if curr_scr == const.LIST_SCR:
+            list_scr = self.main_app.sm.get_screen(const.LIST_SCR)
+            if self.caller.text in self.caller.data:
+                list_scr.update_filtered_category(self.caller.text)
+            else:
+                list_scr.update_filtered_category('All')
+            list_scr.refresh_data()
+
+    def on_dropdown_item_select(self, text_input, content):
+        text_input.text = str(content)
+        self.dismiss()
+
+    def drop(self, widget):
+        menu_items = []
+        curr_scr = self.main_app.sm.current
+        self.caller = widget
+
+        if isinstance(self.caller, DropTextField):
+            self.ver_growth = 'down'
+            self.position = 'bottom' if curr_scr == const.LIST_SCR else 'center'
+
+            for entry in self.caller.data:
+                menu_items.append(
+                    {
+                        'text': entry,
+                        'on_release': lambda item=entry: self.on_dropdown_item_select(self.caller, item)
+                    }
+                )
+        elif isinstance(self.caller, MDActionTopAppBarButton):
+            menu_items = [
+                {
+                    'text': 'Add product',
+                    'on_release': lambda screen=const.ADD_PROD_SCR: (
+                        self.main_app.change_screen_and_update_bar(screen),
+                        self.dismiss()
+                    )
+                },
+                {
+                    'text': 'Manage Data',
+                    'on_release': lambda screen=const.MANAGE_DATA_SCR: (
+                        self.main_app.change_screen_and_update_bar(screen),
+                        self.dismiss()
+                    )
+                },
+            ]
+
+        self.items = menu_items
+        self.open()
+
+
 class EditableTwoLineItemList(MDListItem):
     itm_id = StringProperty()
     headline = StringProperty()
@@ -135,12 +226,6 @@ class BottomSheetQuantitySelector(MDBoxLayout):
             self.apply_btn_disabled = True
         elif self.apply_btn_disabled:
             self.apply_btn_disabled = False
-
-
-class EditableThreeLineItemList(MDListItem):
-    headline = StringProperty()
-    supporting = StringProperty()
-    tertiary = StringProperty()
 
 
 class ProdItemWithImg(MDListItem):
@@ -313,90 +398,3 @@ class MySnackbar(MDSnackbar):
 
         self.add_widget(bar_buttons)
         self.open()
-
-
-class DropdownMenu(MDDropdownMenu):
-    change_screen_func = ObjectProperty
-
-    def __init__(self):
-        super().__init__(
-            padding=[dp(12), 0, dp(12), 0],
-            radius=[12, 12, 12, 12],
-            elevation=4,
-        )
-        self.parent_caller = None
-        self.main_app = MDApp.get_running_app()
-
-    def drop(self, widget):
-        data = None
-        menu_items = []
-        self.caller = widget
-
-        # trigger items belonging to a specific table column
-        if isinstance(widget, MDTextField):
-            self.hor_growth = 'left'
-            self.ver_growth = 'down'
-            self.position = 'center'
-
-            if widget.hint_txt == 'Category':
-                data = db.get_product_categories()
-            elif widget.hint_txt == 'Unit':
-                data = db.get_product_units()
-
-            for entry in data:
-                menu_items.append(
-                    {
-                        'text': entry[1],
-                        'on_release': lambda item=entry: self.on_dropdown_item_select(widget, item)
-                    }
-                )
-        # trigger items which trigger options from the ActionTopAppBarButton
-        elif isinstance(widget, MDActionTopAppBarButton):
-            menu_items = [
-                {
-                    'text': 'Add product',
-                    'on_release': lambda screen=const.ADD_PROD_SCR: (
-                        self.main_app.change_screen_and_update_bar(screen),
-                        self.dismiss()
-                    )
-                },
-                {
-                    'text': 'Manage Data',
-                    'on_release': lambda screen=const.MANAGE_DATA_SCR: (
-                        self.main_app.change_screen_and_update_bar(screen),
-                        self.dismiss()
-                    )
-                },
-            ]
-
-        elif isinstance(widget, TwoLineProdImgListItem):
-            # TODO
-            # widget.bg_color = self.theme_cls.primary_light
-            self.parent_caller = widget
-            self.caller = widget.children[0]
-            prod_id = self.parent_caller.prod_id
-
-            menu_items = [
-                {
-                    'text': 'View',
-                    'on_release': lambda target=prod_id: (
-                        self.main_app.change_screen_to_prod_scr(target),
-                        self.dismiss()
-                    )
-
-                },
-                {
-                    'text': 'Delete',
-                    'on_release': lambda target=prod_id: (
-                        print('delete me?'),
-                        self.dismiss()
-                    )
-                }
-            ]
-
-        self.items = menu_items
-        self.open()
-
-    def on_dropdown_item_select(self, text_input, content):
-        text_input.text = str(content[1])
-        self.dismiss()

@@ -200,11 +200,51 @@ class Database:
             cursor.close()
             conn.close()
 
+    def get_filtered_list_by_category_count(self, list_id, category_name):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.filter_list_by_category_count(), (list_id, category_name))
+            return cursor.fetchone()[0]
+        finally:
+            cursor.close()
+            conn.close()
+
+    def get_shop_list_filtered(self, list_id, category_name):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.filter_list_by_category(), (list_id, category_name))
+            return cursor.fetchall()
+        finally:
+            cursor.close()
+            conn.close()
+
+    def get_shop_list_checked_unchecked_filtered(self, list_id, checked, category_name):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.filter_list_checked_unchecked_by_category(), (list_id, checked, category_name))
+            return cursor.fetchall()
+        finally:
+            cursor.close()
+            conn.close()
+
     def get_shop_list_checked_unchecked_count(self, list_id, checked):
         conn = self.set_conn()
         cursor = conn.cursor()
         try:
             cursor.execute(self.queries.get_single_list_checked_unchecked_count(), (list_id, checked))
+            return cursor.fetchone()[0]
+        finally:
+            cursor.close()
+            conn.close()
+
+    def get_filtered_list_checked_unchecked_by_category_count(self, list_id, checked, category_name):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.filter_list_checked_unchecked_by_category_count(), (list_id, checked, category_name))
             return cursor.fetchone()[0]
         finally:
             cursor.close()

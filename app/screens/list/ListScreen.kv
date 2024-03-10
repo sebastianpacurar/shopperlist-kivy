@@ -7,10 +7,25 @@
         TopGap:
             top_bar_height: root.top_bar_height
 
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: self.children[0].height
+            spacing: dp(10)
+
+            DropTextField:
+                id: product_category_text
+                size_hint_x: .7
+                hint_txt: 'Category'
+
+        Spacer:
+            orientation: 'vertical'
+            value: dp(24)
+
         MDTabsPrimary:
             id: tabs
             lock_swiping: True
-            pos_hint: {"center_x": .5, "center_y": .5}
+            pos_hint: {'center_x': .5, 'center_y': .5}
             on_tab_switch: root.switch_scr(*args)
             MDTabsItem:
                 MDTabsItemIcon:

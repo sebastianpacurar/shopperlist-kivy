@@ -1,4 +1,5 @@
 #: import DropdownMenu components.components.DropdownMenu
+#: import DropTextField components.components.DropTextField
 
 
 <AddProdScreen>:
@@ -24,15 +25,13 @@
                 input_type: 'number'
                 input_filter: 'float'
 
-            SimpleTextField:
+            DropTextField:
                 id: product_unit_text
                 hint_txt: 'Unit'
-                on_focus: if self.focus: DropdownMenu().drop(self)
 
-            SimpleTextField:
+            DropTextField:
                 id: product_category_text
                 hint_txt: 'Category'
-                on_focus: if self.focus: DropdownMenu().drop(self)
 
             MDIconButton:
                 pos_hint: {'center_x': .5}

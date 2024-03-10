@@ -40,7 +40,19 @@ class Queries:
     def get_single_list_count(self):
         pass
 
+    def filter_list_by_category_count(self):
+        pass
+
+    def filter_list_by_category(self):
+        pass
+
+    def filter_list_checked_unchecked_by_category(self):
+        pass
+
     def get_single_list_checked_unchecked_count(self):
+        pass
+
+    def filter_list_checked_unchecked_by_category_count(self):
         pass
 
     def toggle_bought_status(self):
@@ -194,8 +206,70 @@ class QueriesSqlite(Queries):
     def get_single_list_count(self):
         return 'SELECT COUNT(product_id) FROM shop_list_product WHERE shop_list_id = ?'
 
+    def filter_list_by_category_count(self):
+        return ' '.join('''
+                SELECT 
+                    COUNT(product_id) 
+                FROM shop_list_product AS slp
+                JOIN category AS c ON slp.category_id = c.category_id
+                WHERE shop_list_id = ?
+                AND c.name = ?
+        '''.split())
+
+    def filter_list_by_category(self):
+        return ' '.join('''
+                SELECT
+                    slp.shop_list_id,
+                    slp.product_id,
+                    p.name AS product_name,
+                    u.name,
+                    p.price,
+                    c.name AS category_name,
+                    p.product_image,
+                    slp.quantity AS quantity_in_list,
+                    slp.active
+                FROM shop_list_product AS slp
+                JOIN product AS p ON slp.product_id = p.product_id
+                JOIN product_unit AS u on p.unit_id = u.unit_id 
+                LEFT JOIN category AS c ON p.category_id = c.category_id
+                WHERE slp.shop_list_id = ?
+                AND c.name = ?
+        '''.split())
+
+    def filter_list_checked_unchecked_by_category(self):
+        return ' '.join('''
+                   SELECT
+                       slp.shop_list_id,
+                       slp.product_id,
+                       p.name AS product_name,
+                       u.name,
+                       p.price,
+                       c.name AS category_name,
+                       p.product_image,
+                       slp.quantity AS quantity_in_list,
+                       slp.active
+                   FROM shop_list_product AS slp
+                   JOIN product AS p ON slp.product_id = p.product_id
+                   JOIN product_unit AS u on p.unit_id = u.unit_id 
+                   LEFT JOIN category AS c ON p.category_id = c.category_id
+                   WHERE slp.shop_list_id = ?
+                   AND slp.active = ?
+                   AND c.name = ?
+           '''.split())
+
     def get_single_list_checked_unchecked_count(self):
         return 'SELECT COUNT(product_id) FROM shop_list_product WHERE shop_list_id = ? AND active = ?'
+
+    def filter_list_checked_unchecked_by_category_count(self):
+        return ' '.join('''
+                SELECT 
+                    COUNT(product_id) 
+                FROM shop_list_product AS slp
+                JOIN category AS c ON slp.category_id = c.category_id
+                WHERE shop_list_id = ?
+                AND active = ? 
+                AND c.name = ?
+        '''.split())
 
     def toggle_bought_status(self):
         return 'UPDATE shop_list_product SET active = ? WHERE shop_list_id = ? AND product_id = ?'
@@ -406,8 +480,70 @@ class QueriesMysql(Queries):
     def get_single_list_count(self):
         return 'SELECT product_id FROM shop_list_product WHERE shop_list_id = %s'
 
+    def filter_list_by_category_count(self):
+        return ' '.join('''
+                SELECT 
+                    COUNT(product_id) 
+                FROM shop_list_product AS slp
+                JOIN category AS c ON slp.category_id = c.category_id
+                WHERE shop_list_id = %s
+                AND c.name = %s
+        '''.split())
+
+    def filter_list_by_category(self):
+        return ' '.join('''
+                   SELECT
+                       slp.shop_list_id,
+                       slp.product_id,
+                       p.name AS product_name,
+                       u.name,
+                       p.price,
+                       c.name AS category_name,
+                       p.product_image,
+                       slp.quantity AS quantity_in_list,
+                       slp.active
+                   FROM shop_list_product AS slp
+                   JOIN product AS p ON slp.product_id = p.product_id
+                   JOIN product_unit AS u on p.unit_id = u.unit_id 
+                   LEFT JOIN category AS c ON p.category_id = c.category_id
+                   WHERE slp.shop_list_id = %s
+                   AND c.name = %s
+           '''.split())
+
+    def filter_list_checked_unchecked_by_category(self):
+        return ' '.join('''
+                   SELECT
+                       slp.shop_list_id,
+                       slp.product_id,
+                       p.name AS product_name,
+                       u.name,
+                       p.price,
+                       c.name AS category_name,
+                       p.product_image,
+                       slp.quantity AS quantity_in_list,
+                       slp.active
+                   FROM shop_list_product AS slp
+                   JOIN product AS p ON slp.product_id = p.product_id
+                   JOIN product_unit AS u on p.unit_id = u.unit_id 
+                   LEFT JOIN category AS c ON p.category_id = c.category_id
+                   WHERE slp.shop_list_id = %s
+                   AND slp.active = %s
+                   AND c.name = %s
+           '''.split())
+
     def get_single_list_checked_unchecked_count(self):
-        return 'SELECT product_id FROM shop_list_product WHERE shop_list_id = ? AND active = %s'
+        return 'SELECT product_id FROM shop_list_product WHERE shop_list_id = %s AND active = %s'
+
+    def filter_list_checked_unchecked_by_category_count(self):
+        return ' '.join('''
+                SELECT 
+                    COUNT(product_id) 
+                FROM shop_list_product AS slp
+                JOIN category AS c ON slp.category_id = c.category_id
+                WHERE shop_list_id = %s
+                AND active = %s
+                AND c.name = %s
+        '''.split())
 
     def toggle_bought_status(self):
         return 'UPDATE shop_list_product SET active = %s WHERE shop_list_id = %s AND product_id = %s'

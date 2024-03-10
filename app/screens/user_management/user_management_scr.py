@@ -15,7 +15,6 @@ class UserManagerScreen(MDScreen):
         self.sm = None
         self.tabs = None
         self.bind(on_kv_post=self.init_login_screen)
-        self.bind(on_pre_leave=self.switch_to_first_tab)
 
     def set_definitions(self, *args):
         self.sm = self.ids.signin_signup_manager
@@ -47,7 +46,6 @@ class UserManagerScreen(MDScreen):
 
 
 class LoginScr(MDScreen):
-    pass
     top_bar = ObjectProperty()
     user_data = DictProperty()
 
@@ -79,7 +77,6 @@ class LoginScr(MDScreen):
 
 
 class RegisterScr(MDScreen):
-    pass
     top_bar = ObjectProperty()
     user_data = DictProperty()
 
