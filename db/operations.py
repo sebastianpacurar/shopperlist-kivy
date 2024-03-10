@@ -52,8 +52,8 @@ def perform_update_category_name(*args):
 
 
 def perform_list_item_toggle(*args):
-    list_id, product_id, value = args
-    db_res = db.toggle_product_bought(list_id, product_id.itm_id, value.active)
+    list_id, product_id, val = args
+    db_res = db.toggle_product_bought(list_id, product_id, val)
     if not db_res:
         print('error toggling product item')
 

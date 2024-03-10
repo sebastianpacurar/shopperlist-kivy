@@ -72,7 +72,7 @@ class ManageDataScreen(MDScreen):
         self.sm.get_screen(const.PROD_UNITS_SCR).display_search_results()
 
 
-class BaseAddScreen(MDScreen):
+class BaseManageScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.main_app = MDApp.get_running_app()
@@ -89,7 +89,7 @@ class BaseAddScreen(MDScreen):
         }
 
 
-class CategoriesScreen(BaseAddScreen):
+class CategoriesScreen(BaseManageScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -102,7 +102,7 @@ class CategoriesScreen(BaseAddScreen):
         self.ids.rv_categories.data = rv_data
 
 
-class UnitsScreen(BaseAddScreen):
+class UnitsScreen(BaseManageScreen):
     def __init(self, **kwargs):
         super().__init__(**kwargs)
 

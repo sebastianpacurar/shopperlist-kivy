@@ -7,8 +7,54 @@
         TopGap:
             top_bar_height: root.top_bar_height
 
-        RV:
-            viewclass: 'SelectableProdItemWithImg'
-            id: rv_list_content
+        MDTabsPrimary:
+            id: tabs
+            lock_swiping: True
+            pos_hint: {"center_x": .5, "center_y": .5}
+            on_tab_switch: root.switch_scr(*args)
+            MDTabsItem:
+                MDTabsItemIcon:
+                    icon: 'format-list-checks'
+                MDTabsItemText:
+                    text: f'All ({root.count_all})'
+            MDTabsItem:
+                MDTabsItemIcon:
+                    icon: 'format-list-bulleted-square'
+                MDTabsItemText:
+                    text: f'In ({root.count_checked})'
+            MDTabsItem:
+                MDTabsItemIcon:
+                    icon: 'format-list-checkbox'
+                MDTabsItemText:
+                    text: f'Out ({root.count_unchecked})'
+            MDDivider:
+
+        MDScreenManager:
+            id: list_view_manager
+            AllProdsScreen:
+            InProdsScreen:
+            OutProdsScreen:
 
         BottomGap:
+
+        
+<AllProdsScreen>:
+    name: 'all_prods_list_scr'
+    MDFloatLayout:
+        RV:
+            viewclass: 'SelectableProdItemWithImg'
+            id: rv_all_prods_list
+
+<InProdsScreen>:
+    name: 'in_prods_list_scr'
+    MDFloatLayout:
+        RV:
+            viewclass: 'SelectableProdItemWithImg'
+            id: rv_in_prods_list
+    
+<OutProdsScreen>:
+    name: 'out_prods_list_scr'
+    MDFloatLayout:
+        RV:
+            viewclass: 'SelectableProdItemWithImg'
+            id: rv_out_prods_list

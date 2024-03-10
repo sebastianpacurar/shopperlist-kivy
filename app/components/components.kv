@@ -54,14 +54,14 @@
     MDListItemSupportingText:
         text: root.supporting
     MDIconButton:
-        icon: root.itm_icon
+        icon: 'dots-vertical'
         pos_hint: {'center_y': .5}
         on_release: root.sheet_func()
 
 
 <EditableThreeLineItemList>:
     MDListItemTrailingIcon:
-        icon: root.itm_icon
+        icon: 'dots-vertical'
         pos_hint: {'center_y': .5}
     MDListItemHeadlineText:
         text: root.headline
@@ -80,8 +80,8 @@
 
 <SelectableProdItemWithImg>:
     ripple_scale: 0
-    MDListItemLeadingAvatar:
-        source: root.img_path
+    MDIconButton:
+        icon: 'dots-vertical'
         on_release: root.sheet_func()
     MDListItemHeadlineText:
         text: root.headline
@@ -89,8 +89,9 @@
         text: root.supporting
     MDListItemTertiaryText:
         text: root.tertiary
-    MDListItemTrailingCheckbox:
-        on_active: root.checkbox_func(root, self)
+    MDIconButton:
+        icon: root.itm_icon
+        on_release: root.checkbox_func()
         pos_hint: {'center_y': .5}
 
 
@@ -102,7 +103,7 @@
     MDListItemSupportingText:
         text: root.supporting
     MDIconButton:
-        icon: root.itm_icon
+        icon: 'dots-vertical'
         pos_hint: {'center_y': .5}
         on_release: root.icon_func(root)
 
@@ -125,6 +126,30 @@
     md_bg_color: 'gainsboro'
     MDListItemHeadlineText:
         text: root.text
+
+
+<BottomSheetItemDescription>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: img.height
+    padding: dp(10)
+    FitImage:
+        id: img
+        source: root.img_path
+        size_hint: None, None
+        size: dp(96), dp(96)
+        radius: dp(18), dp(18), dp(18), dp(18)
+    MDBoxLayout:
+        orientation: 'vertical'
+        MDLabel:
+            text: root.category
+            font_style: 'Title'
+            halign: 'center'
+        MDLabel:
+            text: root.price
+            font_style: 'Title'
+            halign: 'center'
+
 
 
 <BottomSheetQuantitySelector>:
@@ -161,12 +186,12 @@
         padding: 0, 0, 0, dp(5)
         MDLabel:
             halign: 'center'
-            text: 'Price'
+            text: 'Total Price'
             theme_font_size: 'Custom'
             font_size: sp(16)
         MDLabel:
             halign: 'center'
-            text: str(round(root.price_val, 2))
+            text: f'{round(root.price_val, 2)} $'
             theme_font_size: 'Custom'
             font_size: sp(18)
     MDIconButton:

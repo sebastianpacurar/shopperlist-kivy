@@ -86,7 +86,6 @@ class EditableTwoLineItemList(MDListItem):
     itm_id = StringProperty()
     headline = StringProperty()
     supporting = StringProperty()
-    itm_icon = StringProperty()
     sheet_func = ObjectProperty()
 
 
@@ -95,10 +94,17 @@ class SelectableProdItemWithImg(MDListItem):
     supporting = StringProperty()
     tertiary = StringProperty()
     itm_id = StringProperty()
+    itm_icon = StringProperty()
     list_id = StringProperty()
-    img_path = StringProperty()
     checkbox_func = ObjectProperty()
     sheet_func = ObjectProperty()
+
+
+class BottomSheetItemDescription(MDBoxLayout):
+    img_path = StringProperty()
+    category = StringProperty()
+    price = StringProperty()
+    category_name = StringProperty()
 
 
 class BottomSheetQuantitySelector(MDBoxLayout):
@@ -132,7 +138,6 @@ class BottomSheetQuantitySelector(MDBoxLayout):
 
 
 class EditableThreeLineItemList(MDListItem):
-    itm_icon = StringProperty()
     headline = StringProperty()
     supporting = StringProperty()
     tertiary = StringProperty()
@@ -148,7 +153,6 @@ class TwoLineProdImgListItem(MDListItem):
     supporting = StringProperty()
     prod_id = NumericProperty()
     img_path = StringProperty()
-    itm_icon = StringProperty()
     image_func = ObjectProperty()
     icon_func = ObjectProperty()
 
@@ -183,7 +187,6 @@ class DynamicDialog(MDDialog):
                 inner_scr = main_sm.get_screen(const.MANAGE_DATA_SCR).sm
                 inner_scr.get_screen(inner_scr.current).display_search_results()
             if main_sm.current == const.LIST_SCR:
-                # TODO: to fix when implementing multiple inner_screens
                 main_sm.get_screen(const.LIST_SCR).init_data()
 
 

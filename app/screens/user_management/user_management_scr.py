@@ -1,3 +1,4 @@
+from kivy.clock import Clock
 from kivy.properties import DictProperty, ObjectProperty
 from kivymd.app import MDApp
 from kivymd.uix.screen import MDScreen
@@ -12,23 +13,31 @@ class UserManagerScreen(MDScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.sm = None
+        self.tabs = None
         self.bind(on_kv_post=self.init_login_screen)
-        self.bind(on_pre_leave=self.set_back_to_login)
+        self.bind(on_pre_leave=self.switch_to_first_tab)
 
     def set_definitions(self, *args):
         self.sm = self.ids.signin_signup_manager
+        self.tabs = self.ids.tabs
 
     def init_login_screen(self, *args):
         self.set_definitions()
         self.top_bar.disabled = True
+        Clock.schedule_once(self.switch_to_first_tab, .025)
 
-    def set_back_to_login(self, *args):
-        if self.sm.current == const.REGISTER_SCR:
-            self.sm.current = const.LOGIN_SCR
+    def switch_to_first_tab(self, dt):
+        login_tab = self.tabs.get_tabs_list()[-1]
+        self.ids.tabs.switch_tab(instance=login_tab)
 
     def switch_scr(self, *args):
-        if self.sm.current != args[0]:
-            match args[0]:
+        tab_item = args[1]
+        if tab_item.children[0].text == 'Log in':
+            curr = const.LOGIN_SCR
+        else:
+            curr = const.REGISTER_SCR
+        if self.sm.current != curr:
+            match curr:
                 case const.LOGIN_SCR:
                     self.sm.transition.direction = 'right'
                     self.sm.current = const.LOGIN_SCR

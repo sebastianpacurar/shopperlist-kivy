@@ -180,6 +180,36 @@ class Database:
             cursor.close()
             conn.close()
 
+    def get_shop_list_checked_unchecked(self, list_id, checked):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.get_single_list_checked_unchecked(), (list_id, checked))
+            return cursor.fetchall()
+        finally:
+            cursor.close()
+            conn.close()
+
+    def get_shop_list_all_count(self, list_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.get_single_list_count(), (list_id,))
+            return cursor.fetchone()[0]
+        finally:
+            cursor.close()
+            conn.close()
+
+    def get_shop_list_checked_unchecked_count(self, list_id, checked):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.get_single_list_checked_unchecked_count(), (list_id, checked))
+            return cursor.fetchone()[0]
+        finally:
+            cursor.close()
+            conn.close()
+
     def toggle_product_bought(self, shop_list_id, product_id, value):
         conn = self.set_conn()
         cursor = conn.cursor()

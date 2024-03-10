@@ -1,5 +1,3 @@
-import re
-
 from kivy.core.window import Window
 from kivy.uix.screenmanager import SlideTransition, SwapTransition
 from kivymd.uix.screen import MDScreen
@@ -112,8 +110,6 @@ class MyKivyApp(MDApp):
                 list_content.add_widget(widget)
 
     def clean_bottom_sheet(self):
-        if self.sm.current == const.LIST_SCR:
-            self.sm.get_screen(const.LIST_SCR).init_data()
         self.bottom.enable_swiping = False
         self.root.ids.handle.text = ''
         self.root.ids.content_list.clear_widgets()
