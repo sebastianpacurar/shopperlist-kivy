@@ -2,6 +2,7 @@ import sqlite3
 import os
 
 from setup.add_img import insert_product_images
+from db.database import get_sqlite_db_path
 
 
 def get_sql_queries():
@@ -19,9 +20,8 @@ def get_sql_queries():
 
 
 if __name__ == '__main__':
-    db_path = os.path.join(os.getcwd(), '..', 'db', 'shopping_list_db.db')
     queries = get_sql_queries()
-    conn = sqlite3.connect(db_path)
+    conn = sqlite3.connect(get_sqlite_db_path())
     cursor = conn.cursor()
     cursor.executescript(queries)
     insert_product_images(conn)

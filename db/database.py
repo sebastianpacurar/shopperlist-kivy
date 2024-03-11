@@ -7,9 +7,14 @@ from decouple import config
 from db.queries import QueriesSqlite, QueriesMysql
 from app.utils import constants as const
 
-sqlite_db_path = os.path.join(os.getcwd(), '..', 'db', 'shopping_list_db.db')
 SQLITE = 'sqlite'
 MYSQL = 'mysql'
+
+
+def get_sqlite_db_path():
+    curr_dir = os.path.dirname(__file__)
+    rel_path = os.path.join(curr_dir, '..', 'db', 'shopping_list_db.db')
+    return os.path.normpath(rel_path)
 
 
 class Database:
@@ -21,7 +26,7 @@ class Database:
         match self.rdbms:
             case 'sqlite':
                 self.queries = QueriesSqlite(self.rdbms)
-                return sqlite3.connect(sqlite_db_path)
+                return sqlite3.connect(get_sqlite_db_path())
             case 'mysql':
                 self.queries = QueriesMysql(self.rdbms)
                 return mysql.connector.connect(
