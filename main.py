@@ -6,6 +6,7 @@ import app.components.components
 from app.components.components import *
 from app.utils import constants as const
 from db import operations as ops
+from setup.setup_sqlite import setup_sqlite_db
 
 email_regex = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
@@ -17,6 +18,7 @@ class MainScreen(MDScreen):
 class MyKivyApp(MDApp):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        setup_sqlite_db()
         self.screen_stack = []
         self.sm = None
         self.top_bar = None

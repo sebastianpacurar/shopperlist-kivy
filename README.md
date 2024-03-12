@@ -31,6 +31,8 @@ To get started with this project, follow these steps:
     pip install -r requirements.txt
     ```
 
+6. When done with the app, to deactivate the virtual environment, type `deactivate` in the terminal.
+
 
 ### How To Run
 1. From root folder run `main.py` using python command (either **python**, or **python3**, depending on the OS):
@@ -49,8 +51,8 @@ To get started with this project, follow these steps:
 - **Sqlite3** is enabled by default.
 
 1. Sqlite3 DB Generator:
-   - To recreate the sqlite3 db, go to `db/` folder and delete `shopping_list_db.db`.
-   - Navigate to `setup/` folder and run `setup_sqlite.py`.
+   - The db gets generated, with default values, when the db file is missing from `db/` folder.
+   - To recreate the sqlite3 db, go to `db/` folder and delete `shopping_list_db.db`, then rerun the app.
 
 2. MySql setup:
    1. Create a db named `shopping_list_db` on your MySql server.

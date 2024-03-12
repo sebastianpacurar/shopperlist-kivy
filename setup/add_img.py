@@ -3,16 +3,22 @@ import sqlite3
 import mysql.connector
 from decouple import config
 
-mysql_conn = mysql.connector.connect(
-    host=config('DB_HOST'),
-    user=config('DB_USER'),
-    password=config('DB_PASSWORD'),
-    database='shopping_list_db'
-)
+try:
+    mysql_conn = mysql.connector.connect(
+        host=config('DB_HOST'),
+        user=config('DB_USER'),
+        password=config('DB_PASSWORD'),
+        database='shopping_list_db'
+    )
+    print("MySQL connection selected")
+except Exception as e:
+    print("MySQL is not selected or connection failed")
 
 
 def insert_product_images(conn):
-    path = os.path.join(os.getcwd(), '..', 'png')
+    curr_dir = os.path.dirname(__file__)
+    parent_dir = os.path.abspath(os.path.join(curr_dir, os.pardir))
+    path = os.path.normpath(os.path.relpath(os.path.join('..', parent_dir, "png")))
     sub = '?' if isinstance(conn, sqlite3.Connection) else '%s'
 
     product_images = {
