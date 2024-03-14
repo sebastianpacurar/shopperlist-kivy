@@ -27,6 +27,23 @@ class RV(MDRecycleView):
     pass
 
 
+class ResizableRv(MDRecycleView):
+    rv_item_height = NumericProperty()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.bind(viewclass=self.on_viewclass)
+
+    def on_viewclass(self, *args):
+        val = args[1]
+        if val == RvItemOneLine:
+            self.rv_item_height = dp(48)
+        elif val == RvItemTwoLine:
+            self.rv_item_height = dp(64)
+        elif val == RvItemThreeLine:
+            self.rv_item_height = dp(72)
+
+
 class TopGap(Widget):
     top_bar_height = NumericProperty()
 
@@ -113,7 +130,7 @@ class FilterTextField(MDBoxLayout):
     filter_suffix = StringProperty()
     prefix_width = NumericProperty()
     clear_filter_func = ObjectProperty()
-    clear_btn_disabled = BooleanProperty(False)
+    clear_btn_disabled = BooleanProperty(True)
 
     def handle_clear_btn(self):
         drop_text = self.ids.text_field
@@ -193,7 +210,26 @@ class EditableTwoLineItemList(MDListItem):
     sheet_func = ObjectProperty()
 
 
-class SelectableProdItemWithImg(MDListItem):
+class RvItemOneLine(MDListItem):
+    headline = StringProperty()
+    itm_id = StringProperty()
+    itm_icon = StringProperty()
+    list_id = StringProperty()
+    checkbox_func = ObjectProperty()
+    sheet_func = ObjectProperty()
+
+
+class RvItemTwoLine(MDListItem):
+    headline = StringProperty()
+    supporting = StringProperty()
+    itm_id = StringProperty()
+    itm_icon = StringProperty()
+    list_id = StringProperty()
+    checkbox_func = ObjectProperty()
+    sheet_func = ObjectProperty()
+
+
+class RvItemThreeLine(MDListItem):
     headline = StringProperty()
     supporting = StringProperty()
     tertiary = StringProperty()

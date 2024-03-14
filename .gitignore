@@ -3,5 +3,4 @@
 .vscode
 .env
 
-# generated pngs
-# png
+db/shopping_list_db.db

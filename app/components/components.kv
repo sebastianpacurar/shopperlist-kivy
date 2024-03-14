@@ -7,6 +7,95 @@
         size_hint_y: None
         height: self.minimum_height
 
+<ResizableRv>:
+    RecycleBoxLayout:
+        orientation: 'vertical'
+        default_size: None, root.rv_item_height
+        default_size_hint: 1, None
+        color: (0, 0.7, 0.4, 0.8)
+        size_hint_y: None
+        height: self.minimum_height
+
+
+<RvItemOneLine>:
+    ripple_scale: 0
+    MDIconButton:
+        icon: 'dots-vertical'
+        on_release: root.sheet_func()
+        pos_hint: {'center_y': .5}
+    MDListItemHeadlineText:
+        text: root.headline
+    MDIconButton:
+        icon: root.itm_icon
+        on_release: root.checkbox_func()
+        pos_hint: {'center_y': .5}
+
+
+<RvItemTwoLine>:
+    ripple_scale: 0
+    MDIconButton:
+        icon: 'dots-vertical'
+        on_release: root.sheet_func()
+        pos_hint: {'center_y': .5}
+    MDListItemHeadlineText:
+        text: root.headline
+    MDListItemSupportingText:
+        text: root.supporting
+    MDIconButton:
+        icon: root.itm_icon
+        on_release: root.checkbox_func()
+        pos_hint: {'center_y': .5}
+
+
+<RvItemThreeLine>:
+    ripple_scale: 0
+    MDIconButton:
+        icon: 'dots-vertical'
+        on_release: root.sheet_func()
+        pos_hint: {'center_y': .5}
+    MDListItemHeadlineText:
+        text: root.headline
+    MDListItemSupportingText:
+        text: root.supporting
+    MDListItemTertiaryText:
+        text: root.tertiary
+    MDIconButton:
+        icon: root.itm_icon
+        on_release: root.checkbox_func()
+        pos_hint: {'center_y': .5}
+
+
+<EditableTwoLineItemList>:
+    MDListItemHeadlineText:
+        text: root.headline
+    MDListItemSupportingText:
+        text: root.supporting
+    MDIconButton:
+        icon: 'dots-vertical'
+        pos_hint: {'center_y': .5}
+        on_release: root.sheet_func()
+
+
+<ProdItemWithImg>:
+    ripple_scale: 0
+    MDListItemLeadingAvatar:
+        source: root.img_path
+    MDListItemHeadlineText:
+        text: root.headline
+
+
+<TwoLineProdImgListItem>:
+    MDListItemLeadingAvatar:
+        source: root.img_path
+    MDListItemHeadlineText:
+        text: root.headline
+    MDListItemSupportingText:
+        text: root.supporting
+    MDIconButton:
+        icon: 'dots-vertical'
+        pos_hint: {'center_y': .5}
+        on_release: root.icon_func(root)
+
 
 <SimpleTextField>:
     multiline: False
@@ -36,7 +125,7 @@
             id: text_field
             hint_txt: 'Category'
         MDIconButton:
-            id: clear_filters_btn
+            id: clear_filter_btn
             icon: 'close-circle'
             pos_hint: {'right': .95, 'center_y': .5}
             disabled: root.clear_btn_disabled
@@ -95,56 +184,6 @@
     size_hint_y: None
     height: dp(24 * 2)
     minimum_size: self.size
-
-
-<EditableTwoLineItemList>:
-    MDListItemHeadlineText:
-        text: root.headline
-    MDListItemSupportingText:
-        text: root.supporting
-    MDIconButton:
-        icon: 'dots-vertical'
-        pos_hint: {'center_y': .5}
-        on_release: root.sheet_func()
-
-
-<ProdItemWithImg>:
-    ripple_scale: 0
-    MDListItemLeadingAvatar:
-        source: root.img_path
-    MDListItemHeadlineText:
-        text: root.headline
-
-
-<SelectableProdItemWithImg>:
-    ripple_scale: 0
-    MDIconButton:
-        icon: 'dots-vertical'
-        on_release: root.sheet_func()
-        pos_hint: {'center_y': .5}
-    MDListItemHeadlineText:
-        text: root.headline
-    MDListItemSupportingText:
-        text: root.supporting
-    MDListItemTertiaryText:
-        text: root.tertiary
-    MDIconButton:
-        icon: root.itm_icon
-        on_release: root.checkbox_func()
-        pos_hint: {'center_y': .5}
-
-
-<TwoLineProdImgListItem>:
-    MDListItemLeadingAvatar:
-        source: root.img_path
-    MDListItemHeadlineText:
-        text: root.headline
-    MDListItemSupportingText:
-        text: root.supporting
-    MDIconButton:
-        icon: 'dots-vertical'
-        pos_hint: {'center_y': .5}
-        on_release: root.icon_func(root)
 
 
 <BottomSheetHandleContainer>:

@@ -10,7 +10,6 @@ try:
         password=config('DB_PASSWORD'),
         database='shopping_list_db'
     )
-    print("MySQL connection selected")
 except Exception as e:
     print("MySQL is not selected or connection failed")
 
