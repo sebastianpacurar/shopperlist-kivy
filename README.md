@@ -40,7 +40,7 @@ To get started with this project, follow these steps:
    - Windows users: `python3 main.py`
    
 2. Log in using the following users:
-   <br>`user1` with password: `1234`<br>
+   <br>`user` with password: `1234`<br>
    `user2` with password: `1234`
 3. Alternatively, users can be created using fake emails, from the Register Screen
 

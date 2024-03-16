@@ -1,5 +1,7 @@
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.widget import Widget
 from kivymd.uix.appbar import MDActionTopAppBarButton
+from kivymd.uix.behaviors import RotateBehavior
 from kivymd.uix.bottomsheet import MDBottomSheetDragHandle
 from kivymd.uix.dialog import MDDialog, MDDialogContentContainer
 from kivymd.uix.relativelayout import MDRelativeLayout
@@ -12,7 +14,7 @@ from kivymd.uix.button import MDButton
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.recycleview import MDRecycleView
 from kivymd.uix.snackbar import MDSnackbar, MDSnackbarActionButton
-from kivymd.uix.list import MDListItem
+from kivymd.uix.list import MDListItem, MDListItemTrailingIcon
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.textfield import MDTextField
 
@@ -21,6 +23,10 @@ from app.utils import constants as const
 
 # This is where the DB gets instantiated
 db = Database(SQLITE)
+
+
+class TrailingPressedIconButton(ButtonBehavior, RotateBehavior, MDListItemTrailingIcon):
+    pass
 
 
 class RV(MDRecycleView):
@@ -116,28 +122,12 @@ class DropTextField(MDTextField):
         if self.focus:
             self.text = ''
             db_op = None
-            if self.hint_txt == 'Category':
+            if self.hint_txt.startswith('Category'):
                 db_op = db.get_product_categories()
             elif self.hint_txt == 'Unit':
                 db_op = db.get_product_units()
             self.data = [entry[1] for entry in db_op]
             DropdownMenu().drop(self)
-
-
-class FilterTextField(MDBoxLayout):
-    hint_txt = StringProperty()
-    filter_prefix = StringProperty()
-    filter_suffix = StringProperty()
-    prefix_width = NumericProperty()
-    clear_filter_func = ObjectProperty()
-    clear_btn_disabled = BooleanProperty(True)
-
-    def handle_clear_btn(self):
-        drop_text = self.ids.text_field
-        if drop_text.text in drop_text.data:
-            self.clear_btn_disabled = False
-        else:
-            self.clear_btn_disabled = True
 
 
 class DropdownMenu(MDDropdownMenu):

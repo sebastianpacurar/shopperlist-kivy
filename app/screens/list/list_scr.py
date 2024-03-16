@@ -27,22 +27,33 @@ class ListScreen(MDScreen):
         self.rv_all = None
         self.rv_in = None
         self.rv_out = None
+        self.panel = None
+        self.panel_chevron = None
         self.checkbox_setup = {'Price': False, 'Qty': False}
         self.prev_checkbox_active = None
         self.initial_setup = False
         self.filtered_category = 'All Categories'
         self.main_app = MDApp.get_running_app()
         self.bind(on_pre_enter=self.init_data)
-        self.bind(on_pre_leave=self.clear_filters)
+        self.bind(on_pre_leave=self.clean_up)
 
-    def clean_up(self, *args):
-        self.ids.filter_category_txt.ids.text_field.text = ''
+    def clear_filters_txt(self, *args):
+        self.ids.filter_category_txt.text = ''
         self.ids.filter_category_txt.filter_suffix = self.filtered_category
 
-    def clear_filters(self, *args):
-        self.clean_up()
-        self.update_filtered_category('All Categories')
-        self.refresh_data()
+    def reset_filters(self, *args):
+        if self.filtered_category != 'All Categories':
+            self.clear_filters_txt()
+            self.update_filtered_category('All Categories')
+            self.refresh_data()
+
+    def close_expandable(self):
+        if self.panel.is_open:
+            self.tap_expansion_chevron(self.panel, self.panel_chevron)
+
+    def clean_up(self, *args):
+        self.reset_filters()
+        self.close_expandable()
 
     def update_filtered_category(self, value):
         self.filtered_category = value
@@ -60,6 +71,8 @@ class ListScreen(MDScreen):
         self.rv_all = self.ids.all_prods_scr.ids.rv_all_prods_list
         self.rv_in = self.ids.in_prods_scr.ids.rv_in_prods_list
         self.rv_out = self.ids.out_prods_scr.ids.rv_out_prods_list
+        self.panel = self.ids.panel
+        self.panel_chevron = self.ids.chevron
 
     def init_data(self, *args):
         self.set_definitions()
@@ -104,7 +117,6 @@ class ListScreen(MDScreen):
                     self.sm.get_screen(const.OUT_PRODS_LIST_SCR).display_products(self.list_id, self.filtered_category)
 
     def refresh_data(self, *args):
-        self.ids.filter_category_txt.handle_clear_btn()
         self.sm.get_screen(const.ALL_PRODS_LIST_SCR).display_products(self.list_id, self.filtered_category)
         self.sm.get_screen(const.IN_PRODS_LIST_SCR).display_products(self.list_id, self.filtered_category)
         self.sm.get_screen(const.OUT_PRODS_LIST_SCR).display_products(self.list_id, self.filtered_category)
@@ -134,6 +146,10 @@ class ListScreen(MDScreen):
         self.rv_out.viewclass = viewclass
 
         self.refresh_data()
+
+    def tap_expansion_chevron(self, panel, chevron):
+        panel.open() if not panel.is_open else panel.close()
+        panel.set_chevron_down(chevron) if not panel.is_open else panel.set_chevron_up(chevron)
 
 
 class BaseListViewScreen(MDScreen):

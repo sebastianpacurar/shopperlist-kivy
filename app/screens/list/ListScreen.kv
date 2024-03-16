@@ -7,58 +7,106 @@
         TopGap:
             top_bar_height: root.top_bar_height
 
+        MDExpansionPanel:
+            id: panel
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            MDExpansionPanelHeader:
+                MDListItem:
+                    theme_bg_color: 'Custom'
+                    md_bg_color: self.theme_cls.surfaceContainerLowColor
+                    ripple_effect: False
+                    MDListItemSupportingText:
+                        text: 'Customize List'
+                    TrailingPressedIconButton:
+                        id: chevron
+                        icon: 'chevron-right'
+                        on_release: root.tap_expansion_chevron(panel, chevron)
+            MDExpansionPanelContent:
+                orientation: 'vertical'
+                md_bg_color: self.theme_cls.surfaceBrightColor
+                size_hint_y: None
+                height: (filter_category_txt.height + price_qty_selection.height) * 2 + dp(55)  # hack to prevent overlap with top bar due to padding bug
+                padding: dp(10), dp(100), dp(10), dp(10)
 
-        FilterTextField:
-            id: filter_category_txt
-            hint_txt: 'Category'
-            prefix_width: dp(80)
-            filter_prefix: 'Filter by: '
-            filter_suffix: root.category_filter_message
-            clear_filter_func: root.clear_filters
+                DropTextField:
+                    id: filter_category_txt
+                    hint_txt: 'Category Filter'
 
-        # TODO: continue from here
+                Spacer:
+                    orientation: 'vertical'
+                    value: dp(24)
+
+                MDGridLayout:
+                    id: price_qty_selection
+                    cols: 2
+                    size_hint_y: None
+                    height: self.children[0].height * .25
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        height: self.children[0].height
+                        MDLabel:
+                            id: price_txt
+                            text: 'Price'
+                            size_hint: None, None
+                            height: self.texture_size[1]
+                            width: dp(40)
+                        MDCheckbox:
+                            id: price_box
+                            pos_hint: {'center_y': .5}
+                            on_active: root.set_checkbox_setup(price_txt, *args)
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        height: self.children[0].height
+                        MDLabel:
+                            id: qty_text
+                            text: 'Qty'
+                            size_hint: None, None
+                            height: self.texture_size[1]
+                            width: dp(25)
+                        MDCheckbox:
+                            id: qty_box
+                            pos_hint: {'center_y': .5}
+                            on_active: root.set_checkbox_setup(qty_text, *args)
+
         Spacer:
             orientation: 'vertical'
-            value: dp(20)
-        MDGridLayout:
-            cols: 2
+            value: dp(12)
+
+        MDBoxLayout:
+            id: label_container
             size_hint_y: None
-            height: self.children[0].height * .25
-            md_bg_color: 'cyan'
-            MDBoxLayout:
-                orientation: 'horizontal'
+            height: dp(25)
+            orientation: 'horizontal'
+            MDLabel:
+                padding: dp(12), dp(5), 0, 0
+                text: 'Filter By: '
+                theme_font_size: 'Custom'
+                font_size: sp(16)
+                text_color: 'black'
+                size_hint: None, None
+                height: self.texture_size[1]
+                width: dp(80)
+            MDLabel:
+                padding: 0, dp(5), 0, 0
+                text: root.category_filter_message
+                bold: True
+                theme_font_size: 'Custom'
+                font_size: sp(16)
+                text_color: 'green'
                 size_hint_y: None
-                height: self.children[0].height
-                MDLabel:
-                    id: price_txt
-                    text: 'Price'
-                    size_hint: None, None
-                    height: self.texture_size[1]
-                    width: dp(40)
-                MDCheckbox:
-                    id: price_box
-                    pos_hint: {'center_y': .5}
-                    on_active: root.set_checkbox_setup(price_txt, *args)
-            MDBoxLayout:
-                orientation: 'horizontal'
-                size_hint_y: None
-                height: self.children[0].height
-                MDLabel:
-                    id: qty_text
-                    text: 'Qty'
-                    size_hint: None, None
-                    height: self.texture_size[1]
-                    width: dp(25)
-                MDCheckbox:
-                    id: qty_box
-                    pos_hint: {'center_y': .5}
-                    on_active: root.set_checkbox_setup(qty_text, *args)
-
-
+                height: self.texture_size[1]
+            MDIconButton:
+                id: reset_filters_btn
+                pos_hint: {'center_y': .5}
+                icon: 'close'
+                style: 'tonal'
+                on_release: root.reset_filters()
 
         Spacer:
             orientation: 'vertical'
-            value: dp(24)
+            value: dp(12)
 
         MDTabsPrimary:
             id: tabs
