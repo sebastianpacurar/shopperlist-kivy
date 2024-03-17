@@ -151,7 +151,7 @@ class MyKivyApp(MDApp):
                 top_bar_title.text = 'Shopping List'
                 left_btn.icon = 'arrow-left'
                 left_btn.on_release = lambda btn=left_btn: self.navigate_back(btn)
-                right_btn.on_release = lambda: self.change_screen_and_update_bar(const.ADD_TO_LIST_SCR)
+                right_btn.on_release = lambda: self.change_screen_to_add_to_list_scr(self.sm.get_screen(const.LIST_SCR).list_id)
                 right_btn.icon = 'plus-thick'
                 right_btn.disabled = False
             case const.ADD_PROD_SCR:
@@ -229,6 +229,11 @@ class MyKivyApp(MDApp):
     def change_screen_to_list_scr(self, list_id):
         self.sm.get_screen(const.LIST_SCR).list_id = list_id
         self.change_screen(const.LIST_SCR)
+        self.update_top_bar()
+
+    def change_screen_to_add_to_list_scr(self, list_id):
+        self.sm.get_screen(const.ADD_TO_LIST_SCR).list_id = list_id
+        self.change_screen(const.ADD_TO_LIST_SCR)
         self.update_top_bar()
 
     def set_app_user(self, user_data):

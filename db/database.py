@@ -112,6 +112,19 @@ class Database:
             cursor.close()
             conn.close()
 
+    def filter_product_names_which_are_not_in_list(self, list_id, search_param):
+        like_query = search_param + '%'
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.get_products_which_are_not_in_list(), (list_id, like_query,))
+            return cursor.fetchall()
+        except Exception as e:
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+
     def filter_categories(self, search_param):
         like_query = search_param + '%'
         conn = self.set_conn()
@@ -409,6 +422,16 @@ class Database:
             conn.close()
         return res, row_id, const.LIST_SCR
 
+    def get_product_category_id(self, category_name):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        try:
+            cursor.execute(self.queries.get_category_id(), (category_name,))
+            return cursor.fetchone()[0]
+        finally:
+            cursor.close()
+            conn.close()
+
     def add_product(self, name, price, category, unit, img_path):
         conn = self.set_conn()
         cursor = conn.cursor()
@@ -434,6 +457,22 @@ class Database:
             cursor.close()
             conn.close()
         return res, row_id, const.PROD_SCR
+
+    def add_product_in_list(self, list_id, product_id, unit_id, category_id):
+        conn = self.set_conn()
+        cursor = conn.cursor()
+        res = False
+        try:
+            cursor.execute(self.queries.insert_into_shop_list_product(), (list_id, product_id, unit_id, category_id))
+            conn.commit()
+            res = True
+        except Exception as e:
+            conn.rollback()
+            print(e)
+        finally:
+            cursor.close()
+            conn.close()
+        return res
 
     def add_category(self, name):
         conn = self.set_conn()

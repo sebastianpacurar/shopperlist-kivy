@@ -36,15 +36,15 @@ CREATE TABLE shop_list (
 );
 
 CREATE TABLE shop_list_product (
-    shop_list_id INTEGER,
-    product_id INTEGER,
-    quantity INT NOT NULL,
-    unit_id INTEGER,
-    category_id INTEGER,
-    active INTEGER NOT NULL DEFAULT 1,
+    shop_list_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
+    unit_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    active INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (shop_list_id, product_id),
     FOREIGN KEY (shop_list_id) REFERENCES shop_list(shop_list_id),
     FOREIGN KEY (product_id) REFERENCES product(product_id),
-    FOREIGN KEY (category_id) REFERENCES category(category_id),
-    FOREIGN KEY (unit_id) REFERENCES product_unit(unit_id)
+    FOREIGN KEY (unit_id) REFERENCES product_unit(unit_id),
+    FOREIGN KEY (category_id) REFERENCES category(category_id)
 );

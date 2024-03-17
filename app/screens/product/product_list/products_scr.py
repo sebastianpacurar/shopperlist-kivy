@@ -22,7 +22,7 @@ class ProdsScreen(MDScreen):
                 'prod_id': entry[0],
                 'headline': entry[1],
                 'supporting': entry[2],
-                'itm_icon': 'dots-vertical',
+                # 'itm_icon': 'dots-vertical',
                 'img_path': entry[3],
                 'icon_func': lambda x: DropdownMenu().drop(x)
             }
@@ -32,6 +32,7 @@ class ProdsScreen(MDScreen):
 
     def clean_up(self, *args):
         self.ids.text_field.text = ''
+
 
 # TODO: continue from here to switch to bottom sheet viewing
 def set_bottom_sheet_content(list_id, product_id, unit, price, category, img, quantity):

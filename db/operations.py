@@ -53,18 +53,18 @@ def perform_update_category_name(*args):
 
 def perform_list_item_toggle(*args):
     list_id, product_id, val = args
-    db_res = db.toggle_product_bought(list_id, product_id, val)
-    if not db_res:
+    db_result = db.toggle_product_bought(list_id, product_id, val)
+    if not db_result:
         print('error toggling product item')
 
 
 def perform_quantity_update(*args):
     value, list_id, product_id, = args
-    db_res = db.update_item_quantity(value, list_id, product_id)
+    db_result = db.update_item_quantity(value, list_id, product_id)
     msg = 'Quantity updated'
-    if not db_res:
+    if not db_result:
         msg = 'error updating product'
-    MySnackbar(msg, db_res)
+    MySnackbar(msg, db_result)
 
 
 def perform_list_item_remove(*args):
@@ -107,10 +107,19 @@ def perform_delete_category(*args):
 def perform_delete_unit(*args):
     dialog, name, unit_id = args
     db_result = db.delete_unit(unit_id)
-    msg = f'Failed to {name}'
+    msg = f'Failed to delete {name}'
     dialog.should_refresh = db_result
     if db_result:
         dialog.should_refresh = db_result
         msg = f'{name} deleted successfully'
         dialog.dismiss()
+    MySnackbar(msg, db_result)
+
+
+def perform_add_prod_to_list(*args):
+    list_id, product_id, unit_id, category_id = args
+    db_result = db.add_product_in_list(list_id, product_id, unit_id, category_id)
+    msg = 'Failed to add product to list'
+    if db_result:
+        msg = 'Product added to list'
     MySnackbar(msg, db_result)

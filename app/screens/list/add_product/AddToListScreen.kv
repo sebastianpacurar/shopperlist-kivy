@@ -11,10 +11,17 @@ AddToListScreen:
 
         MDBoxLayout:
             orientation: 'vertical'
-            spacing: dp(30)
+            spacing: dp(20)
 
-            MDTextField:
+            SimpleTextField:
+                id: text_field
+                on_text: root.display_search_results(self)
+                hint_txt: 'Search Product'
+                size_hint_x: .8
+                pos_hint: {'center_x': .5}
 
-            MDTextField:
+            RV:
+                id: rv_prod_list
+                viewclass: 'TwoLineProdImgListItem'
 
-        BottomGap:
+            BottomGap:

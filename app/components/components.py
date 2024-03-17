@@ -279,6 +279,7 @@ class TwoLineProdImgListItem(MDListItem):
     img_path = StringProperty()
     image_func = ObjectProperty()
     icon_func = ObjectProperty()
+    itm_icon = StringProperty()
 
 
 class SelectSignInSignUpButton(MDButton):

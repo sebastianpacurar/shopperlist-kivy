@@ -31,6 +31,9 @@ class Queries:
     def get_all_lists_for_user(self):
         pass
 
+    def get_products_which_are_not_in_list(self):
+        pass
+
     def get_single_list(self):
         pass
 
@@ -85,9 +88,6 @@ class Queries:
     def delete_category(self):
         pass
 
-    def get_unit_id(self):
-        pass
-
     def get_all_products_of_unit_type(self):
         pass
 
@@ -104,6 +104,9 @@ class Queries:
         pass
 
     def insert_into_shopping_list(self):
+        pass
+
+    def insert_into_shop_list_product(self):
         pass
 
     def create_user(self):
@@ -163,6 +166,26 @@ class QueriesSqlite(Queries):
 
     def get_all_lists_for_user(self):
         return 'SELECT * FROM shop_list WHERE user_id = ?'
+
+    def get_products_which_are_not_in_list(self):
+        return ' '.join('''
+                SELECT
+                    product.product_id,
+                    product.name,
+                    category.name AS category_name,
+                    category.category_id,
+                    product.product_image,
+                    product.unit_id
+                FROM product
+                JOIN category ON product.category_id = category.category_id
+                LEFT JOIN (
+                    SELECT product_id
+                    FROM shop_list_product
+                    WHERE shop_list_id = ?
+                ) AS slp ON product.product_id = slp.product_id
+                WHERE product.name LIKE ?
+                AND slp.product_id IS NULL
+        '''.split())
 
     def get_single_list(self):
         return ' '.join('''
@@ -311,9 +334,6 @@ class QueriesSqlite(Queries):
     def delete_category(self):
         return 'DELETE FROM category WHERE category_id = ?'
 
-    def get_unit_id(self):
-        return 'SELECT unit_id FROM product_unit WHERE name = ?'
-
     def get_all_products_of_unit_type(self):
         return ' '.join('''
                 SELECT 
@@ -341,6 +361,12 @@ class QueriesSqlite(Queries):
 
     def insert_into_shopping_list(self):
         return 'INSERT INTO shop_list (name, user_id) VALUES (?, ?)'
+
+    def insert_into_shop_list_product(self):
+        return ' '.join('''
+                INSERT INTO shop_list_product(shop_list_id, product_id, quantity, unit_id, category_id, active)
+                VALUES (?, ?, 1, ?, ?, 0)
+        '''.split())
 
     def check_if_user_stored(self):
         return 'SELECT * FROM user WHERE name = ? AND password = ?'
@@ -441,7 +467,25 @@ class QueriesMysql(Queries):
     def get_all_lists_for_user(self):
         return 'SELECT * FROM shop_list WHERE user_id = %s'
 
-    def get_single_listget_single_list(self):
+    def get_products_which_are_not_in_list(self):
+        return ' '.join('''
+                SELECT
+                    product.product_id,
+                    product.name,
+                    category.name AS category_name,
+                    product.product_image
+                FROM product
+                JOIN category ON product.category_id = category.category_id
+                LEFT JOIN (
+                    SELECT product_id
+                    FROM shop_list_product
+                    WHERE shop_list_id = %s
+                ) AS slp ON product.product_id = slp.product_id
+                WHERE product.name LIKE %s
+                AND slp.product_id IS NULL
+        ''')
+
+    def get_single_list(self):
         return ' '.join('''
                 SELECT
                     slp.shop_list_id,
@@ -585,9 +629,6 @@ class QueriesMysql(Queries):
     def delete_category(self):
         return 'DELETE FROM category WHERE category_id = %s'
 
-    def get_unit_id(self):
-        return 'SELECT unit_id FROM product_unit WHERE name = %s'
-
     def get_all_products_of_unit_type(self):
         return ' '.join('''
                 SELECT 
@@ -615,6 +656,12 @@ class QueriesMysql(Queries):
 
     def insert_into_shopping_list(self):
         return 'INSERT INTO shop_list (name, user_id) VALUES (%s, %s)'
+
+    def insert_into_shop_list_product(self):
+        return ' '.join('''
+                INSERT INTO shop_list_product(shop_list_id, product_id, quantity, unit_id, category_id, active)
+                VALUES (%s, %s, 1, %s, %s, 0)
+        '''.split())
 
     def check_if_user_stored(self):
         return 'SELECT * FROM user WHERE name = %s AND password = %s'

@@ -36,11 +36,11 @@ CREATE TABLE shop_list (
 );
 
 CREATE TABLE shop_list_product (
-    shop_list_id INT,
-    product_id INT,
+    shop_list_id INT NOT NULL,
+    product_id INT NOT NULL,
     quantity INT NOT NULL,
-    unit_id INT,
-    category_id INT,
+    unit_id INT NOT NULL,
+    category_id INT NOT NULL,
     active BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY (shop_list_id, product_id),
     FOREIGN KEY (shop_list_id) REFERENCES shop_list(shop_list_id),
